@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        ViewClientController: function (scope, routeParams, route, location, resourceFactory, http, $modal, API_VERSION, $rootScope, $upload) {
+        ClientPaymentsController: function (scope, routeParams, route, location, resourceFactory, http, $modal, API_VERSION, $rootScope, $upload) {
             scope.client = [];
             scope.identitydocuments = [];
             scope.buttons = [];
@@ -10,6 +10,12 @@
             scope.openLoan = true;
             scope.openSaving = true;
             scope.updateDefaultSavings = false;
+            scope.showPaymentDetails = true;
+            scope.isTransaction = true;
+            scope.paymentTypes = [];
+            scope.loanrepayments = [];
+            scope.deposits = [];
+
             scope.routeToLoan = function (id) {
                 location.path('/viewloanaccount/' + id);
             };
@@ -21,10 +27,6 @@
                 } else if (depositTypeCode === "depositAccountType.recurringDeposit") {
                     location.path('/viewrecurringdepositaccount/' + id);
                 }
-            };
-            scope.routeToClientPayments = function (clientid) {
-                console.log('Redirecting to payments for: ' + clientid);
-                location.path('/clientpayments/' + clientid);
             };
             scope.haveFile = [];
             resourceFactory.clientResource.get({clientId: routeParams.id}, function (data) {
@@ -38,6 +40,7 @@
                     }).then(function (imageData) {
                         scope.image = imageData.data;
                     });
+
                 }
                 http({
                     method: 'GET',
@@ -52,7 +55,7 @@
                     }
                 });
 
-                
+
                 var clientStatus = new mifosX.models.ClientStatus();
 
                 if (clientStatus.statusKnown(data.status.value)) {
@@ -116,87 +119,6 @@
                     $modalInstance.dismiss('cancel');
                 };
             };
-            scope.capturePic = function () {
-                $modal.open({
-                    templateUrl: 'capturepic.html',
-                    controller: CapturePicCtrl,
-                    windowClass: 'modalwidth700'
-                });
-            };
-            var CapturePicCtrl = function ($scope, $modalInstance) {
-
-                $scope.video = null;
-                $scope.picture = null;
-                $scope.error = null;
-
-                $scope.onVideoSuccess = function (video) {
-                    $scope.video = video;
-                    $scope.error = null;
-                };
-
-                $scope.onVideoError = function (err) {
-                    if(typeof err != "undefined")
-                        $scope.error = err.message + '(' + err.name + ')';
-                };
-
-                $scope.takeScreenshot = function () {
-                    var picCanvas = document.createElement('canvas');
-                    var width = $scope.video.width;
-                    var height = $scope.video.height;
-
-                    picCanvas.width = width;
-                    picCanvas.height = height;
-                    var ctx = picCanvas.getContext("2d");
-                    ctx.drawImage($scope.video, 0, 0, width, height);
-                    var imageData = ctx.getImageData(0, 0, width, height);
-                    document.querySelector('#clientSnapshot').getContext("2d").putImageData(imageData, 0, 0);
-                    $scope.picture = picCanvas.toDataURL();
-                };
-                $scope.uploadscreenshot = function () {
-                    if($scope.picture != null) {
-                        http({
-                            method: 'POST',
-                            url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/images',
-                            data: $scope.picture
-                        }).then(function (imageData) {
-                            if (!scope.$$phase) {
-                                scope.$apply();
-                            }
-                            $modalInstance.close('upload');
-                            route.reload();
-                        });
-                    }
-                };
-                $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
-                };
-                $scope.reset = function () {
-                    $scope.picture = null;
-                }
-            };
-            scope.deletePic = function () {
-                $modal.open({
-                    templateUrl: 'deletePic.html',
-                    controller: DeletePicCtrl
-                });
-            };
-            var DeletePicCtrl = function ($scope, $modalInstance) {
-                $scope.delete = function () {
-                    http({
-                        method: 'DELETE',
-                        url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/images',
-                    }).then(function (imageData) {
-                        if (!scope.$$phase) {
-                            scope.$apply();
-                        }
-                        $modalInstance.close('delete');
-                        route.reload();
-                    });
-                };
-                $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
-                };
-            };
             scope.uploadSig = function () {
                 $modal.open({
                     templateUrl: 'uploadsig.html',
@@ -215,15 +137,15 @@
                                 name: 'clientSignature',
                                 description: 'client signature'
                             },
-                            file: scope.file,
+                            file: scope.file
                         }).then(function (imageData) {
-                                // to fix IE not refreshing the model
-                                if (!scope.$$phase) {
-                                    scope.$apply();
-                                }
-                                $modalInstance.close('upload');
-                                route.reload();
-                            });
+                            // to fix IE not refreshing the model
+                            if (!scope.$$phase) {
+                                scope.$apply();
+                            }
+                            $modalInstance.close('upload');
+                            route.reload();
+                        });
                     }
                 };
                 $scope.cancel = function () {
@@ -259,10 +181,24 @@
                     $modalInstance.dismiss('cancel');
                 };
             };
+
             resourceFactory.clientAccountResource.get({clientId: routeParams.id}, function (data) {
                 scope.clientAccounts = data;
+                if(data.paymentTypeOptions != null){
+                    scope.paymentTypes = data.paymentTypeOptions;
+                }
+                if (data.loanAccounts) {
+                    scope.loanAccounts = data.loanAccounts || [];
+                    for(var i in scope.loanAccounts){
+                        scope.loanAccounts[i].relativeUrl = "loans/"+scope.loanAccounts[i].id+"/repayment?command=repayment";
+                        scope.loanAccounts[i].repaymentAmount = "";
+                    }
+                }
                 if (data.savingsAccounts) {
+                    scope.savingsAccounts = data.savingsAccounts || [];
                     for (var i in data.savingsAccounts) {
+                        scope.savingsAccounts[i].relativeUrl = "savingsaccounts/"+scope.savingsAccounts[i].id+"/transactions?command=deposit";
+                        scope.savingsAccounts[i].depositAmount = "";
                         if (data.savingsAccounts[i].status.value == "Active") {
                             scope.updateDefaultSavings = true;
                             break;
@@ -270,6 +206,91 @@
                     }
                 }
             });
+
+            scope.submitPayments = function(){
+                var requests = [];
+                var d = new Date();
+                var today =formatDate(d);
+                var submitProcess = false;
+                var requestId = 1;
+                var req = 0;
+                //Header Requests
+                var headers = [{name: "Content-type", value: "application/json"}];
+                for(var l in scope.loanAccounts) {
+                    if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
+                        submitProcess = true;
+                        var request = {};
+                        request.requestId = requestId;
+                        request.relativeUrl = "loans/" + scope.loanAccounts[l].id + "/repayment?command=repayment";
+                        request.method = "POST";
+                        request.headers = headers;
+                        var bodyJson = "{";
+                        bodyJson+="\"transactionAmount\":\""+scope.loanAccounts[l].repaymentAmount+"\"";
+                        bodyJson+=",\"transactionDate\":\""+today+"\"";
+                        bodyJson+=",\"paymentTypeId\":\""+scope.formData.paymentTypeId+"\"";
+                        bodyJson+=",\"receiptNumber\":\""+scope.formData.receiptNumber+"\"";
+                        bodyJson+=",\"accountNumber\":\""+scope.formData.accountNumber+"\"";
+                        bodyJson+=",\"checkNumber\":\""+scope.formData.checkNumber+"\"";
+                        bodyJson+=",\"routingCode\":\""+scope.formData.routingCode+"\"";
+                        bodyJson+=",\"bankNumber\":\""+scope.formData.bankNumber+"\"";
+                        bodyJson+=",\"locale\":\"en\"";
+                        bodyJson+=",\"dateFormat\":\"dd MMMM yyyy\"";
+                        bodyJson += "}";
+                        request.body = bodyJson;
+
+                        requests[req++] = request;
+                        requestId++
+                    }
+                }
+                for(var s in scope.savingsAccounts) {
+                    if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != "") {
+                        submitProcess = true;
+                        var request = {};
+                        request.requestId = requestId;
+                        request.relativeUrl = "savingsaccounts/" + scope.savingsAccounts[s].id + "/transactions?command=deposit";
+                        request.method = "POST";
+                        request.headers = headers;
+                        var bodyJson = "{";
+                        bodyJson+="\"transactionAmount\":\""+scope.savingsAccounts[s].depositAmount+"\"";
+                        bodyJson+=",\"transactionDate\":\""+today+"\"";
+                        bodyJson+=",\"paymentTypeId\":\""+scope.formData.paymentTypeId+"\"";
+                        bodyJson+=",\"receiptNumber\":\""+scope.formData.receiptNumber+"\"";
+                        bodyJson+=",\"accountNumber\":\""+scope.formData.accountNumber+"\"";
+                        bodyJson+=",\"checkNumber\":\""+scope.formData.checkNumber+"\"";
+                        bodyJson+=",\"routingCode\":\""+scope.formData.routingCode+"\"";
+                        bodyJson+=",\"bankNumber\":\""+scope.formData.bankNumber+"\"";
+                        bodyJson+=",\"locale\":\"en\"";
+                        bodyJson+=",\"dateFormat\":\"dd MMMM yyyy\"";
+                        bodyJson += "}";
+                        request.body = bodyJson;
+
+                        requests[req++] = request;
+                        requestId++
+                    }
+                }
+                if(submitProcess){
+                    resourceFactory.batchResource.post(requests, function (data) {
+                        location.path('/viewclient/' + routeParams.id);
+                    });
+                }else{
+                    alert("Please enter amount");
+                }
+            };
+
+            var m_names = new Array("January", "February", "March",
+                "April", "May", "June", "July", "August", "September",
+                "October", "November", "December");
+
+            function formatDate(d) {
+                var month = d.getMonth();
+                var day = d.getDate();
+                day = day + "";
+                if (day.length == 1){
+                    day = "0" + day;
+                }
+                return day + ' ' + m_names[month] + ' ' + d.getFullYear();
+            };
+
             scope.isClosed = function (loanaccount) {
                 if (loanaccount.status.code === "loanStatusType.closed.written.off" ||
                     loanaccount.status.code === "loanStatusType.closed.obligations.met" ||
@@ -364,6 +385,10 @@
                         }
                     }
                 });
+            };
+
+            scope.cancel = function(){
+                location.path('/viewclient/' + scope.client.id);
             };
 
             scope.viewstandinginstruction = function () {
@@ -555,7 +580,7 @@
                     controller: ViewLargerClientSignature,
                     size: "lg"
                 });
-             };
+            };
 
             scope.showWithoutSignature = function()
             {
@@ -580,11 +605,11 @@
                 };
             };
             var ViewLargerClientSignature = function($scope,$modalInstance){
-                    var loadSignature = function(){
-                     http({
+                var loadSignature = function(){
+                    http({
                         method: 'GET',
                         url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents'
-                     }).then(function (docsData) {
+                    }).then(function (docsData) {
                         var docId = -1;
                         for (var i = 0; i < docsData.data.length; ++i) {
                             if (docsData.data[i].name == 'clientSignature') {
@@ -592,21 +617,21 @@
                                 scope.signature_url = $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents/' + docId + '/attachment?tenantIdentifier=' + $rootScope.tenantIdentifier;
                             }
                         }
-                    if (scope.signature_url != null) {
-                        http({
-                            method: 'GET',
-                            url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents/' + docId + '/attachment?tenantIdentifier=' + $rootScope.tenantIdentifier
-                    }).then(function (docsData) {
-                            $scope.largeImage = scope.signature_url;
-                        });
-                    }
+                        if (scope.signature_url != null) {
+                            http({
+                                method: 'GET',
+                                url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents/' + docId + '/attachment?tenantIdentifier=' + $rootScope.tenantIdentifier
+                            }).then(function (docsData) {
+                                $scope.largeImage = scope.signature_url;
+                            });
+                        }
                     });
                 };
                 loadSignature();
                 $scope.cancel = function () {
                     $modalInstance.dismiss('cancel');
                 };
-             };
+            };
 
             var ViewLargerPicCtrl = function ($scope, $modalInstance) {
                 var loadImage = function () {
@@ -623,11 +648,11 @@
                 $scope.cancel = function () {
                     $modalInstance.dismiss('cancel');
                 };
-            }
+            };
         }
     });
 
-    mifosX.ng.application.controller('ViewClientController', ['$scope', '$routeParams', '$route', '$location', 'ResourceFactory', '$http', '$modal', 'API_VERSION', '$rootScope', '$upload', mifosX.controllers.ViewClientController]).run(function ($log) {
-        $log.info("ViewClientController initialized");
+    mifosX.ng.application.controller('ClientPaymentsController', ['$scope', '$routeParams', '$route', '$location', 'ResourceFactory', '$http', '$modal', 'API_VERSION', '$rootScope', '$upload', mifosX.controllers.ClientPaymentsController]).run(function ($log) {
+        $log.info("ClientPaymentsController initialized");
     });
 }(mifosX.controllers || {}));

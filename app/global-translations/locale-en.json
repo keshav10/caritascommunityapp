@@ -82,6 +82,10 @@
     "label.heading.loanamount" : "Original Loan",
     "label.heading.outstandingamount" : "Loan Balance",
     "label.heading.dueamount" : "Amount Paid",
+    "label.heading.loans.repayments": "Repayments",
+    "label.heading.savings.deposits":"Deposits",
+    "label.heading.loans":"Loans",
+    "label.heading.deposits":"Deposits",
 
     "#Menu Links": "..",
     "label.menu.selectloanofficer": "Select Staff",
@@ -181,6 +185,7 @@
     "label.button.summary": "Summary",
     "label.button.updatedefaultsavings":"Update Default Savings",
     "label.button.submit": "Submit",
+    "label.button.clientpayments": "Client Payments",
 
 
     "#Misc Labels": "..",
@@ -366,6 +371,7 @@
     "label.heading.help":"Help",
     "label.heading.language":"Language",
     "label.heading.primaryemail":"Primary Email",
+    "label.heading.clientpayments": "Payments for ",
 
 
     "#Menu Links": "..",
