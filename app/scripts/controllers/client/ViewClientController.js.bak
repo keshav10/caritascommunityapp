@@ -22,10 +22,6 @@
                     location.path('/viewrecurringdepositaccount/' + id);
                 }
             };
-			 scope.routeToClientPayments = function (clientid) {
-                console.log('Redirecting to payments for: ' + clientid);
-                location.path('/clientpayments/' + clientid);
-            };
             scope.haveFile = [];
             resourceFactory.clientResource.get({clientId: routeParams.id}, function (data) {
                 scope.client = data;

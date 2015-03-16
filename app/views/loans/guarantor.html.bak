@@ -3,13 +3,13 @@
     <api-validate></api-validate>
     <fieldset>
         <legend class="bolder">{{'label.heading.createguarantor' | translate}}</legend>
-       <!-- <div class="form-group">
+        <div class="form-group">
             <label class="control-label col-sm-2">{{ 'label.input.existingclient' | translate }}</label>
 
             <div class="col-sm-3">
                 <input type="checkbox" data-ng-model="temp" data-ng-change="checkClient()">
             </div>
-        </div> -->
+        </div>
         <div data-ng-switch on="temp">
             <div data-ng-switch-when="true">
                 <div class="form-group">
