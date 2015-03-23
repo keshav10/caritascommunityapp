@@ -1,4 +1,4 @@
-<div class="col-md-12" ng-controller="ListOnHoldTransactionController">
+<div class="col-md-12" ng-controller="ListOnHoldTransactionController" xmlns="http://www.w3.org/1999/html">
     <div>
         <ul class="breadcrumb">
             <li><a href="#/{{fromPath}}/{{fromPathId}}">{{'label.heading.' +fromPath | translate}}</a></li>
@@ -6,17 +6,29 @@
         </ul>
     </div>
     <api-validate></api-validate>
-    <div class="span gray-head" style="margin-left:0%;">
-          <span style="margin-left: 10px;font-size:20px">
-                <strong> {{'label.heading.listonholdtransaction' | translate}}</strong>
-          </span>
-    </div>
+    <form name="onholdtransactionform" novalidate="" class="form-horizontal well" ng-repeat="transaction in transactions.currentPageItems|limitTo:1">
+        <fieldset>
+            <label class="col-sm-2" ng-show="fromPath === 'viewsavingaccount'">{{'label.heading.clientnameonholdtransaction' | translate}}</label>
+            <div class="col-sm-3" ng-show="fromPath === 'viewsavingaccount'">{{transaction.savingsClientName}}</div>
+            <label class="col-sm-2" ng-show="fromPath === 'viewsavingaccount'">{{'label.heading.savingsaccountnoonholdtransaction' | translate}}</label>
+            <div class="col-sm-3" ng-show="fromPath === 'viewsavingaccount'">{{transaction.savingsAccountNo}}</div><br>
+            <label class="col-sm-2" ng-show="fromPath === 'listguarantors'">{{'label.heading.clientnameonholdtransaction' | translate}}</label>
+            <div class="col-sm-3" ng-show="fromPath === 'listguarantors'">{{transaction.loanClientName}}</div>
+            <label class="col-sm-2" ng-show="fromPath === 'listguarantors'">{{'label.heading.loanaccountnumonholdtransaction' | translate}}</label>
+            <div class="col-sm-3" ng-show="fromPath === 'listguarantors'">{{transaction.loanAccountNo}}</div><br>
+            </fieldset>
+            <label class="col-sm-3">{{'label.heading.listonholdtransaction' | translate}}</label>
 
     <div ng-show="transactions" class="marginbuttontop25px">
         <table class="table">
             <thead>
-            <tr class="graybg">
-                <th>{{'label.heading.id' | translate}}</th>
+
+            <tr class="graybg" >
+                <th>{{'label.heading.transactionid' | translate}}</th>
+                <th ng-show="fromPath === 'listguarantors'">{{'label.heading.savingsaccountno' | translate}}</th>
+                <th ng-show="fromPath === 'listguarantors'">{{'label.heading.clientnameonholdtransaction' | translate}}</th>
+                <th ng-show="fromPath === 'viewsavingaccount'">{{'label.heading.loanaccountnum' | translate}}</th>
+                <th ng-show="fromPath === 'viewsavingaccount'">{{'label.heading.clientnameonholdtransaction' | translate}}</th>
                 <th>{{'label.heading.transactionType' | translate}}</th>
                 <th>{{'label.heading.transactionDate' | translate}}</th>
                 <th>{{'label.heading.amount' | translate}}</th>
@@ -26,6 +38,10 @@
             <tr ng-repeat="transaction in transactions.currentPageItems"
                 ng-class="{strikeoff : transaction.reversed==true}">
                 <td>{{transaction.id}}</td>
+                <td ng-show="fromPath === 'listguarantors'"><a href="#/viewsavingaccount/{{transaction.savingsId}}"> {{transaction.savingsAccountNo}}</a></td>
+                <td ng-show="fromPath === 'listguarantors'">{{transaction.savingsClientName}}</td>
+                <td ng-show="fromPath === 'viewsavingaccount'"><a href="#/viewloanaccount/{{transaction.loanId}}"> {{transaction.loanAccountNo}}</a></td>
+                <td ng-show="fromPath === 'viewsavingaccount'">{{transaction.loanClientName}}</td>
                 <td>{{transaction.transactionType.code | translate}}</td>
                 <td>{{transaction.transactionDate | DateFormat}}</td>
                 <td>{{transaction.amount}}</td>
@@ -41,6 +57,6 @@
                 | translate}}&rarr;</a></li>
         </ul>
     </div>
-
+</form>
 </div>
 
