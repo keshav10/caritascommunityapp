@@ -477,7 +477,7 @@
 
                         scope.printbtn = true;
                         scope.hidePentahoReport = true;
-                        scope.formData.outputType = 'HTML';
+                        scope.formData.outputType = 'PDF';
                         scope.baseURL = $rootScope.hostUrl + API_VERSION + "/runreports/" + encodeURIComponent("Payment Receipts");
                         scope.baseURL += "?output-type=" + encodeURIComponent(scope.formData.outputType) + "&tenantIdentifier=" + $rootScope.tenantIdentifier+"&locale="+scope.optlang.code;
 
