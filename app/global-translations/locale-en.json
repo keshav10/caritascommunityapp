@@ -1483,6 +1483,7 @@
     "error.msg.loan.cannot.modify.loan.in.its.present.state": "Loan application details cannot be modified in current state. It must be 'Submitted and pending approval'.",
     "error.msg.loan.application.submitted.on.date.cannot.be.before.the.loan.product.start.date": "Submitted on date cannot be before the loan product start date `{{params[1].value}}`.",
     "error.msg.loan.application.submitted.on.date.cannot.be.after.the.loan.product.close.date": "Submitted on date cannot be after the loan product close date `{{params[1].value}}`.",
+    "error.msg.loan.application.clientsubstatus": "Client Sub-Status does not permit this action for loan.",
     "error.msg.loanCharge.dueDate.cannot.be.blank": "A charge `{{params[1].value}}` with collection type as 'specified due date' does not have a date against it.",
     "error.msg.loanCharge.attach.to.loan.invalid.currency": "A charge must have the same currency as the loan.",
     "error.msg.loanCharge.requires.linked.account": "One of the charges requires linked savings account for payment.",
