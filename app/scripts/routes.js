@@ -85,6 +85,9 @@
             .when('/viewclient/:id', {
                 templateUrl: 'views/clients/viewclient.html'
             })
+            .when('/clientpayments/:id', {
+                templateUrl: 'views/clients/clientpayments.html'
+            })
             .when('/clientscreenreport/:clientId', {
                 templateUrl: 'views/clients/clientscreenreport.html'
             })
