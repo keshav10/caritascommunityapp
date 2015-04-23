@@ -217,9 +217,6 @@
                         ]
 
                     };
-					if(scope.savingaccountdetails.savingsProductName.indexOf("Shares") != -1 ) {
-                        scope.buttons.singlebuttons[1].name=null;
-                    }
                     if (data.clientId) {
                         scope.buttons.options.push({
                             name: "button.transferFunds",

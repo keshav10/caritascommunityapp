@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        ClientPaymentsController: function (scope, routeParams, route, location, resourceFactory, http, $modal, API_VERSION, $rootScope, $upload, dateFilter, $sce) {
+        ClientPaymentsController: function (scope, routeParams, route, location, resourceFactory, http, $modal, API_VERSION, $rootScope, $upload) {
             scope.client = [];
             scope.identitydocuments = [];
             scope.buttons = [];
@@ -13,11 +13,8 @@
             scope.showPaymentDetails = true;
             scope.isTransaction = true;
             scope.paymentTypes = [];
-            scope.restrictDate = new Date();
-            scope.formData.submittedOnDate = new Date();
-            scope.formData.totalAmount = 0;
-
-            scope.isDisabled = true;
+            scope.loanrepayments = [];
+            scope.deposits = [];
 
             scope.routeToLoan = function (id) {
                 location.path('/viewloanaccount/' + id);
@@ -185,18 +182,16 @@
                 };
             };
 
-            resourceFactory.clientAccountResource.get({clientId: routeParams.id, command: 'loanrepaymentamount'}, function (data) {
+            resourceFactory.clientAccountResource.get({clientId: routeParams.id}, function (data) {
                 scope.clientAccounts = data;
                 if(data.paymentTypeOptions != null){
                     scope.paymentTypes = data.paymentTypeOptions;
-                    scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
                 }
                 if (data.loanAccounts) {
                     scope.loanAccounts = data.loanAccounts || [];
                     for(var i in scope.loanAccounts){
                         scope.loanAccounts[i].relativeUrl = "loans/"+scope.loanAccounts[i].id+"/repayment?command=repayment";
-                        scope.loanAccounts[i].repaymentAmount = scope.loanAccounts[i].loanrepaymentamount;
-                        scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[i].loanrepaymentamount;
+                        scope.loanAccounts[i].repaymentAmount = "";
                     }
                 }
                 if (data.savingsAccounts) {
@@ -204,10 +199,6 @@
                     for (var i in data.savingsAccounts) {
                         scope.savingsAccounts[i].relativeUrl = "savingsaccounts/"+scope.savingsAccounts[i].id+"/transactions?command=deposit";
                         scope.savingsAccounts[i].depositAmount = "";
-                    }
-                }
-                if (data.savingsAccounts) {
-                    for (var i in data.savingsAccounts) {
                         if (data.savingsAccounts[i].status.value == "Active") {
                             scope.updateDefaultSavings = true;
                             break;
@@ -216,27 +207,9 @@
                 }
             });
 
-            scope.keyPress = function(){
-                scope.formData.totalAmount = 0;
-                for(var l in scope.loanAccounts) {
-                    if (scope.loanAccounts[l].active) {
-                        if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
-                            scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[l].repaymentAmount;
-                        }
-                    }
-                }
-                for(var l in scope.savingsAccounts) {
-                    if (scope.savingsAccounts[l].active) {
-                        if (scope.savingsAccounts[l].depositAmount != null && scope.savingsAccounts[l].depositAmount != "") {
-                            scope.formData.totalAmount = scope.formData.totalAmount + scope.savingsAccounts[l].depositAmount;
-                        }
-                    }
-                }
-            };
-
             scope.submitPayments = function(){
                 var requests = [];
-                var d = scope.formData.submittedOnDate;
+                var d = new Date();
                 var today =formatDate(d);
                 var submitProcess = false;
                 var requestId = 1;
@@ -244,269 +217,64 @@
                 //Header Requests
                 var headers = [{name: "Content-type", value: "application/json"}];
                 for(var l in scope.loanAccounts) {
-                    if (scope.loanAccounts[l].active) {
-                        if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
-                            var actualDisbursementDate = new Date(scope.loanAccounts[l].timeline.actualDisbursementDate);
-                            if(d >= actualDisbursementDate){
-                                submitProcess = true;
-                                var request = {};
-                                request.requestId = requestId;
-                                request.relativeUrl = "loans/" + scope.loanAccounts[l].id + "/repayment?command=repayment";
-                                request.method = "POST";
-                                request.headers = headers;
-                                var bodyJson = "{";
-                                bodyJson += "\"transactionAmount\":\"" + scope.loanAccounts[l].repaymentAmount + "\"";
-                                bodyJson += ",\"transactionDate\":\"" + today + "\"";
+                    if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
+                        submitProcess = true;
+                        var request = {};
+                        request.requestId = requestId;
+                        request.relativeUrl = "loans/" + scope.loanAccounts[l].id + "/repayment?command=repayment";
+                        request.method = "POST";
+                        request.headers = headers;
+                        var bodyJson = "{";
+                        bodyJson+="\"transactionAmount\":\""+scope.loanAccounts[l].repaymentAmount+"\"";
+                        bodyJson+=",\"transactionDate\":\""+today+"\"";
+                        bodyJson+=",\"paymentTypeId\":\""+scope.formData.paymentTypeId+"\"";
+                        bodyJson+=",\"receiptNumber\":\""+scope.formData.receiptNumber+"\"";
+                        bodyJson+=",\"accountNumber\":\""+scope.formData.accountNumber+"\"";
+                        bodyJson+=",\"checkNumber\":\""+scope.formData.checkNumber+"\"";
+                        bodyJson+=",\"routingCode\":\""+scope.formData.routingCode+"\"";
+                        bodyJson+=",\"bankNumber\":\""+scope.formData.bankNumber+"\"";
+                        bodyJson+=",\"locale\":\"en\"";
+                        bodyJson+=",\"dateFormat\":\"dd MMMM yyyy\"";
+                        bodyJson += "}";
+                        request.body = bodyJson;
 
-                                if(scope.formData.paymentTypeId != undefined) {
-                                    bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
-                                }
-                                if(scope.formData.receiptNumber != undefined) {
-                                    bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
-                                }
-                                if(scope.formData.accountNumber != undefined) {
-                                    bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
-                                }
-                                if(scope.formData.checkNumber != undefined) {
-                                    bodyJson += ",\"checkNumber\":\"" + scope.formData.checkNumber + "\"";
-                                }
-                                if(scope.formData.routingCode != undefined) {
-                                    bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
-                                }
-                                if(scope.formData.bankNumber != undefined) {
-                                    bodyJson += ",\"bankNumber\":\"" + scope.formData.bankNumber + "\"";
-                                }
-
-                                bodyJson += ",\"locale\":\"en\"";
-                                bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
-                                bodyJson += "}";
-                                request.body = bodyJson;
-
-                                requests[req++] = request;
-                                requestId++
-                            }else{
-                                submitProcess = false;
-                                alert("Loan Account : "+scope.loanAccounts[l].id+"\nTransaction date cannot be before account activation date.");
-                                return;
-                            }
-                        }
+                        requests[req++] = request;
+                        requestId++
                     }
                 }
                 for(var s in scope.savingsAccounts) {
-                    if (scope.savingsAccounts[s].active) {
-                        if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != "") {
-                            var activatedOnDate = new Date(scope.savingsAccounts[s].timeline.activatedOnDate);
-                            if(d >= activatedOnDate){
-                                submitProcess = true;
-                                var request = {};
-                                request.requestId = requestId;
-                                request.relativeUrl = "savingsaccounts/" + scope.savingsAccounts[s].id + "/transactions?command=deposit";
-                                request.method = "POST";
-                                request.headers = headers;
-                                var bodyJson = "{";
-                                bodyJson += "\"transactionAmount\":\"" + scope.savingsAccounts[s].depositAmount + "\"";
-                                bodyJson += ",\"transactionDate\":\"" + today + "\"";
+                    if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != "") {
+                        submitProcess = true;
+                        var request = {};
+                        request.requestId = requestId;
+                        request.relativeUrl = "savingsaccounts/" + scope.savingsAccounts[s].id + "/transactions?command=deposit";
+                        request.method = "POST";
+                        request.headers = headers;
+                        var bodyJson = "{";
+                        bodyJson+="\"transactionAmount\":\""+scope.savingsAccounts[s].depositAmount+"\"";
+                        bodyJson+=",\"transactionDate\":\""+today+"\"";
+                        bodyJson+=",\"paymentTypeId\":\""+scope.formData.paymentTypeId+"\"";
+                        bodyJson+=",\"receiptNumber\":\""+scope.formData.receiptNumber+"\"";
+                        bodyJson+=",\"accountNumber\":\""+scope.formData.accountNumber+"\"";
+                        bodyJson+=",\"checkNumber\":\""+scope.formData.checkNumber+"\"";
+                        bodyJson+=",\"routingCode\":\""+scope.formData.routingCode+"\"";
+                        bodyJson+=",\"bankNumber\":\""+scope.formData.bankNumber+"\"";
+                        bodyJson+=",\"locale\":\"en\"";
+                        bodyJson+=",\"dateFormat\":\"dd MMMM yyyy\"";
+                        bodyJson += "}";
+                        request.body = bodyJson;
 
-                                if(scope.formData.paymentTypeId != undefined) {
-                                    bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
-                                }
-                                if(scope.formData.receiptNumber != undefined) {
-                                    bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
-                                }
-                                if(scope.formData.accountNumber != undefined) {
-                                    bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
-                                }
-                                if(scope.formData.checkNumber != undefined) {
-                                    bodyJson += ",\"checkNumber\":\"" + scope.formData.checkNumber + "\"";
-                                }
-                                if(scope.formData.routingCode != undefined) {
-                                    bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
-                                }
-                                if(scope.formData.bankNumber != undefined) {
-                                    bodyJson += ",\"bankNumber\":\"" + scope.formData.bankNumber + "\"";
-                                }
-
-                                bodyJson += ",\"locale\":\"en\"";
-                                bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
-                                bodyJson += "}";
-                                request.body = bodyJson;
-
-                                requests[req++] = request;
-                                requestId++
-                            }else{
-                                submitProcess = false;
-                                alert("Saving Account : "+scope.savingsAccounts[s].id+"\nTransaction date cannot be before account activation date.");
-                                return;
-                            }
-                        }
+                        requests[req++] = request;
+                        requestId++
                     }
                 }
                 if(submitProcess){
-                    http({
-                        method: 'POST',
-                        url: $rootScope.hostUrl + API_VERSION + '/batches/',
-                        dataType: 'json',
-                        data: requests
-                    }).success(function(data){
+                    resourceFactory.batchResource.post(requests, function (data) {
                         location.path('/viewclient/' + routeParams.id);
-                    }).error(function(data){
-
                     });
                 }else{
                     alert("Please enter amount");
                 }
-            };
-
-            scope.submitPaymentsAndPrint = function(){
-                var requests = [];
-                var d = scope.formData.submittedOnDate;
-                var today =formatDate(d);
-                var submitProcess = false;
-                var requestId = 1;
-                var req = 0;
-                //Header Requests
-                var headers = [{name: "Content-type", value: "application/json"}];
-                for(var l in scope.loanAccounts) {
-                    if (scope.loanAccounts[l].active) {
-                        if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
-                            var actualDisbursementDate = new Date(scope.loanAccounts[l].timeline.actualDisbursementDate);
-                            if(d >= actualDisbursementDate){
-                                submitProcess = true;
-                                var request = {};
-                                request.requestId = requestId;
-                                request.relativeUrl = "loans/" + scope.loanAccounts[l].id + "/repayment?command=repayment";
-                                request.method = "POST";
-                                request.headers = headers;
-                                var bodyJson = "{";
-                                bodyJson += "\"transactionAmount\":\"" + scope.loanAccounts[l].repaymentAmount + "\"";
-                                bodyJson += ",\"transactionDate\":\"" + today + "\"";
-
-                                if(scope.formData.paymentTypeId != undefined) {
-                                    bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
-                                }
-                                if(scope.formData.receiptNumber != undefined) {
-                                    bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
-                                }
-                                if(scope.formData.accountNumber != undefined) {
-                                    bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
-                                }
-                                if(scope.formData.checkNumber != undefined) {
-                                    bodyJson += ",\"checkNumber\":\"" + scope.formData.checkNumber + "\"";
-                                }
-                                if(scope.formData.routingCode != undefined) {
-                                    bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
-                                }
-                                if(scope.formData.bankNumber != undefined) {
-                                    bodyJson += ",\"bankNumber\":\"" + scope.formData.bankNumber + "\"";
-                                }
-
-                                bodyJson += ",\"locale\":\"en\"";
-                                bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
-                                bodyJson += "}";
-                                request.body = bodyJson;
-
-                                requests[req++] = request;
-                                requestId++
-                            }else{
-                                submitProcess = false;
-                                alert("Loan Account : "+scope.loanAccounts[l].id+"\nTransaction date cannot be before account activation date.");
-                                return;
-                            }
-                        }
-                    }
-                }
-                for(var s in scope.savingsAccounts) {
-                    if (scope.savingsAccounts[s].active) {
-                        if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != "") {
-                            var activatedOnDate = new Date(scope.savingsAccounts[s].timeline.activatedOnDate);
-                            if(d >= activatedOnDate){
-                                submitProcess = true;
-                                var request = {};
-                                request.requestId = requestId;
-                                request.relativeUrl = "savingsaccounts/" + scope.savingsAccounts[s].id + "/transactions?command=deposit";
-                                request.method = "POST";
-                                request.headers = headers;
-                                var bodyJson = "{";
-                                bodyJson += "\"transactionAmount\":\"" + scope.savingsAccounts[s].depositAmount + "\"";
-                                bodyJson += ",\"transactionDate\":\"" + today + "\"";
-
-                                if(scope.formData.paymentTypeId != undefined) {
-                                    bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
-                                }
-                                if(scope.formData.receiptNumber != undefined) {
-                                    bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
-                                }
-                                if(scope.formData.accountNumber != undefined) {
-                                    bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
-                                }
-                                if(scope.formData.checkNumber != undefined) {
-                                    bodyJson += ",\"checkNumber\":\"" + scope.formData.checkNumber + "\"";
-                                }
-                                if(scope.formData.routingCode != undefined) {
-                                    bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
-                                }
-                                if(scope.formData.bankNumber != undefined) {
-                                    bodyJson += ",\"bankNumber\":\"" + scope.formData.bankNumber + "\"";
-                                }
-
-                                bodyJson += ",\"locale\":\"en\"";
-                                bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
-                                bodyJson += "}";
-                                request.body = bodyJson;
-
-                                requests[req++] = request;
-                                requestId++
-                            }else{
-                                submitProcess = false;
-                                alert("Saving Account : "+scope.savingsAccounts[s].id+"\nTransaction date cannot be before account activation date.");
-                                return;
-                            }
-                        }
-                    }
-                }
-                if(submitProcess){
-                    http({
-                        method: 'POST',
-                        url: $rootScope.hostUrl + API_VERSION + '/batches/',
-                        dataType: 'json',
-                        data: requests
-                    }).success(function(data){
-                        scope.isDisabled = false;
-                        var tDate = dateFilter(scope.formData.submittedOnDate, 'yyyy-MM-dd');
-                        var reciptNo = scope.formData.receiptNumber;
-
-                        scope.printbtn = true;
-                        scope.hidePentahoReport = true;
-                        scope.formData.outputType = 'PDF';
-                        scope.baseURL = $rootScope.hostUrl + API_VERSION + "/runreports/" + encodeURIComponent("Payment Receipts");
-                        scope.baseURL += "?output-type=" + encodeURIComponent(scope.formData.outputType) + "&tenantIdentifier=" + $rootScope.tenantIdentifier+"&locale="+scope.optlang.code;
-
-                        var reportParams = "";
-                        var paramName = "R_clientId";
-                        reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(routeParams.id)+ "&";
-                        paramName = "R_tDate";
-                        reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(tDate)+ "&";
-                        paramName = "R_reciptNo";
-                        if(reciptNo == undefined || reciptNo == "" || paramName == "-"){
-                            reciptNo = "-";
-                        }
-                        reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(reciptNo);
-                        if (reportParams > "") {
-                            scope.baseURL += "&" + reportParams;
-                        }
-                        // allow untrusted urls for iframe http://docs.angularjs.org/error/$sce/insecurl
-                        scope.baseURL = $sce.trustAsResourceUrl(scope.baseURL);
-
-                    }).error(function(data){
-
-                    });
-                }else{
-                    alert("Please enter amount");
-                }
-            };
-            scope.printReport = function () {
-                window.print();
-                window.close();
             };
 
             var m_names = new Array("January", "February", "March",
@@ -884,7 +652,7 @@
         }
     });
 
-    mifosX.ng.application.controller('ClientPaymentsController', ['$scope', '$routeParams', '$route', '$location', 'ResourceFactory', '$http', '$modal', 'API_VERSION', '$rootScope', '$upload', 'dateFilter', '$sce', mifosX.controllers.ClientPaymentsController]).run(function ($log) {
+    mifosX.ng.application.controller('ClientPaymentsController', ['$scope', '$routeParams', '$route', '$location', 'ResourceFactory', '$http', '$modal', 'API_VERSION', '$rootScope', '$upload', mifosX.controllers.ClientPaymentsController]).run(function ($log) {
         $log.info("ClientPaymentsController initialized");
     });
 }(mifosX.controllers || {}));

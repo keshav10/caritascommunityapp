@@ -25,11 +25,12 @@
 
 	<div class="col-md-12 col-sm-12">
 		<div class="row client">
-			<div class="col-sm-10 col-md-10 paddingleft0px">
+			<div class="col-sm-9 col-md-9 paddingleft0px">
 				<div data-ng-show="loanAccounts || savingsAccounts">
-					<form name="clientpayments" class="form-horizontal well">
+					<form name="clientpayments" novalidate="" class="form-horizontal well">
 						<api-validate></api-validate>
 						<div>
+
 							<table class="table table-condensed">
 								<tr class="graybg" data-ng-show="loanAccounts">
 									<th>{{'label.heading.loans' | translate}}</th>
@@ -43,7 +44,6 @@
 								</tr>
 								<tr ng-repeat="loanaccount in loanAccounts | orderBy:'id':true | filter:isLoanNotClosed">
 									<td><input id="actualDisbursementDate" type="hidden" name="actualDisbursementDate" ng-model="loanaccount.timeline.actualDisbursementDate"/></td>
-
 									<td class="pointer" data-ng-click="routeToLoan(loanaccount.id)">
 										<i ng-hide="loanaccount.inArrears" tooltip-placement="right" tooltip-placementoltip="{{loanaccount.status.value}}"
 										   class="icon-stop {{loanaccount.status.code | StatusLookup}}"></i>
@@ -68,6 +68,7 @@
 												ng-init="loanaccount.active=true" ng-checked="true" type="checkbox" />
 									</td>
 								</tr>
+
 								<tr class="graybg" data-ng-show="savingsAccounts">
 									<th>{{'label.heading.deposits' | translate}}</th>
 									<th>{{'label.heading.accnum' | translate}}</th>
@@ -80,7 +81,6 @@
 								</tr>
 								<tr ng-repeat="savingaccount in savingsAccounts | orderBy:'id':true | filter:isSavingNotClosed">
 									<td><input id="activatedOnDate" type="hidden" name="activatedOnDate" ng-model="savingaccount.timeline.activatedOnDate"/></td>
-
 									<td class="pointer" data-ng-click="routeToSaving(savingaccount.id, savingaccount.depositType.code)">
 										<i tooltip-placement="right" tooltip="{{savingaccount.status.value}}" class="icon-stop {{savingaccount.status.code | StatusLookup}}"></i>
 										{{savingaccount.accountNo}}
@@ -124,6 +124,7 @@
 										<select id="paymentTypeId" ng-model="formData.paymentTypeId"
 												ng-options="paymentType.id as paymentType.name for paymentType in paymentTypes"
 												value="{{paymentType.id}}" class="form-control">
+											<option value="">{{'label.selectone' | translate}}</option>
 										</select>
 									<td>
 								</tr>
@@ -166,33 +167,21 @@
 									</td>
 									<td>&nbsp;</td>
 									<td></td>
-									<td></td>
+									<td></td>	
 								</tr>
 							</table>
 
 							<div class="col-md-offset-5">
 								<button id="cancel" type="reset" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>
-								<button id="save" type="submit" ng-show="isDisabled" class="btn btn-primary" ng-click="submitPayments()">{{ 'label.button.save' | translate}}</button>
-								<button id="printreceiptcontent" ng-show="isDisabled" type="submit" class="btn btn-primary" ng-click="submitPaymentsAndPrint()">{{ 'label.button.submitandprint' | translate}}</button>
+								<button id="save" type="submit" class="btn btn-primary" ng-click="submitPayments()">{{ 'label.button.save' | translate}}</button>
 							</div>
 
-							<div>
-								<button ng-show="printbtn" ng-click="printReport()" class="btn btn-primary"><i class="icon-print icon-white">{{'label.button.print' |
-									translate}}
-								</i></button>
-								<div id="printreceiptcontent">
-									<iframe id="rptLoadingreceiptFrame" ng-src="{{baseURL}}" frameborder="0" width="100%" height="800px"></iframe>
-								</div>
-							</div>
 						</div>
 
 					</form>
 
 				</div>
-
 			</div>
-
-		</div>
 		</div>
 	</div>
 
