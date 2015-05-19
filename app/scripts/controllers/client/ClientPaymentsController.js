@@ -347,6 +347,10 @@
                 alert("please enter recipt number");
                     return;
                 }
+                if(scope.formData.bankNumber==null){
+                    alert("please enter bank date");
+                    return;
+                }
                 if(submitProcess){
                     http({
                         method: 'POST',
