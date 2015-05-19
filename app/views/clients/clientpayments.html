@@ -129,7 +129,8 @@
 								</tr>
 								<tr>
 									<td class="col-sm-3">
-										<label class="control-label" for="receiptNumber">{{ 'label.input.receiptnumber' | translate}}</label>
+										<label class="control-label" for="receiptNumber">{{ 'label.input.receiptnumber' | translate}}<span
+												class="required">*</span></label>
 									</td>
 									<td class="col-sm-3">
 										<input id="receiptNumber" class="form-control" type="text" ng-model="formData.receiptNumber">
@@ -162,7 +163,7 @@
 										<label class="control-label" for="bankNumber">{{ 'label.input.banknumber' | translate}}</label>
 									</td>
 									<td class="col-sm-3">
-										<input id="bankNumber" class="form-control" type="text" ng-model="formData.bankNumber">
+										<input id="bankNumber" class="form-control" sort type="text" ng-model="formData.bankNumber" datepicker-pop="dd MMMM yyyy" is-open="opened" >
 									</td>
 									<td>&nbsp;</td>
 									<td></td>

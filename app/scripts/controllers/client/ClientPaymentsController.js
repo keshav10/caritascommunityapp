@@ -274,7 +274,8 @@
                                     bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
                                 }
                                 if(scope.formData.bankNumber != undefined) {
-                                    bodyJson += ",\"bankNumber\":\"" + scope.formData.bankNumber + "\"";
+                                    var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
+                                    bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
                                 }
 
                                 bodyJson += ",\"locale\":\"en\"";
@@ -323,7 +324,8 @@
                                     bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
                                 }
                                 if(scope.formData.bankNumber != undefined) {
-                                    bodyJson += ",\"bankNumber\":\"" + scope.formData.bankNumber + "\"";
+                                    var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
+                                    bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
                                 }
 
                                 bodyJson += ",\"locale\":\"en\"";
@@ -341,6 +343,10 @@
                         }
                     }
                 }
+                if(scope.formData.receiptNumber==null){
+                alert("please enter recipt number");
+                    return;
+                }
                 if(submitProcess){
                     http({
                         method: 'POST',
@@ -356,6 +362,7 @@
                     alert("Please enter amount");
                 }
             };
+
 
             scope.submitPaymentsAndPrint = function(){
                 var requests = [];

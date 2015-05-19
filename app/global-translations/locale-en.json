@@ -2420,6 +2420,7 @@
     "label.loan": "Loan",
     "label.savingsaccount": "Savings account",
     "label.client": "Client",
+    "label.clientpayments.totalAmount":"Total Amount",
     "label.group": "Group",
     "label.center": "Center",
     "label.office": "Office",
