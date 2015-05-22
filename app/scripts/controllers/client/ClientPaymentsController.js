@@ -409,7 +409,7 @@
                                 }
                                 if(scope.formData.bankNumber != undefined) {
                                     var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
-                                    bodyJson += ",\"bankNumber\":\"" + scope.formData.bankNumber + "\"";
+                                    bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
                                 }
 
                                 bodyJson += ",\"locale\":\"en\"";
@@ -459,7 +459,7 @@
                                 }
                                 if(scope.formData.bankNumber != undefined) {
                                     var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
-                                    bodyJson += ",\"bankNumber\":\"" + scope.formData.bankNumber + "\"";
+                                    bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
                                 }
 
                                 bodyJson += ",\"locale\":\"en\"";
