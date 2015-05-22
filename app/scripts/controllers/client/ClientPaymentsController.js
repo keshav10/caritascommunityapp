@@ -408,6 +408,7 @@
                                     bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
                                 }
                                 if(scope.formData.bankNumber != undefined) {
+                                    var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
                                     bodyJson += ",\"bankNumber\":\"" + scope.formData.bankNumber + "\"";
                                 }
 
@@ -457,6 +458,7 @@
                                     bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
                                 }
                                 if(scope.formData.bankNumber != undefined) {
+                                    var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
                                     bodyJson += ",\"bankNumber\":\"" + scope.formData.bankNumber + "\"";
                                 }
 
