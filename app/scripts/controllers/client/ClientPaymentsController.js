@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        ClientPaymentsController: function (scope, routeParams, route, location, resourceFactory, http, $modal, API_VERSION, $rootScope, $upload, dateFilter, $sce) {
+        ClientPaymentsController: function (scope, routeParams, route, location, resourceFactory, http, $modal, API_VERSION, $rootScope, $upload, dateFilter, $sce,$location) {
             scope.client = [];
             scope.identitydocuments = [];
             scope.buttons = [];
@@ -16,6 +16,10 @@
             scope.restrictDate = new Date();
             scope.formData.submittedOnDate = new Date();
             scope.formData.totalAmount = 0;
+            scope.pageUrl=$location.path();
+            scope.pageUrlSplit=[];
+            scope.pageUrlSplit=scope.pageUrl.split("/");
+
 
             scope.isDisabled = true;
 
@@ -186,6 +190,7 @@
             };
 
             resourceFactory.clientAccountResource.get({clientId: routeParams.id, command: 'loanrepaymentamount'}, function (data) {
+
                 scope.clientAccounts = data;
                 if(data.paymentTypeOptions != null){
                     scope.paymentTypes = data.paymentTypeOptions;
@@ -215,6 +220,8 @@
                     }
                 }
             });
+
+
 
             scope.keyPress = function(){
                 scope.formData.totalAmount = 0;
@@ -247,7 +254,10 @@
                     if (scope.loanAccounts[l].active) {
                         if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
                             var actualDisbursementDate = new Date(scope.loanAccounts[l].timeline.actualDisbursementDate);
-                            if(d >= actualDisbursementDate){
+                            /*alert("actualDisbursementDate: "+actualDisbursementDate);
+                            alert("maxdate: "+scope.maxtransactionsDate);
+                            alert("d: "+d);*/
+                            if(d >= actualDisbursementDate /*& d>=scope.maxtransactionsDate*/){
                                 submitProcess = true;
                                 var request = {};
                                 request.requestId = requestId;
@@ -285,11 +295,12 @@
 
                                 requests[req++] = request;
                                 requestId++
-                            }else{
+                            } else{
                                 submitProcess = false;
                                 alert("Loan Account : "+scope.loanAccounts[l].id+"\nTransaction date cannot be before account activation date.");
                                 return;
                             }
+
                         }
                     }
                 }
@@ -352,20 +363,28 @@
                     return;
                 }
                 if(submitProcess){
-                    http({
+                     http({
                         method: 'POST',
-                        url: $rootScope.hostUrl + API_VERSION + '/batches/',
+                        url: $rootScope.hostUrl + API_VERSION + '/batches?enclosingTransaction=true',
                         dataType: 'json',
                         data: requests
-                    }).success(function(data){
-                        location.path('/viewclient/' + routeParams.id);
-                    }).error(function(data){
-
+                    }).success(function(data,status){
+                         if(data.length==0){
+                             alert("Loan Transaction cannot be before the last transaction date");
+                             return;
+                         }else{
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].statusCode === 200)
+                                location.path('/viewclient/' + routeParams.id);
+                                }}
+                    }).error(function(error){
                     });
-                }else{
+                 }
+                else{
                     alert("Please enter amount");
                 }
             };
+
 
 
             scope.submitPaymentsAndPrint = function(){
@@ -480,10 +499,16 @@
                 if(submitProcess){
                     http({
                         method: 'POST',
-                        url: $rootScope.hostUrl + API_VERSION + '/batches/',
+                        url: $rootScope.hostUrl + API_VERSION + '/batches/?enclosingTransaction=true',
                         dataType: 'json',
                         data: requests
                     }).success(function(data){
+                        if(data.length==0){
+                            alert("Loan Transaction cannot be before the last transaction date");
+                            return;
+                        }else{
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].statusCode === 200){
                         scope.isDisabled = false;
                         var tDate = dateFilter(scope.formData.submittedOnDate, 'yyyy-MM-dd');
                         var reciptNo = scope.formData.receiptNumber;
@@ -510,8 +535,9 @@
                         // allow untrusted urls for iframe http://docs.angularjs.org/error/$sce/insecurl
                         scope.baseURL = $sce.trustAsResourceUrl(scope.baseURL);
 
+                                }
+                            }}
                     }).error(function(data){
-
                     });
                 }else{
                     alert("Please enter amount");
@@ -897,7 +923,7 @@
         }
     });
 
-    mifosX.ng.application.controller('ClientPaymentsController', ['$scope', '$routeParams', '$route', '$location', 'ResourceFactory', '$http', '$modal', 'API_VERSION', '$rootScope', '$upload', 'dateFilter', '$sce', mifosX.controllers.ClientPaymentsController]).run(function ($log) {
+    mifosX.ng.application.controller('ClientPaymentsController', ['$scope', '$routeParams', '$route', '$location', 'ResourceFactory', '$http', '$modal', 'API_VERSION', '$rootScope', '$upload', 'dateFilter', '$sce','$location', mifosX.controllers.ClientPaymentsController]).run(function ($log) {
         $log.info("ClientPaymentsController initialized");
     });
 }(mifosX.controllers || {}));
