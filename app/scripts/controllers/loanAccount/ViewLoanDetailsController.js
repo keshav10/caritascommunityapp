@@ -561,10 +561,10 @@
 
             };
             
-            scope.transactionSort = {
+            /*scope.transactionSort = {
                 column: 'date',
                 descending: true
-            };    
+            };    */
             scope.changeTransactionSort = function(column) {
                 var sort = scope.transactionSort;
                 if (sort.column == column) {
