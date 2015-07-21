@@ -73,6 +73,9 @@
             .when('/admin/users', {
                 templateUrl: 'views/administration/users.html'
             })
+            .when('/mpesa',{
+                templateUrl: 'views/mpesa/mpesa.html'
+            })
             .when('/clients', {
                 templateUrl: 'views/clients/clients.html'
             })
@@ -86,6 +89,9 @@
                 templateUrl: 'views/clients/viewclient.html'
             })
             .when('/clientpayments/:id', {
+                templateUrl: 'views/clients/clientpayments.html'
+            })
+            .when('/clientpayments/:id/:mpesaammount', {
                 templateUrl: 'views/clients/clientpayments.html'
             })
             .when('/clientscreenreport/:clientId', {

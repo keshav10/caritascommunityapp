@@ -40,6 +40,7 @@ define(['Q', 'underscore', 'mifosX'], function (Q) {
             'loanAccount/LoanScreenReportController',
             'groups/AssignStaffController',
             'client/ClientController',
+            'mpesa/MpesaController',
             'client/EditClientController',
             'client/ViewClientController',
             'client/CreateClientController',

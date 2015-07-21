@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        ClientPaymentsController: function (scope, routeParams, route, location, resourceFactory, http, $modal, API_VERSION, $rootScope, $upload, dateFilter, $sce) {
+        ClientPaymentsController: function (scope, routeParams, route, location, resourceFactory, http, $modal, API_VERSION, $rootScope, $upload, dateFilter, $sce,$location) {
             scope.client = [];
             scope.identitydocuments = [];
             scope.buttons = [];
@@ -16,6 +16,9 @@
             scope.restrictDate = new Date();
             scope.formData.submittedOnDate = new Date();
             scope.formData.totalAmount = 0;
+            scope.pageUrl=$location.path();
+            scope.pageUrlSplit=[];
+            scope.pageUrlSplit=scope.pageUrl.split("/");
 
             scope.isDisabled = true;
 
@@ -897,7 +900,7 @@
         }
     });
 
-    mifosX.ng.application.controller('ClientPaymentsController', ['$scope', '$routeParams', '$route', '$location', 'ResourceFactory', '$http', '$modal', 'API_VERSION', '$rootScope', '$upload', 'dateFilter', '$sce', mifosX.controllers.ClientPaymentsController]).run(function ($log) {
+    mifosX.ng.application.controller('ClientPaymentsController', ['$scope', '$routeParams', '$route', '$location', 'ResourceFactory', '$http', '$modal', 'API_VERSION', '$rootScope', '$upload', 'dateFilter', '$sce','$location', mifosX.controllers.ClientPaymentsController]).run(function ($log) {
         $log.info("ClientPaymentsController initialized");
     });
 }(mifosX.controllers || {}));

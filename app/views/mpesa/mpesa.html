@@ -1,0 +1,34 @@
+<div class="col-md-12" ng-controller="MpesaController">
+    <ul class="breadcrumb">
+        <li class="active">Mpesa</li>
+    </ul>
+    <api-validate></api-validate>
+    <table class="table">
+        <thead>
+        <tr class="graybg">
+            <th>Transaction Id</th>
+            <th>Transaction Code</th>
+            <th>Transaction Date</th>
+            <th>Transaction Time</th>
+            <th>client Id</th>
+            <th>Client Name</th>
+            <th>Mobile No</th>
+            <th>office Id</th>
+            <th>Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="transactions in completetransaction">
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.id}}</td>
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionCode}}</td>
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionDate}}</td>
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionTime}}</td>
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.clientId}}</td>
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.sender}}</td>
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.mobileNo}}</td>
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.officeId}}</td>
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionAmount}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
