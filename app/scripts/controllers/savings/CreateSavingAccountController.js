@@ -8,6 +8,7 @@
             scope.clientId = routeParams.clientId;
             scope.groupId = routeParams.groupId;
 			scope.date = {};
+            scope.showMsg = 'false';
 			scope.date.submittedOnDate = new Date();
             if (routeParams.centerEntity) {
                 scope.centerEntity = true;
@@ -42,6 +43,13 @@
 
                     scope.data = data;
                     scope.charges = data.charges;
+
+
+                    for(var i in scope.charges){
+                        if(data.charges[i].chargeTimeType.id == 12){
+                            scope.showMsg = 'true';
+                        }
+                    }
 
                     for (var i in scope.charges) {
                         if (scope.charges[i].chargeTimeType.value === "Annual Fee" && scope.charges[i].feeOnMonthDay) {
@@ -129,6 +137,8 @@
                                 feeOnMonthDay: dateFilter(scope.charges[i].feeOnMonthDay, 'dd MMMM'), feeInterval: scope.charges[i].feeInterval});
                         } else if (scope.charges[i].chargeTimeType.value == 'Weekly Fee') {
                             this.formData.charges.push({ chargeId: scope.charges[i].chargeId, amount: scope.charges[i].amount, dueDate: dateFilter(scope.charges[i].dueDate, scope.df), feeInterval: scope.charges[i].feeInterval});                            
+                        }else if(scope.charges[i].chargeTimeType.value == 'Savings Late Fee'){
+                            this.formData.charges.push();
                         }
                         else {
                             this.formData.charges.push({ chargeId: scope.charges[i].chargeId, amount: scope.charges[i].amount});
