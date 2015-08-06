@@ -57,7 +57,23 @@
                         }
                     }
                 });
-
+                scope.$watch('formData.transactionDate',function(){
+                    scope.onDateChange();
+                });
+                scope.onDateChange = function(){
+                    scope.routeToLoan = function (id) {
+                        location.path('/viewloanaccount/' + id);
+                    };
+                    scope.routeToSaving = function (id, depositTypeCode) {
+                        if (depositTypeCode === "depositAccountType.savingsDeposit") {
+                            location.path('/viewsavingaccount/' + id);
+                        } else if (depositTypeCode === "depositAccountType.fixedDeposit") {
+                            location.path('/viewfixeddepositaccount/' + id);
+                        } else if (depositTypeCode === "depositAccountType.recurringDeposit") {
+                            location.path('/viewrecurringdepositaccount/' + id);
+                        }
+                    };
+        };
 
                 var clientStatus = new mifosX.models.ClientStatus();
 
@@ -185,7 +201,12 @@
                 };
             };
 
-            resourceFactory.clientAccountResource.get({clientId: routeParams.id, command: 'loanrepaymentamount'}, function (data) {
+
+            //resourceFactory. clientAccountChargeResource.get({clientId:routeParams.id ,command: 'loanrepaymentamount'},function(data){
+            //    scope.newData = data;
+            //});
+
+            resourceFactory.clientAccountChargeResource.get({clientId: routeParams.id, command: 'loanrepaymentamount'}, function (data) {
                 scope.clientAccounts = data;
                 if(data.paymentTypeOptions != null){
                     scope.paymentTypes = data.paymentTypeOptions;
@@ -232,6 +253,14 @@
                         }
                     }
                 }
+
+                for (var l in scope.savingsAccounts){
+                    if(scope.savingsAccounts[l].active){
+                        if(scope.savingsAccounts[l].charges !=null && scope.savingsAccounts[l].charges!=""){
+                            scope.formData.totalAmount= scope.formData.totalAmount+scope.savingsAccounts[l].charges;
+                        }
+                    }
+                }
             };
 
             scope.submitPayments = function(){
@@ -255,7 +284,8 @@
                                 request.method = "POST";
                                 request.headers = headers;
                                 var bodyJson = "{";
-                                bodyJson += "\"transactionAmount\":\"" + scope.loanAccounts[l].repaymentAmount + "\"";
+                                bodyJson += "\"transactionAmount\":\"" + scope.loanAccounts[l].repaymentAmount + "\""
+                                +loanAccounts[l].charges;
                                 bodyJson += ",\"transactionDate\":\"" + today + "\"";
 
                                 if(scope.formData.paymentTypeId != undefined) {
@@ -305,7 +335,8 @@
                                 request.method = "POST";
                                 request.headers = headers;
                                 var bodyJson = "{";
-                                bodyJson += "\"transactionAmount\":\"" + scope.savingsAccounts[s].depositAmount + "\"";
+                                bodyJson += "\"transactionAmount\":\"" + scope.savingsAccounts[s].depositAmount + "\""
+                                +scope.savingsAccounts[s].charges;
                                 bodyJson += ",\"transactionDate\":\"" + today + "\"";
 
                                 if(scope.formData.paymentTypeId != undefined) {

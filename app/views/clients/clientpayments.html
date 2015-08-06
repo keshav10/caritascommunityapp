@@ -25,7 +25,7 @@
 
 	<div class="col-md-12 col-sm-12">
 		<div class="row client">
-			<div class="col-sm-10 col-md-10 paddingleft0px">
+			<div class="col-sm-12 col-md-12 paddingleft0px">
 				<div data-ng-show="loanAccounts || savingsAccounts">
 					<form name="clientpayments" class="form-horizontal well">
 						<api-validate></api-validate>
@@ -40,6 +40,7 @@
 									<th>{{'label.heading.dueamount' | translate}}</th>
 									<th>{{'label.heading.type' | translate}}</th>
 									<th>{{'label.heading.loans.repayments' | translate}}</th>
+									<th>{{'label.heading.charges' |translate}}</th>
 								</tr>
 								<tr ng-repeat="loanaccount in loanAccounts | orderBy:'id':true | filter:isLoanNotClosed">
 									<td><input id="actualDisbursementDate" type="hidden" name="actualDisbursementDate" ng-model="loanaccount.timeline.actualDisbursementDate"/></td>
@@ -65,29 +66,29 @@
 										<input class="col-sm-8" id="repaymentAmount" type="text" name="repaymentAmount"
 											   ng-model="loanaccount.repaymentAmount" ng-keyup="keyPress()" class="form-control" number-format />
 										<input id="loanactiveCheckbox" ng-change="keyPress()" ng-model="loanaccount.active"
-												ng-init="loanaccount.active=true" ng-checked="true" type="checkbox" />
-									</td>
+												ng-init="loanaccount.active=true" ng-checked="true" type="checkbox"/></td>
+									<td class="pointer" data-ng-click="routeToLoan(loanaccount.id)"> &nbsp;&nbsp;&nbsp;&nbsp;{{loanaccount.charges|number}}</td>
 								</tr>
 								<tr class="graybg" data-ng-show="savingsAccounts">
 									<th>{{'label.heading.deposits' | translate}}</th>
 									<th>{{'label.heading.accnum' | translate}}</th>
 									<th>{{'label.heading.savingaccount' | translate}}</th>
+									<th></th>
 									<th class="center">{{'label.heading.balance' | translate}}</th>
 									<th></th>
 									<th></th>
-									<th></th>
 									<th>{{'label.heading.savings.deposits' | translate}}</th>
+									<th>{{'label.heading.charges'|translate}}</th>
 								</tr>
 								<tr ng-repeat="savingaccount in savingsAccounts | orderBy:'id':true | filter:isSavingNotClosed">
 									<td><input id="activatedOnDate" type="hidden" name="activatedOnDate" ng-model="savingaccount.timeline.activatedOnDate"/></td>
-
 									<td class="pointer" data-ng-click="routeToSaving(savingaccount.id, savingaccount.depositType.code)">
 										<i tooltip-placement="right" tooltip="{{savingaccount.status.value}}" class="icon-stop {{savingaccount.status.code | StatusLookup}}"></i>
 										{{savingaccount.accountNo}}
 									</td>
 									<td class="pointer" data-ng-click="routeToSaving(savingaccount.id, savingaccount.depositType.code)">{{savingaccount.productName}}</td>
-									<td class="pointer center" data-ng-click="routeToSaving(savingaccount.id, savingaccount.depositType.code)">{{savingaccount.accountBalance|number}}</td>
 									<td></td>
+									<td class="pointer center" data-ng-click="routeToSaving(savingaccount.id, savingaccount.depositType.code)">{{savingaccount.accountBalance|number}}</td>
 									<td></td>
 									<td></td>
 									<td ng-if="savingaccount.status.active"  align="right">
@@ -96,11 +97,15 @@
 										<input ng-hide="true" id="savingactiveCheckbox" ng-change="keyPress()" ng-model="savingaccount.active"
 											   ng-init="savingaccount.active=true" ng-checked="true" type="checkbox" />
 									</td>
+
+									<td class="pointer" data-ng-click="routeToSaving(savingaccount.id, savingaccount.depositType.code)">{{savingaccount.charges|number}}</td>
+
 								</tr>
 								<tr class="graybg">
 									<th colspan="7">{{'label.clientpayments.totalAmount' | translate}}</th>
 									<th><input class="col-sm-8" id="totalAmount" type="text" ng-disabled="true" name="totalAmount"
 											   ng-model="formData.totalAmount" class="form-control" number-format /></th>
+									<th></th>
 								</tr>
 							</table>
 						</div>
@@ -113,7 +118,7 @@
 											}}&nbsp;<span class="required">*</span></label>
 									</td>
 									<td class="col-sm-3">
-										<input id="submittedOnDate" sort type="text" datepicker-pop="dd MMMM yyyy" ng-model="formData.submittedOnDate" is-open="opened" max="restrictDate" class="form-control"/>
+										<input id="submittedOnDate" ng-change="onDateChange()" sort type="text" datepicker-pop="dd MMMM yyyy" ng-model="formData.submittedOnDate" is-open="opened" max="restrictDate" class="form-control"/>
 									</td>
 									<td>&nbsp;</td>
 									<td class="col-sm-3">
@@ -175,7 +180,7 @@
 							<div class="col-md-offset-5">
 								<button id="cancel" type="reset" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>
 								<button id="save" type="submit" ng-show="isDisabled" class="btn btn-primary" ng-click="submitPayments()">{{ 'label.button.save' | translate}}</button>
-								<button id="printreceiptcontent" ng-show="isDisabled" type="submit" class="btn btn-primary" ng-click="submitPaymentsAndPrint()">{{ 'label.button.submitandprint' | translate}}</button>
+								<button id="precipitant" ng-show="isDisabled" type="submit" class="btn btn-primary" ng-click="submitPaymentsAndPrint()">{{ 'label.button.submitandprint' | translate}}</button>
 							</div>
 
 							<div>

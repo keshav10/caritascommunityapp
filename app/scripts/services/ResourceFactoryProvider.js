@@ -41,7 +41,7 @@
                         update: { method: 'PUT'}
                     }),
                     clientResource: defineResource(apiVer + "/clients/:clientId/:anotherresource", {clientId: '@clientId', anotherresource: '@anotherresource'}, {
-                        getAllClients: {method: 'GET', params: {limit: 2500}},
+                        getAllClients: {method: 'GET', params: {limit:30000}},
                         getClientClosureReasons: {method: 'GET', params: {}},
                         getAllClientDocuments: {method: 'GET', params: {}, isArray: true},
                         update: { method: 'PUT'}
@@ -53,6 +53,9 @@
                         getAllClientDocuments: {method: 'GET', params: {}, isArray: true}
                     }),
                     clientAccountResource: defineResource(apiVer + "/clients/:clientId/accounts", {clientId: '@clientId'}, {
+                        getAllClients: {method: 'GET', params: {}}
+                    }),
+                    clientAccountChargeResource: defineResource(apiVer + "/clients/:clientId/clientsPayments", {clientId: '@clientId'}, {
                         getAllClients: {method: 'GET', params: {}}
                     }),
                     clientNotesResource: defineResource(apiVer + "/clients/:clientId/notes", {clientId: '@clientId'}, {
