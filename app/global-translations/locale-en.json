@@ -92,7 +92,10 @@
     "label.heading.savings.deposits":"Deposits",
     "label.heading.loans":"Loans",
     "label.heading.deposits":"Deposits",
-    "label.heading.charges":"Charges",
+    "label.heading.Loancharges":"Loan Charges",
+    "label.heading.Savingcharges":"Savings Charges",
+    "label.heading.addcharges":"Add Loan Charges",
+    "label.heading.addsavingcharges":"Add Savings Charges",
 
     "#Menu Links": "..",
     "label.menu.selectloanofficer": "Select Staff",

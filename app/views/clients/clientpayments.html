@@ -40,8 +40,11 @@
 									<th>{{'label.heading.dueamount' | translate}}</th>
 									<th>{{'label.heading.type' | translate}}</th>
 									<th>{{'label.heading.loans.repayments' | translate}}</th>
-									<th>{{'label.heading.charges' |translate}}</th>
+									<th>{{'label.heading.Loancharges' |translate}}</th>
+									<th>{{'label.heading.addcharges'|translate}}</th>
 								</tr>
+
+
 								<tr ng-repeat="loanaccount in loanAccounts | orderBy:'id':true | filter:isLoanNotClosed">
 									<td><input id="actualDisbursementDate" type="hidden" name="actualDisbursementDate" ng-model="loanaccount.timeline.actualDisbursementDate"/></td>
 
@@ -67,8 +70,104 @@
 											   ng-model="loanaccount.repaymentAmount" ng-keyup="keyPress()" class="form-control" number-format />
 										<input id="loanactiveCheckbox" ng-change="keyPress()" ng-model="loanaccount.active"
 												ng-init="loanaccount.active=true" ng-checked="true" type="checkbox"/></td>
-									<td class="pointer" data-ng-click="routeToLoan(loanaccount.id)"> &nbsp;&nbsp;&nbsp;&nbsp;{{loanaccount.charges|number}}</td>
-								</tr>
+									<td class="pointer" data-ng-click="routeToLoan(loanaccount.id)"> &nbsp;&nbsp;&nbsp;&nbsp;{{formData.charges}}
+									<i class="icon-question-sign" tooltip={{formData.chargeDescription}} tooltip-append-to-body="true"></i></td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a ng-click="showAddLoanCharges(loanaccount.id)">&nbsp;<i class="icon-plus icon-blue"></i></a>
+                                    </td>
+									</tr>
+
+
+
+									<!--
+									for addings savings charges
+									-->
+
+
+
+
+
+
+
+									<div ng-show="addLoanCharges==true">
+
+										<form class="form-horizontal well" novalidate="" name="loanchargeform" ng-submit="submit1()">
+											<api-validate></api-validate>
+											<fieldset>
+												<legend>{{ 'label.heading.addloancharge' | translate }}</legend>
+
+												<div class="form-group">
+													<label class="control-label col-sm-2" for="chargeId">{{ 'label.input.charge' | translate }}<span
+															class="required">*</span></label>
+
+													<div class="col-sm-3">
+														<select id="chargeId" ng-model="formData.chargeId" class="form-control"
+																ng-options="charge.id as (charge.name+' '+'('+charge.currency.name+')') for charge in charges"
+																value="{{charge.id}}" ng-change="selectCharge()">
+															<option value="">{{'label.selectcharge' | translate}}</option>
+														</select>
+													</div>
+												</div>
+												<div ng-hide="isCollapsed">
+													<div class="form-group">
+														<label class="control-label col-sm-2" for="amount">{{ 'label.input.amount' | translate }}<span
+																class="required">*</span></label>
+
+														<div class="col-sm-3">
+															<input id="amount" type="text" class="form-control" name="amount" ng-model="formData.amount" required
+																   number-format ng-late-Validate>
+														</div>
+														<div class="col-sm-3">
+						                         <span ng-show="loanchargeform.amount.$invalid">
+                                                            <small class="error">
+																{{ 'label.requiredfield' | translate }}
+															</small>
+                                                  </span>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-2">{{ 'label.input.chargecalculation' | translate }}</label>
+
+														<div class="col-sm-3">
+															<input type="text" class="form-control" value="{{chargeData.chargeCalculationType.value}}" readonly>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-2">{{ 'label.input.chargetime' | translate }}</label>
+
+														<div class="col-sm-3">
+															<input type="text" class="form-control" value="{{chargeData.chargeTimeType.value}}" readonly>
+														</div>
+													</div>
+													<div class="form-group" ng-show="chargeData.chargeTimeType.id==2">
+														<label class="control-label col-sm-2">{{ 'label.input.dueon' | translate }}<span
+																class="required">*</span></label>
+
+														<div class="col-sm-3">
+															<input id="dueDate" type="text" datepicker-pop="dd MMMM yyyy" class="form-control"
+																   placeholder="{{'label.input.duedate' | translate}}" ng-model="formData.dueDate"
+																   is-open="opened" min="minDate" max="'2020-06-22'"/>
+														</div>
+													</div>
+												</div>
+											</fieldset>
+											<div class="col-md-offset-3">
+												<button id="cancel1" type="reset" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate }}
+												</button>
+												<button id="save1" type="submit" class="btn btn-primary" ng-click="submitLoanCharge()" has-permission='CREATE_LOANCHARGE' ng-show="!isCollapsed">{{ 'label.button.save' |
+													translate }}
+												</button>
+											</div>
+										</form>
+
+									</div>
+
+
+
+
+
+
+
+
 								<tr class="graybg" data-ng-show="savingsAccounts">
 									<th>{{'label.heading.deposits' | translate}}</th>
 									<th>{{'label.heading.accnum' | translate}}</th>
@@ -78,7 +177,8 @@
 									<th></th>
 									<th></th>
 									<th>{{'label.heading.savings.deposits' | translate}}</th>
-									<th>{{'label.heading.charges'|translate}}</th>
+									<th>{{'label.heading.Savingcharges'|translate}}</th>
+									<th>{{'label.heading.addsavingcharges'|translate}}</th>
 								</tr>
 								<tr ng-repeat="savingaccount in savingsAccounts | orderBy:'id':true | filter:isSavingNotClosed">
 									<td><input id="activatedOnDate" type="hidden" name="activatedOnDate" ng-model="savingaccount.timeline.activatedOnDate"/></td>
@@ -97,18 +197,21 @@
 										<input ng-hide="true" id="savingactiveCheckbox" ng-change="keyPress()" ng-model="savingaccount.active"
 											   ng-init="savingaccount.active=true" ng-checked="true" type="checkbox" />
 									</td>
-
-									<td class="pointer" data-ng-click="routeToSaving(savingaccount.id, savingaccount.depositType.code)">{{savingaccount.charges|number}}</td>
-
+									<td class="pointer" data-ng-click="routeToLoan(savingaccount.id)"> &nbsp;&nbsp;&nbsp;&nbsp;{{formData.savingAccountCharges}}
+										<i class="icon-question-sign" tooltip={{formData.savingChargesDescription}} tooltip-append-to-body="true"></i></td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a ng-click="showAddSavingsCharges(savingaccount.id)">&nbsp;<i class="icon-plus icon-blue"></i></a>
+									</td>
 								</tr>
 								<tr class="graybg">
 									<th colspan="7">{{'label.clientpayments.totalAmount' | translate}}</th>
 									<th><input class="col-sm-8" id="totalAmount" type="text" ng-disabled="true" name="totalAmount"
 											   ng-model="formData.totalAmount" class="form-control" number-format /></th>
 									<th></th>
+									<th></th>
 								</tr>
 							</table>
 						</div>
+
 
 						<div>
 							<table class="table table-condensed">
