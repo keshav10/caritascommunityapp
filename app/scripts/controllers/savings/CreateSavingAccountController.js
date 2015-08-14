@@ -8,7 +8,7 @@
             scope.clientId = routeParams.clientId;
             scope.groupId = routeParams.groupId;
 			scope.date = {};
-            scope.showMsg = 'false';
+            scope.showMsg = false;
 			scope.date.submittedOnDate = new Date();
             if (routeParams.centerEntity) {
                 scope.centerEntity = true;
@@ -38,6 +38,7 @@
             });
 
             scope.changeProduct = function () {
+
                 scope.inparams.productId = scope.formData.productId;
                 resourceFactory.savingsTemplateResource.get(scope.inparams, function (data) {
 
@@ -47,7 +48,9 @@
 
                     for(var i in scope.charges){
                         if(data.charges[i].chargeTimeType.id == 12){
-                            scope.showMsg = 'true';
+                            scope.showMsg = true;
+                        }else{
+                            scope.showMsg = false;
                         }
                     }
 
@@ -78,6 +81,7 @@
                     if (data.withdrawalFeeType) scope.formData.withdrawalFeeType = data.withdrawalFeeType.id;
 
                 });
+
             };
 
             scope.addCharge = function (chargeId) {

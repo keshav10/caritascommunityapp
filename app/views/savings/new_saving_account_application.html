@@ -52,6 +52,7 @@
             <input ng-show="formData.productId" id="externalId" ng-model="formData.externalId" class="form-control"/>
         </td>
     </tr>
+
 </table>
 <hr data-ng-show="formData.productId"/>
 <label ng-show="data"><strong>{{ 'label.heading.terms' | translate }}</strong></label>
@@ -216,11 +217,9 @@
                             {{'label.'+labelchargeerror | translate}}
                         </small>
                       </span>
-              <span ng-show="showMsg">
-                  <small class="error">
-                      Deposit Late Fee Charge will be apply to this Saving Account
-                    </small>
-              </span>
+              <div ng-show="showMsg==true" align="center">
+                  <p class="error">Saving Deposit Late Fee Charge will be apply to this Account </p>
+              </div>
 
 
     <table class="table" width="100%" ng-show="charges.length>0">
