@@ -10,6 +10,29 @@
             scope.hideAccrualTransactions = false;
             scope.isHideAccrualsCheckboxChecked = true;
             scope.loandetails = [];
+
+            scope.showAddInvestment = true;
+
+            scope.routeToAddInvestment = function () {
+                scope.showAddInvestment = false;
+            };
+
+            resourceFactory.loanInvestmentResource.get({loanId: routeParams.id}, function (data) {
+                scope.loanInvestment = data;
+            });
+            scope.routeToDelete = function (saving_id) {
+                resourceFactory.loanInvestmentResource.delete({
+                    savingId: saving_id,
+                    loanId: routeParams.id
+                }, function (data) {
+                    route.reload();
+                });
+            }
+
+            scope.routeToSaving = function (saving_id) {
+                location.path('/viewsavingaccount/' + saving_id);
+            };
+
             scope.updateCheckBoxStatus = function (){
                 scope.isHideAccrualsCheckboxChecked = !scope.isHideAccrualsCheckboxChecked;
             };
@@ -631,8 +654,110 @@
 
                 return true;
             };
+
+
+
+              // this code for investment from loan side to adding the loan to particular saving investment
+
+
+                        scope.formDate = {};
+                        scope.groups = [];
+                        scope.names = [];
+                        scope.loans = [];
+                        resourceFactory.groupResource.getAllGroups(function (data) {
+                            scope.groups = data;
+                        });
+
+                       scope.gotoBack = function () {
+                           scope.showAddInvestment = true;
+                       };
+
+
+               scope.selectSaving = function (id) {
+                   scope.loan = [];
+                   resourceFactory.groupAccountResource.get({groupId: scope.formData.id}, function (data) {
+                       if (data.savingsAccounts) {
+                           scope.names = data.savingsAccounts;
+                           for (var i = 0; i < scope.names.length; i++) {
+                               scope.name = scope.names[i].productName;
+                               scope.acno = scope.names[i].accountNo;
+                               scope.fullname = scope.acno + '-' + scope.name;
+                               scope.loan.push({productName: scope.fullname, Id: scope.names[i].id});
+                           }
+                       }
+                       else {
+                           scope.names = null;
+                           scope.loans = null;
+                       }
+                       scope.loans = scope.loan;
+                   });
+               };
+               scope.loanData = [];
+               scope.loanInvestment = [];
+               resourceFactory.loanInvestmentResource.get({loanId: routeParams.id}, function (data) {
+                   scope.loanInvestment = data;
+               });
+
+              scope.addInvestment = function (Id) {
+
+                  resourceFactory.savingsResource.get({
+                      accountId: scope.formData.Id,
+                      associations: 'all'
+                  }, function (data) {
+                      scope.savingData = data;
+                      if (scope.loanInvestment.length == 0) {
+                          scope.loanInvestment.push({
+                              name: scope.savingData.groupName,
+                              productname: scope.savingData.savingsProductName,
+                              accountno: scope.savingData.accountNo,
+                              savingamount: scope.savingData.summary.accountBalance,
+                              saving_id: scope.savingData.id,
+                              investedAmount: scope.formData.investedAmount
+                          });
+                      }
+                      else {
+                          var count = 0;
+                          for (var i = 0; i < scope.loanInvestment.length; i++) {
+                              if (scope.loanInvestment[i].saving_id == scope.savingData.id) {
+                                  count++;
+                                  alert(" Loan Account Already Added ....! ");
+                              }
+                          }
+                          if (count == 0) {
+                              scope.loanInvestment.push({
+                                  name: scope.savingData.groupName,
+                                  productname: scope.savingData.savingsProductName,
+                                  accountno: scope.savingData.accountNo,
+                                  savingamount: scope.savingData.summary.accountBalance,
+                                  saving_id: scope.savingData.id,
+                                  investedAmount: scope.formData.investedAmount
+                              });
+                          }
+                      }
+                  });
+                };
+
+
+                scope.submitData = function () {
+                    scope.savingId = [];
+                    scope.investedAmounts = [];
+
+                    for (var i = 0; i < scope.loanInvestment.length; i++) {
+                        scope.savingId.push(scope.loanInvestment[i].saving_id);
+                        scope.investedAmounts.push(scope.loanInvestment[i].investedAmount);
+                    }
+                    scope.loanId = routeParams.id;
+                    resourceFactory.loanInvestmentResource.save({
+                        savingId: this.savingId,
+                        loanId: this.loanId,
+                        investedAmounts: this.investedAmounts
+                    }, function (data) {
+                        scope.showAddInvestment = true;
+                    });
+            };
         }
     });
+
     mifosX.ng.application.controller('ViewLoanDetailsController', ['$scope', '$routeParams', 'ResourceFactory', '$location', '$route', '$http', '$modal', 'dateFilter', 'API_VERSION', '$sce', '$rootScope', mifosX.controllers.ViewLoanDetailsController]).run(function ($log) {
         $log.info("ViewLoanDetailsController initialized");
     });
