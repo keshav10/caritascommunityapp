@@ -296,6 +296,17 @@
                     savingsTemplateResource: defineResource(apiVer + "/savingsaccounts/template", {}, {
                         get: {method: 'GET', params: {}}
                     }),
+
+                    savingsInvestmentResource: defineResource(apiVer + "/savingsaccounts/:savingId/savingInvestment",{
+                        savingId:'@savingId'},{
+                        get: {method: 'GET', params: {}, isArray: true},
+                        delete:{method:'DELETE',params:{loanId: '@loanId'}}
+                    }),
+                    loanInvestmentResource: defineResource(apiVer + "/loans/:loanId/loanInvestment",{
+                        loanId: '@loanId'}, {
+                        get: {method: 'GET', params:{}, isArray: true},
+                        delete:{method: 'DELETE', params:{loanId: '@loanId'}}
+                    }),
                     savingsResource: defineResource(apiVer + "/savingsaccounts/:accountId/:resourceType/:chargeId", {accountId: '@accountId', resourceType: '@resourceType', chargeId: '@chargeId'}, {
                         get: {method: 'GET', params: {}},
                         getAllNotes: {method: 'GET', params: {}, isArray: true},
