@@ -24,6 +24,7 @@
             
             var UndoTransactionModel = function ($scope, $modalInstance, accountId, transactionId) {
                 $scope.undoTransaction = function () {
+                    alert("1");
                     var params = {loanId: accountId, transactionId: transactionId, command: 'undo'};
                     var formData = {dateFormat: scope.df, locale: scope.optlang.code, transactionAmount: 0};
                     formData.transactionDate = dateFilter(new Date(), scope.df);

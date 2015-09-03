@@ -96,6 +96,10 @@
     "label.heading.Savingcharges":"Savings Charges",
     "label.heading.addcharges":"Add Loan Charges",
     "label.heading.addsavingcharges":"Add Savings Charges",
+    "label.heading.applycharges":"Applied Charges",
+    "label.heading.chargeduedate":"charge Due Date",
+    "label.heading.Amount":"Amount",
+
 
     "#Menu Links": "..",
     "label.menu.selectloanofficer": "Select Staff",
@@ -1259,6 +1263,8 @@
     "label.input.grouptotal": "Group total",
     "label.input.centertotal": "Center total",
     "label.input.charge": "Charge",
+    "labe.input.addloancharge":"Add Loan Charge",
+    "label.input.savingscharge":"Add Savings Charge",
     "label.input.chargetime": "Charge time",
     "label.input.collateraltype": "Collateral type",
     "label.input.relationship": "Relationship",
@@ -1289,6 +1295,7 @@
     "label.input.actions": "Actions",
     "label.input.linksavings": "Link savings",
     "label.input.installment":"Select Installment",
+    "label.input.waiveloanchargeInstallment":"Select Installment No For Waive Charge",
     "label.input.loan.disbursaldate":"Disbursement date",
     "label.input.loan.approvaldate": "Approval date",
     "label.input.loan.createdondate": "Creation date",

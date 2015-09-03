@@ -247,6 +247,7 @@
                     } else if(this.formData.inactivationOnDate){
                         this.formData.inactivationOnDate = dateFilter(this.formData.inactivationOnDate, scope.df);
                     }
+                    alert(routeParams.chargeId);
                     resourceFactory.savingsResource.save(params, this.formData, function (data) {
                         location.path('/viewsavingaccount/' + data.savingsId);
                     });
