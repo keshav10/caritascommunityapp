@@ -806,13 +806,44 @@
                     </tab>
 
                     <tab heading="Investment"  has-permission="CREATE_LOANINVESTMENT">
+                        <api-validate></api-validate>
 
                         <div ng-show="showAddInvestment">
-                            <div has-permission="CREATE_LOANINVESTMENT">
+                            <div ng-hide = "editId" has-permission="CREATE_LOANINVESTMENT">
                                 <button class="btn btn-primary pull-right" ng-click="routeToAddInvestment()"><i class="icon-plus icon-white"></i> {{'label.button.addinvestment' | translate}}</button>
                             </div>
                             <br>
-                            <table class="table" has-permission="CREATE_LOANINVESTMENT">
+                            <div ng-show = "editId">
+                              <div class="col-sm-3">
+                                  <select chosen="groups" id="ids" ng-model="formData.ids"  class="form-control"
+                                        ng-change="selectSaving(formData.ids)"
+                                        ng-options="group.id as group.name for group in groups" value="{{group.id}}">
+                                      <option value="">--Select Group --</option>
+                                   </select>
+                               </div>
+
+
+                              <div class="col-sm-3">
+                                <select chosen="loans" ng-model="formData.Ids"  class="form-control"
+                                        ng-options="ln.Id as ln.productName for ln in loans" value="{{ln.Id}}">
+                                    <option value="">--Select Saving --</option>
+                                </select>
+                               </div>
+
+
+                              <label class="control-label col-sm-2"> Investment Amount </label>
+                              <div class="col-sm-2">
+                                <input type="text" id="investedAmounts" name="investedAmount" ng-model="formData.investedAmounts"  class="form-control" number-format required late-Validate/>
+                               </div>
+
+                                <div class="col-md-offset-5 center">
+                                    <button class="btn btn-primary" ng-click="gotoBack()"> {{'label.button.cancel' | translate}}</button>
+                                    <button id="update" type="submit" ng-click="submit()" class="btn btn-primary"  ng-hide="blockUI"> Update</button>
+                                    <button class="btn btn-info" ng-show="blockUI"><strong>{{'label.button.processing' | translate}}</strong></button>
+                                </div>
+                            </div>
+
+                            <table ng-hide = "editId" class="table" has-permission="CREATE_LOANINVESTMENT">
                                 <thead>
                                 <tr class="graybg">
                                     <th> {{'label.heading.groupname' | translate}} </th>
@@ -829,9 +860,12 @@
                                     <td class="pointer" data-ng-click="routeToSaving(loan.saving_id)">{{loan.name}}</td>
                                     <td class="pointer" data-ng-click="routeToSaving(loan.saving_id)"> {{loan.productname}}</td>
                                     <td class="pointer" data-ng-click="routeToSaving(loan.saving_id)">{{loan.accountno}}</td>
-                                    <td class="pointer" data-ng-click="routeToSaving(loan.saving_id)"> {{loan.savingamount}}</td>
-                                    <td class="pointer" data-ng-click="routeToSaving(loan.saving_id"> {{ loan.investedAmount}}</td>
-                                    <td><a class="btn btn-danger" data-ng-click="routeToDelete(loan.saving_id)"><i class="icon-trash "></i></a></td>
+                                    <td class="pointer" data-ng-click="routeToSaving(loan.saving_id)">{{loan.savingamount | number}}</td>
+                                    <td class="pointer" data-ng-click="routeToSaving(loan.saving_id)">{{loan.investedAmount | number}}</td>
+                                    <td><a class="btn btn-danger" data-ng-click="routeToDelete(loan.saving_id)"><i class="icon-trash "></i></a>
+                                        <a class="btn btn-primary ng-binding " data-ng-click="ToEdit(loan.saving_id,loan.group_id,loan.investedAmount)">
+                                            <i class="icon-edit icon-white"></i>
+                                        </a></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -864,7 +898,17 @@
 
                                     <label class="control-label col-sm-2"> Investment Amount </label>
                                     <div class="col-sm-2">
-                                        <input type="text" id="investedAmount" name="investedAmount" ng-model="formData.investedAmount"  class="form-control"/>
+                                        <input type="text" id="investedAmount" name="investedAmount" ng-model="formData.investedAmount"  class="form-control" number-format required late-Validate/>
+                                        <div ng-show="ifNoFunds">
+                                            <p class = "error"> No Funds Available  </p>
+                                        </div>
+                                        <div ng-show = "accountexists">
+                                            <label class ="error">Already Invested</label>
+                                        </div>
+
+                                        <div ng-show="lessloanamount" class = "error">
+                                            Investing More than LoanAmount
+                                        </div>
                                     </div>
 
                                     <div class="col-md-1">
@@ -889,8 +933,8 @@
                                             <td>{{investment.name}}</td>
                                             <td> {{investment.productname}}</td>
                                             <td>{{investment.accountno}}</td>
-                                            <td> {{investment.savingamount}}</td>
-                                            <td> {{investment.investedAmount}}</td>
+                                            <td> {{investment.savingamount | number}}</td>
+                                            <td> {{investment.investedAmount | number}}</td>
                                         </tr>
                                    </tbody>
                                     </table>

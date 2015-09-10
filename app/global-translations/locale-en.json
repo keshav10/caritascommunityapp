@@ -1870,6 +1870,9 @@
 
 
     "#Enumeration & Error Messages": "..",
+    "error.msg.loan.exists":"Already Invested",
+    "error.msg.more.loanammount":"Investing more than LoanAmount",
+    "error.msg.funds.NotAvailable":"No funds Available to Invest",
     "savings.interest.rate.savingsPeriodFrequencyType.days": "Per day",
     "savings.interest.rate.savingsPeriodFrequencyType.weeks": "Per week",
     "savings.interest.rate.savingsPeriodFrequencyType.months": "Per month",

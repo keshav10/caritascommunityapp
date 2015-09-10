@@ -11,15 +11,40 @@
             scope.savingaccountdetails = [];
             scope.offices = [];
             scope.showAddInvestment = true;
-
+            scope.loanInvestment = [];
+            scope.editId = 0;
+            scope.editclientId = 0;
             scope.routeToLoan = function (loan_id) {
                 location.path('/viewloanaccount/' + loan_id);
             };
             scope.routeToAddInvestment = function(){
                 scope.showAddInvestment = false;
             };
+
+
+            scope.ToEdit = function(id,clientId,amount){
+
+                scope.editId = id;
+                scope.editClientId = clientId;
+                scope.formData.investedAmounts = amount;
+                scope.oldAmount = amount;
+                resourceFactory.clientResource.getAllClients(function(data){
+
+                    scope.editclients = data.pageItems;
+                    for(var i in scope.editclients){
+                        if(scope.editclients[i].id == scope.editClientId)
+                        {
+                            scope.formData.ids = scope.editclients[i].id;
+                        }
+                    }
+                });
+                scope.selectLoans(clientId);
+
+
+            };
             resourceFactory.savingsInvestmentResource.get({savingId: routeParams.id},function (data) {
                 scope.loans = data;
+
             });
             resourceFactory.savingsResource.get({accountId: routeParams.id, associations: 'all'}, function (data){
                 scope.saving = data;
@@ -443,17 +468,27 @@
             scope.clients = [];
             scope.names = [];
             scope.loans = [];
+
             resourceFactory.clientResource.getAllClients(function(data){
+
                scope.clients = data.pageItems;
+
+
+
             });
 
            scope.gotoBack = function(){
-                    scope.showAddInvestment = true;
+               scope.showAddInvestment = true;
+               scope.editId = 0;
+               route.reload();
+
            };
 
           scope.selectLoans = function(id) {
+
+
                 scope.loan = [];
-                resourceFactory.clientAccountResource.get({clientId: scope.formData.id}, function (data) {
+                resourceFactory.clientAccountResource.get({clientId: id}, function (data) {
 
                 if(data.loanAccounts) {
                     scope.names = data.loanAccounts;
@@ -461,6 +496,7 @@
                         scope.name = scope.names[i].productName;
                         scope.acno = scope.names[i].accountNo;
                         scope.fullname = scope.acno + '-' + scope.name;
+                        if(scope.names[i].status.value == 'Active')
                         scope.loan.push({productName: scope.fullname, Id: scope.names[i].id});
                     }
                 }
@@ -469,6 +505,15 @@
                     scope.loans = null;
                 }
                 scope.loans = scope.loan;
+
+                        for(var i in scope.loans) {
+                            if(scope.loans[i].Id == scope.editId) {
+                                scope.formData.Ids = scope.loans[i].Id;
+                                scope.oldLoanId = scope.formData.Ids;
+                            }
+                        }
+
+
             });
         };
 
@@ -478,37 +523,90 @@
              scope.savingInvestment = data;
          });
 
+
          scope.addInvestment = function(Id){
-
+             scope.ifNoFunds = false;
+             scope.lessloanamount = false;
+             scope.accountexists = false;
               resourceFactory.LoanAccountResource.getLoanAccountDetails({loanId: scope.formData.Id , associations: 'all',exclude: 'guarantors'}, function (data) {
+
                   scope.loanData = data;
-                  if(scope.savingInvestment.length==0) {
-                      scope.savingInvestment.push({
-                          name: scope.loanData.clientName, productname: scope.loanData.loanProductName,
-                          accountno: scope.loanData.accountNo, loanammount: scope.loanData.principal,  loan_id: scope.loanData.id,
-                          investedAmount: scope.formData.investedAmount
-                      });
-                  }
-                  else{
-                            var count = 0;
-                            for(var i=0 ; i<scope.savingInvestment.length ; i++){
+                  var check = 0;
 
-                                if(scope.savingInvestment[i].loan_id == scope.loanData.id){
-                                    count ++;
-                                    alert(" Loan Account Already Added ....! ");
-                                }
-                            }
+                  resourceFactory.loanInvestmentResource.get({loanId: scope.loanData.id}, function (data) {
 
-                      if(count == 0){
-                          scope.savingInvestment.push({
-                              name: scope.loanData.clientName, productname: scope.loanData.loanProductName,
-                              accountno: scope.loanData.accountNo, loanammount: scope.loanData.principal, loan_id: scope.loanData.id,
-                              investedAmount: scope.formData.investedAmount
-                          });
+                      scope.loanInvestment = data;
+                      for (var i in scope.loanInvestment){
+                          if(scope.loanInvestment[i].investedAmount) {
+                              check = check + parseInt(scope.loanInvestment[i].investedAmount);
+                          }
                       }
-                    }
+
+
+                   var sum = 0 ;
+
+                   for (var i in scope.savingInvestment) {
+                      if(scope.savingInvestment[i].investedAmount) {
+                          sum = sum + parseInt(scope.savingInvestment[i].investedAmount);
+                      }
+                   }
+
+
+                   if(scope.formData.investedAmount <= scope.loanData.principal-check) {
+
+
+                      if (scope.formData.investedAmount <= scope.savingaccountdetails.summary.accountBalance-sum) {
+
+                          if (scope.savingInvestment.length == 0) {
+
+                              scope.savingInvestment.push({
+                                  name: scope.loanData.clientName, productname: scope.loanData.loanProductName,
+                                  accountno: scope.loanData.accountNo, loanammount: scope.loanData.principal, loan_id: scope.loanData.id,
+                                  investedAmount: scope.formData.investedAmount
+                              });
+
+                          }
+                          else {
+                              var count = 0;
+                              for (var i = 0; i < scope.savingInvestment.length; i++) {
+
+                                  if (scope.savingInvestment[i].loan_id == scope.loanData.id) {
+                                      count++;
+                                      scope.accountexists = true;
+                                  }
+                              }
+
+                              if (count == 0) {
+                                  scope.savingInvestment.push({
+                                      name: scope.loanData.clientName, productname: scope.loanData.loanProductName,
+                                      accountno: scope.loanData.accountNo, loanammount: scope.loanData.principal, loan_id: scope.loanData.id,
+                                      investedAmount: scope.formData.investedAmount
+                                  });
+                              }
+                          }
+
+                      }
+                      else {
+
+                          scope.ifNoFunds = true;
+
+                      }
+                   }
+                   else{
+                      scope.lessloanamount = true;
+                   }
+                  });
             });
-    };
+
+     };
+
+            scope.submit = function(){
+                resourceFactory.savingsInvestmentResource.update({'savingId': routeParams.id, loanId: this.formData.Ids, oldLoanId: this.oldLoanId,oldAmount: this.oldAmount,   investedAmounts: this.formData.investedAmounts}, function (data) {
+                    scope.changes = data;
+                    route.reload();
+                });
+            }
+
 
 
             scope.submitData = function(){
@@ -526,7 +624,7 @@
             });
             };
          }
-   });
+       });
 
 
     mifosX.ng.application.controller('ViewSavingDetailsController', ['$scope', '$routeParams', 'ResourceFactory', '$location','$modal', '$route', 'dateFilter', '$sce', '$rootScope', 'API_VERSION', mifosX.controllers.ViewSavingDetailsController]).run(function ($log) {
