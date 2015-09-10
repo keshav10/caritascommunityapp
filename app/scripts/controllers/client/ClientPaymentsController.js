@@ -732,6 +732,7 @@
 
                                 requests[req++] = request;
                                 requestId++
+                               alert(scope.formData.paymentTypeId);
 
                             } else {
                                 submitProcess = false;
