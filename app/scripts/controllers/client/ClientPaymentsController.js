@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        ClientPaymentsController: function (scope,routeParams, route, location, resourceFactory, http, $modal, API_VERSION, $rootScope, $upload, dateFilter, $sce) {
+        ClientPaymentsController: function (scope, routeParams, route, location, resourceFactory, http, $modal, API_VERSION, $rootScope, $upload, dateFilter, $sce,$location) {
             scope.client = [];
             scope.identitydocuments = [];
             scope.buttons = [];
@@ -29,6 +29,9 @@
             scope.chargeid1=0;
             scope.waiveSavingChargeData ={};
             scope.chargeAmount=0;
+            scope.pageUrl=$location.path();
+            scope.pageUrlSplit=[];
+            scope.pageUrlSplit=scope.pageUrl.split("/");
             scope.isDisabled = true;
             scope.showinstallmentCharge=false;
 
@@ -205,10 +208,12 @@
                 };
             };
 
+
             resourceFactory.clientAccountChargeResource.get({
                 clientId: routeParams.id,
                 command: 'loanrepaymentamount'
             }, function (data) {
+
                 scope.clientAccounts = data;
                 if (data.paymentTypeOptions != null) {
                     scope.paymentTypes = data.paymentTypeOptions;
@@ -269,6 +274,7 @@
                 }
             });
 //       on changing the date:-
+
 
             scope.$watch('formData.submittedOnDate',function(){
                 scope.onDateChange();
@@ -347,7 +353,9 @@
             };
 
 
-            scope.keyPress = function () {
+
+
+            scope.keyPress = function(){
                 scope.formData.totalAmount = 0;
                 for (var l in scope.loanAccounts) {
                     if (scope.loanAccounts[l].active) {
@@ -635,11 +643,13 @@
 
                                 requests[req++] = request;
                                 requestId++
-                            } else {
+
+                            } else{
                                 submitProcess = false;
                                 alert("Loan Account : " + scope.loanAccounts[l].id + "\nTransaction date cannot be before account activation date.");
                                 return;
                             }
+
                         }
                     }
                 }
@@ -753,25 +763,31 @@
                     alert("please enter bank date");
                     return;
                 }
-                if (submitProcess) {
+
+                if(submitProcess){
                     http({
                         method: 'POST',
-                        url: $rootScope.hostUrl + API_VERSION + '/batches/',
+                        url: $rootScope.hostUrl + API_VERSION + '/batches?enclosingTransaction=true',
                         dataType: 'json',
                         data: requests
-                    }).success(function (data) {
-                        location.path('/viewclient/' + routeParams.id);
-                    }).error(function (data) {
-
+                    }).success(function(data,status){
+                        if(data.length==0){
+                            alert("Loan Transaction cannot be before the last transaction date");
+                            return;
+                        }else{
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].statusCode === 200)
+                                    location.path('/viewclient/' + routeParams.id);
+                            }}
+                    }).error(function(error){
                     });
-                } else {
+                }
+                else{
                     alert("Please enter amount");
                 }
-
             };
 
-
-            scope.submitPaymentsAndPrint = function () {
+            scope.submitPaymentsAndPrint = function(){
                 var requests = [];
                 var d = scope.formData.submittedOnDate;
                 var today = formatDate(d);
@@ -810,8 +826,10 @@
                                 if (scope.formData.routingCode != undefined) {
                                     bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
                                 }
-                                if (scope.formData.bankNumber != undefined) {
-                                    bodyJson += ",\"bankNumber\":\"" + scope.formData.bankNumber + "\"";
+
+                                if(scope.formData.bankNumber != undefined) {
+                                    var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
+                                    bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
                                 }
 
                                 bodyJson += ",\"locale\":\"en\"";
@@ -859,8 +877,11 @@
                                 if (scope.formData.routingCode != undefined) {
                                     bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
                                 }
-                                if (scope.formData.bankNumber != undefined) {
-                                    bodyJson += ",\"bankNumber\":\"" + scope.formData.bankNumber + "\"";
+
+                                if(scope.formData.bankNumber != undefined) {
+                                    var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
+                                    bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
+
                                 }
 
                                 bodyJson += ",\"locale\":\"en\"";
@@ -925,43 +946,50 @@
                     }
                 }
 
-                if (submitProcess) {
+                if(submitProcess){
                     http({
                         method: 'POST',
-                        url: $rootScope.hostUrl + API_VERSION + '/batches/',
+                        url: $rootScope.hostUrl + API_VERSION + '/batches/?enclosingTransaction=true',
                         dataType: 'json',
                         data: requests
-                    }).success(function (data) {
-                        scope.isDisabled = false;
-                        var tDate = dateFilter(scope.formData.submittedOnDate, 'yyyy-MM-dd');
-                        var reciptNo = scope.formData.receiptNumber;
+                    }).success(function(data){
+                        if(data.length==0){
+                            alert("Loan Transaction cannot be before the last transaction date");
+                            return;
+                        }else{
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].statusCode === 200){
+                                    scope.isDisabled = false;
+                                    var tDate = dateFilter(scope.formData.submittedOnDate, 'yyyy-MM-dd');
+                                    var reciptNo = scope.formData.receiptNumber;
 
-                        scope.printbtn = true;
-                        scope.hidePentahoReport = true;
-                        scope.formData.outputType = 'PDF';
-                        scope.baseURL = $rootScope.hostUrl + API_VERSION + "/runreports/" + encodeURIComponent("Payment Receipts");
-                        scope.baseURL += "?output-type=" + encodeURIComponent(scope.formData.outputType) + "&tenantIdentifier=" + $rootScope.tenantIdentifier + "&locale=" + scope.optlang.code;
+                                    scope.printbtn = true;
+                                    scope.hidePentahoReport = true;
+                                    scope.formData.outputType = 'PDF';
+                                    scope.baseURL = $rootScope.hostUrl + API_VERSION + "/runreports/" + encodeURIComponent("Payment Receipts");
+                                    scope.baseURL += "?output-type=" + encodeURIComponent(scope.formData.outputType) + "&tenantIdentifier=" + $rootScope.tenantIdentifier+"&locale="+scope.optlang.code;
 
-                        var reportParams = "";
-                        var paramName = "R_clientId";
-                        reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(routeParams.id) + "&";
-                        paramName = "R_tDate";
-                        reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(tDate) + "&";
-                        paramName = "R_reciptNo";
-                        if (reciptNo == undefined || reciptNo == "" || paramName == "-") {
-                            reciptNo = "-";
-                        }
-                        reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(reciptNo);
-                        if (reportParams > "") {
-                            scope.baseURL += "&" + reportParams;
-                        }
-                        // allow untrusted urls for iframe http://docs.angularjs.org/error/$sce/insecurl
-                        scope.baseURL = $sce.trustAsResourceUrl(scope.baseURL);
+                                    var reportParams = "";
+                                    var paramName = "R_clientId";
+                                    reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(routeParams.id)+ "&";
+                                    paramName = "R_tDate";
+                                    reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(tDate)+ "&";
+                                    paramName = "R_reciptNo";
+                                    if(reciptNo == undefined || reciptNo == "" || paramName == "-"){
+                                        reciptNo = "-";
+                                    }
+                                    reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(reciptNo);
+                                    if (reportParams > "") {
+                                        scope.baseURL += "&" + reportParams;
+                                    }
+                                    // allow untrusted urls for iframe http://docs.angularjs.org/error/$sce/insecurl
+                                    scope.baseURL = $sce.trustAsResourceUrl(scope.baseURL);
 
-                    }).error(function (data) {
-
+                                }
+                            }}
+                    }).error(function(data){
                     });
-                } else {
+                }else{
                     alert("Please enter amount");
                 }
             };
@@ -1369,7 +1397,7 @@
 
     });
 
-    mifosX.ng.application.controller('ClientPaymentsController', ['$scope', '$routeParams', '$route', '$location', 'ResourceFactory', '$http', '$modal', 'API_VERSION', '$rootScope', '$upload', 'dateFilter', '$sce', mifosX.controllers.ClientPaymentsController]).run(function ($log) {
+    mifosX.ng.application.controller('ClientPaymentsController', ['$scope', '$routeParams', '$route', '$location', 'ResourceFactory', '$http', '$modal', 'API_VERSION', '$rootScope', '$upload', 'dateFilter', '$sce','$location', mifosX.controllers.ClientPaymentsController]).run(function ($log) {
         $log.info("ClientPaymentsController initialized");
     });
 }(mifosX.controllers || {}));
