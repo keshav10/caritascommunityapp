@@ -342,14 +342,46 @@
                 </tab>
 
                 <tab heading="Investment"  has-permission="CREATE_SAVINGINVESTMENT">
+                    <api-validate></api-validate>
 
                                         <div ng-show="showAddInvestment">
-                                            <div has-permission="CREATE_SAVINGINVESTMENT">
+                                            <div ng-hide = "editId" has-permission="CREATE_SAVINGINVESTMENT">
                                                 <button class="btn btn-primary pull-right" ng-click="routeToAddInvestment()"><i class="icon-plus icon-white"></i> {{'label.button.addinvestment' | translate}}</button>
                                            </div>
                                         <br>
 
-                                            <table class="table" has-permission="CREATE_SAVINGINVESTMENT">
+                                            <div ng-show = "editId">
+
+                                                <div class="col-sm-3">
+                                                    <select chosen="editclients" id="ids" ng-model="formData.ids"  class="form-control"
+                                                            ng-change = " selectLoans(formData.ids)"
+                                                            ng-options="client.id as client.displayName for client in editclients" value="{{client.id}}">
+                                                        <option value="">---Select Client----</option>
+
+
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <select chosen="loans" ng-model="formData.Ids"  class="form-control"
+                                                            ng-options="ln.Id as ln.productName for ln in loans" value="{{ln.Id}}">
+                                                        <option value="">--Select Loan --</option>
+                                                    </select>
+                                                </div>
+                                                <label class="control-label col-sm-2">Investment Amount </label>
+
+                                                <div class="col-sm-2">
+                                                    <input type="text" id="investedAmounts" name="investedAmount" ng-model="formData.investedAmounts"  class="form-control" number-format required late-Validate/>
+                                                    </div>
+
+
+                                                <div class="col-md-offset-5 center">
+                                                    <button class="btn btn-primary" ng-click="gotoBack()"> {{'label.button.cancel' | translate}}</button>
+                                                    <button id="update" type="submit" ng-click="submit()" class="btn btn-primary"  ng-hide="blockUI"> Update</button>
+                                                    <button class="btn btn-info" ng-show="blockUI"><strong>{{'label.button.processing' | translate}}</strong></button>
+                                                </div>
+                                            </div>
+
+                                            <table ng-hide = "editId"class="table" has-permission="CREATE_SAVINGINVESTMENT">
                                                 <thead>
                                             <tr class="graybg">
                                                     <th>{{'label.heading.clientname' | translate}} </th>
@@ -362,18 +394,22 @@
                                                 </tr>
                                             </thead>
                                                 <tbody>
-                                            <tr class="pointer-main" ng-repeat="loan in loans |orderBy:'name':reverse">
-
+                                            <tr  class="pointer-main" ng-repeat="loan in loans |orderBy:'name':reverse">
+                                                <div>
                                                     <td class="pointer" data-ng-click="routeToLoan(loan.loan_id)">{{loan.name}}</td>
                                                     <td class="pointer" data-ng-click="routeToLoan(loan.loan_id)"> {{loan.productname}}</td>
                                                     <td class="pointer" data-ng-click="routeToLoan(loan.loan_id)">{{loan.accountno}}</td>
-                                                    <td class="pointer" data-ng-click="routeToLoan(loan.loan_id)"> {{loan.loanammount}}</td>
-                                                    <td class="pointer" data-ng-click="routeToLoan(loan.loan_id)"> {{ loan.investedAmount}}</td>
-                                                    <td>
+                                                    <td class="pointer" data-ng-click="routeToLoan(loan.loan_id)"> {{loan.loanammount | number}}</td>
+                                                    <td class="pointer" data-ng-click="routeToLoan(loan.loan_id)"> {{ loan.investedAmount | number}}</td>
+                                                    <td >
                                                         <a class="btn btn-danger" data-ng-click="routeToDelete(loan.loan_id)"><i class="icon-trash "></i></a>
-
+                                                        <a  class="btn btn-primary ng-binding " data-ng-click="ToEdit(loan.loan_id,loan.client_id,loan.investedAmount)">
+                                                            <i class="icon-edit icon-white"></i>
+                                                        </a>
                                                     </td>
-                                              </tr>
+                                                    </div>
+
+                                            </tr>
                                            </tbody>
                                             </table>
 
@@ -401,13 +437,29 @@
                                                              </select>
                                                         </div>
                                                         <label class="control-label col-sm-2">Investment Amount </label>
+
                                                         <div class="col-sm-2">
-                                                            <input type="text" id="investedAmount" name="investedAmount" ng-model="formData.investedAmount"  class="form-control"/>
+                                                            <input type="text" id="investedAmount" name="investedAmount" ng-model="formData.investedAmount"  class="form-control" number-format required late-Validate/>
+                                                            <div ng-show="ifNoFunds">
+                                                                <p class = "error"> No Available Funds  </p>
+                                                            </div>
+                                                            <div ng-show = "accountexists">
+                                                                <label class ="error">Already Invested</label>
+                                                            </div>
+
+                                                            <div ng-show="lessloanamount" class = "error">
+                                                                Investing More than LoanAmount
+                                                            </div>
+
+
                                                         </div>
+
+
 
                                                         <div class="col-md-1">
                                                             <a class="btn bg-primary" ng-click='addInvestment(formData.Id)'><i class="icon-plus"></i></a>
                                                         </div>
+
 
                                                     </div>
 
@@ -427,11 +479,12 @@
                                                                 <td>{{investment.name}}</td>
                                                                 <td> {{investment.productname}}</td>
                                                                 <td>{{investment.accountno}}</td>
-                                                               <td> {{investment.loanammount}}</td>
-                                                                <td>  {{investment.investedAmount}}</td>
+                                                               <td> {{investment.loanammount | number}}</td>
+                                                                <td>  {{investment.investedAmount | number}} </td>
                                                         </tr>
                                                        </tbody>
-                                                        </table>
+                                                     </table>
+
                                                     </div>
 
                                                     <div class="col-md-offset-5">

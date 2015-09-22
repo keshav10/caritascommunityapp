@@ -11,11 +11,34 @@
             scope.hideAccrualTransactions = false;
             scope.isHideAccrualsCheckboxChecked = true;
             scope.loandetails = [];
+            scope.editId = null;
+            scope.editgroupId = null;
 
             scope.showAddInvestment = true;
 
             scope.routeToAddInvestment = function () {
                 scope.showAddInvestment = false;
+            };
+
+            scope.ToEdit = function(id,groupId,amount){
+                scope.editId = id;
+                scope.editgroupId = groupId;
+                scope.formData.investedAmounts = amount;
+                scope.oldAmount = amount;
+                resourceFactory.groupResource.getAllGroups(function (data) {
+                    scope.groups = data;
+                });
+
+                    for(var i in scope.groups){
+                        if(scope.groups[i].id == scope.editgroupId)
+                        {
+                            scope.formData.ids = scope.groups[i].id;
+                        }
+                    }
+
+                scope.selectSaving(groupId);
+
+
             };
 
             resourceFactory.loanInvestmentResource.get({loanId: routeParams.id}, function (data) {
@@ -671,18 +694,20 @@
 
                        scope.gotoBack = function () {
                            scope.showAddInvestment = true;
+                           route.reload();
                        };
 
 
                scope.selectSaving = function (id) {
                    scope.loan = [];
-                   resourceFactory.groupAccountResource.get({groupId: scope.formData.id}, function (data) {
+                   resourceFactory.groupAccountResource.get({groupId: id}, function (data) {
                        if (data.savingsAccounts) {
                            scope.names = data.savingsAccounts;
                            for (var i = 0; i < scope.names.length; i++) {
                                scope.name = scope.names[i].productName;
                                scope.acno = scope.names[i].accountNo;
                                scope.fullname = scope.acno + '-' + scope.name;
+                               if(scope.names[i].status.value == 'Active')
                                scope.loan.push({productName: scope.fullname, Id: scope.names[i].id});
                            }
                        }
@@ -691,6 +716,12 @@
                            scope.loans = null;
                        }
                        scope.loans = scope.loan;
+                       for(var i in scope.loans) {
+                           if(scope.loans[i].Id == scope.editId) {
+                               scope.formData.Ids = scope.loans[i].Id;
+                               scope.oldSavingId = scope.formData.Ids;
+                           }
+                       }
                    });
                };
                scope.loanData = [];
@@ -700,43 +731,88 @@
                });
 
               scope.addInvestment = function (Id) {
+                  scope.ifNoFunds = false;
+                  scope.lessloanamount = false;
+                  scope.accountexists = false;
 
-                  resourceFactory.savingsResource.get({
-                      accountId: scope.formData.Id,
-                      associations: 'all'
-                  }, function (data) {
-                      scope.savingData = data;
-                      if (scope.loanInvestment.length == 0) {
-                          scope.loanInvestment.push({
-                              name: scope.savingData.groupName,
-                              productname: scope.savingData.savingsProductName,
-                              accountno: scope.savingData.accountNo,
-                              savingamount: scope.savingData.summary.accountBalance,
-                              saving_id: scope.savingData.id,
-                              investedAmount: scope.formData.investedAmount
-                          });
-                      }
-                      else {
-                          var count = 0;
-                          for (var i = 0; i < scope.loanInvestment.length; i++) {
-                              if (scope.loanInvestment[i].saving_id == scope.savingData.id) {
-                                  count++;
-                                  alert(" Loan Account Already Added ....! ");
+                      resourceFactory.savingsResource.get({
+                          accountId: scope.formData.Id,
+                          associations: 'all'
+                      }, function (data) {
+                          scope.savingData = data;
+
+                          var check = 0;
+
+                          resourceFactory.savingsInvestmentResource.get({savingId: scope.savingData.id},function (data) {
+
+                              scope.savingsInvestment = data;
+                              for (var i in scope.savingsInvestment) {
+                                  if (scope.savingsInvestment[i].investedAmount) {
+                                      check = check + parseInt(scope.savingsInvestment[i].investedAmount);
+                                  }
                               }
-                          }
-                          if (count == 0) {
-                              scope.loanInvestment.push({
-                                  name: scope.savingData.groupName,
-                                  productname: scope.savingData.savingsProductName,
-                                  accountno: scope.savingData.accountNo,
-                                  savingamount: scope.savingData.summary.accountBalance,
-                                  saving_id: scope.savingData.id,
-                                  investedAmount: scope.formData.investedAmount
-                              });
-                          }
-                      }
-                  });
+                              var sum = 0;
+
+                              for (var i in scope.loanInvestment) {
+                                  if (scope.loanInvestment[i].investedAmount) {
+                                      sum = sum + parseInt(scope.loanInvestment[i].investedAmount);
+                                  }
+                              }
+                              if(scope.formData.investedAmount <= scope.savingData.summary.accountBalance-check) {
+                                  if (scope.formData.investedAmount <= scope.loandetails.principal - sum) {
+
+                                      if (scope.loanInvestment.length == 0) {
+                                          scope.loanInvestment.push({
+                                              name: scope.savingData.groupName,
+                                              productname: scope.savingData.savingsProductName,
+                                              accountno: scope.savingData.accountNo,
+                                              savingamount: scope.savingData.summary.accountBalance,
+                                              saving_id: scope.savingData.id,
+                                              investedAmount: scope.formData.investedAmount
+                                          });
+                                      }
+                                      else {
+                                          var count = 0;
+                                          for (var i = 0; i < scope.loanInvestment.length; i++) {
+                                              if (scope.loanInvestment[i].saving_id == scope.savingData.id) {
+                                                  count++;
+                                                  scope.accountexists = true;
+                                              }
+                                          }
+                                          if (count == 0) {
+                                              scope.loanInvestment.push({
+                                                  name: scope.savingData.groupName,
+                                                  productname: scope.savingData.savingsProductName,
+                                                  accountno: scope.savingData.accountNo,
+                                                  savingamount: scope.savingData.summary.accountBalance,
+                                                  saving_id: scope.savingData.id,
+                                                  investedAmount: scope.formData.investedAmount
+                                              });
+                                          }
+                                      }
+                                  }
+                                  else {
+                                      scope.lessloanamount = true;
+
+                                  }
+                              }
+                              else{
+                                  scope.ifNoFunds = true;
+
+                              }
+                          });
+                      });
+
                 };
+
+            scope.submit = function(){
+                resourceFactory.loanInvestmentResource.update({loanId: routeParams.id, savingId: this.formData.Ids, oldSavingId: this.oldSavingId,oldAmount: this.oldAmount,   investedAmounts: this.formData.investedAmounts}, function (data) {
+                    scope.changes = data;
+                    route.reload();
+                });
+
+
+            }
 
 
                 scope.submitData = function () {
