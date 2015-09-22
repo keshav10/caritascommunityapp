@@ -927,6 +927,27 @@
                                         var bodyJson = "{";
                                         bodyJson += "\"amount\":\"" + scope.chargeAmount + "\"";
                                         bodyJson += ",\"dueDate\":\"" + today + "\"";
+                                        if (scope.formData.paymentTypeId != undefined) {
+                                            bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
+                                        }
+                                        if (scope.formData.receiptNumber != undefined) {
+                                            bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
+                                        }
+                                        if (scope.formData.accountNumber != undefined) {
+                                            bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
+                                        }
+                                        if (scope.formData.checkNumber != undefined) {
+                                            bodyJson += ",\"checkNumber\":\"" + scope.formData.checkNumber + "\"";
+                                        }
+                                        if (scope.formData.routingCode != undefined) {
+                                            bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
+                                        }
+
+                                        if(scope.formData.bankNumber != undefined) {
+                                            var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
+                                            bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
+
+                                        }
                                         bodyJson += ",\"locale\":\"en\"";
                                         bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
                                         bodyJson += "}";
