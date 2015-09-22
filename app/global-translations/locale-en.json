@@ -3448,6 +3448,12 @@
 
     "------------------": "------------",
 
+    "#----------------------": "------------",
+
+    "#uploadxls": "....",
+    "label.anchor.uploadxls" :" Upload Xls",
+    "label.view.uploadxls" : "upload xls for mpesa",
+
     "#Entity to mapping": "....",
     "office_access_to_loan_products":"Offices --> Loan Products",
     "office_access_to_savings_products":"Offices --> Savings Products",

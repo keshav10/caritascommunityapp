@@ -141,6 +141,7 @@ define(['Q', 'underscore', 'mifosX'], function (Q) {
             'organization/HolController',
             'organization/ViewHolController',
             'organization/EditHolidayController',
+            'organization/UploadxlsController',
             'organization/AddHolController',
             'reports/ViewReportsController',
             'organization/EditHolidayController',

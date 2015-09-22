@@ -721,6 +721,9 @@
             .when('/editteller/:id', {
                 templateUrl: 'views/organization/cashmgmt/editTeller.html'
             })
+            .when('/uploadxls/', {
+                templateUrl: 'views/organization/uploadxls.html'
+            })
             ;
         $locationProvider.html5Mode(false);
     };
