@@ -2,7 +2,20 @@
     <ul class="breadcrumb">
         <li class="active">Mpesa</li>
     </ul>
-    <api-validate></api-validate>
+    <ul></ul>
+    <div>
+        <table>
+            <tr>
+                <td ng-click="search('mobileNo')" class="btn btn-default">{{'Find by Mobile No' | translate}}</td>
+                <td ng-click="search('TxnDate')" class="btn btn-default">{{'Find by Transaction Date' | translate}}</td>
+                <td ng-click="search('status')" class="btn btn-default">{{'Find by Status' | translate}}</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        
+    </div>
+    <ul></ul>
     <table class="table">
         <thead>
         <tr class="graybg">
