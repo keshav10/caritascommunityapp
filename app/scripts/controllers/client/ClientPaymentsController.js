@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        ClientPaymentsController: function (scope, routeParams, route, location, resourceFactory, http, $modal, API_VERSION, $rootScope, $upload, dateFilter, $sce,$location) {
+        ClientPaymentsController: function (scope, routeParams, route, location, resourceFactory, http, $modal, API_VERSION, $rootScope, $upload, dateFilter, $sce,$location,$http,$q) {
             scope.client = [];
             scope.identitydocuments = [];
             scope.buttons = [];
@@ -34,6 +34,20 @@
             scope.pageUrlSplit=scope.pageUrl.split("/");
             scope.isDisabled = true;
             scope.showinstallmentCharge=false;
+            scope.mpesaAmount;
+            scope.mpetxnsacode;
+            scope.TxnDate;
+            scope.mpesaPayment=false;
+            scope.showError=false;
+            scope.txnId;
+
+            if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null){
+                scope.mpesaPayment=true;
+                scope.mpesaAmount=routeParams.amount;
+                scope.mpetxnsacode=routeParams.mpetxnsacode;
+                scope.TxnDate=dateFilter(routeParams.txnDate, 'dd MMMM yyyy');
+                scope.txnId=routeParams.txnId;
+            }
 
             scope.routeToLoan = function (id) {
                 location.path('/viewloanaccount/' + id);
@@ -594,8 +608,13 @@
 
             scope.submitPayments = function () {
                 var requests = [];
+
                 var d = scope.formData.submittedOnDate;
                 var today = formatDate(d);
+               if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                   var today=scope.TxnDate;
+                }
+
                 var submitProcess = false;
                 var requestId = 1;
                 var req = 0;
@@ -619,8 +638,13 @@
                                 if (scope.formData.paymentTypeId != undefined) {
                                     bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                 }
+
                                 if (scope.formData.receiptNumber != undefined) {
                                     bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
+                                }
+                                if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
+
                                 }
                                 if (scope.formData.accountNumber != undefined) {
                                     bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
@@ -671,8 +695,10 @@
                                 if (scope.formData.paymentTypeId != undefined) {
                                     bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                 }
-                                if (scope.formData.receiptNumber != undefined) {
-                                    bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
+
+                                if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
+
                                 }
                                 if (scope.formData.accountNumber != undefined) {
                                     bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
@@ -735,6 +761,29 @@
                                 var bodyJson = "{";
                                 bodyJson += "\"amount\":\"" + scope.chargeAmount + "\"";
                                 bodyJson += ",\"dueDate\":\"" + today + "\"";
+                                if (scope.formData.paymentTypeId != undefined) {
+                                    bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
+                                }
+
+
+                                if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
+
+                                }
+                                if (scope.formData.accountNumber != undefined) {
+                                    bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
+                                }
+                                if (scope.formData.checkNumber != undefined) {
+                                    bodyJson += ",\"checkNumber\":\"" + scope.formData.checkNumber + "\"";
+                                }
+                                if (scope.formData.routingCode != undefined) {
+                                    bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
+                                }
+                                if (scope.formData.bankNumber != undefined) {
+                                    var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
+                                    bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
+                                }
+
                                 bodyJson += ",\"locale\":\"en\"";
                                 bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
                                 bodyJson += "}";
@@ -754,7 +803,13 @@
                     }
                     }
                 }
-
+                if(scope.mpesaAmount!=null) {
+                    scope.formData.receiptNumber=scope.mpetxnsacode;
+                    if (scope.mpesaAmount != scope.formData.totalAmount) {
+                        submitProcess = false;
+                        scope.showError=true;
+                    }
+                }
                 if (scope.formData.receiptNumber == null) {
                     alert("please enter recipt number");
                     return;
@@ -777,20 +832,37 @@
                         }else{
                             for (var i = 0; i < data.length; i++) {
                                 if (data[i].statusCode === 200)
+                                    if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                        http({
+                                            method: 'GET',
+                                            url: 'http://localhost:9292/mpesa/postpayment?id=' + scope.txnId
+                                        }).success(function (data) {
+                                        });
+                                    }
                                     location.path('/viewclient/' + routeParams.id);
                             }}
                     }).error(function(error){
                     });
+
+
                 }
                 else{
-                    alert("Please enter amount");
+                    if(scope.mpesaAmount!=null){}
+                    else {
+                        alert("Please enter amount");
+                    }
                 }
             };
 
             scope.submitPaymentsAndPrint = function(){
                 var requests = [];
+
                 var d = scope.formData.submittedOnDate;
                 var today = formatDate(d);
+                if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                    var today=scope.TxnDate;
+                }
+
                 var submitProcess = false;
                 var requestId = 1;
                 var req = 0;
@@ -816,6 +888,10 @@
                                 }
                                 if (scope.formData.receiptNumber != undefined) {
                                     bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
+                                }
+                                if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
+
                                 }
                                 if (scope.formData.accountNumber != undefined) {
                                     bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
@@ -867,6 +943,10 @@
                                 }
                                 if (scope.formData.receiptNumber != undefined) {
                                     bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
+                                }
+                                if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
+
                                 }
                                 if (scope.formData.accountNumber != undefined) {
                                     bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
@@ -933,6 +1013,10 @@
                                         if (scope.formData.receiptNumber != undefined) {
                                             bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                         }
+                                        if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                            bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
+
+                                        }
                                         if (scope.formData.accountNumber != undefined) {
                                             bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
                                         }
@@ -966,7 +1050,13 @@
                         }
                     }
                 }
-
+                if(scope.mpesaAmount!=null) {
+                    scope.formData.receiptNumber=scope.mpetxnsacode;
+                    if (scope.mpesaAmount != scope.formData.totalAmount) {
+                        submitProcess = false;
+                        scope.showError=true;
+                    }
+                }
                 if(submitProcess){
                     http({
                         method: 'POST',
@@ -980,6 +1070,13 @@
                         }else{
                             for (var i = 0; i < data.length; i++) {
                                 if (data[i].statusCode === 200){
+                                    if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                        http({
+                                            method: 'GET',
+                                            url: 'http://localhost:9292/mpesa/postpayment?id=' + scope.txnId
+                                        }).success(function (data) {
+                                        });
+                                    }
                                     scope.isDisabled = false;
                                     var tDate = dateFilter(scope.formData.submittedOnDate, 'yyyy-MM-dd');
                                     var reciptNo = scope.formData.receiptNumber;
@@ -1011,7 +1108,11 @@
                     }).error(function(data){
                     });
                 }else{
-                    alert("Please enter amount");
+
+                    if(scope.mpesaAmount!=null){}
+                    else {
+                        alert("Please enter amount");
+                    }
                 }
             };
             scope.printReport = function () {
@@ -1418,7 +1519,7 @@
 
     });
 
-    mifosX.ng.application.controller('ClientPaymentsController', ['$scope', '$routeParams', '$route', '$location', 'ResourceFactory', '$http', '$modal', 'API_VERSION', '$rootScope', '$upload', 'dateFilter', '$sce','$location', mifosX.controllers.ClientPaymentsController]).run(function ($log) {
+    mifosX.ng.application.controller('ClientPaymentsController', ['$scope', '$routeParams', '$route', '$location', 'ResourceFactory', '$http', '$modal', 'API_VERSION', '$rootScope', '$upload', 'dateFilter', '$sce','$location','$q','$http', mifosX.controllers.ClientPaymentsController]).run(function ($log) {
         $log.info("ClientPaymentsController initialized");
     });
 }(mifosX.controllers || {}));

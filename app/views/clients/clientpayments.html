@@ -22,6 +22,17 @@
 			</h3>
 		</div>
 	</div>
+	<div >
+		<table>
+			<tr ng-if="mpesaAmount!=null"></tr>
+			<tr ng-if="mpesaAmount!=null">
+				<td><strong>Amount:  {{mpesaAmount}}  | TransactioId:   {{mpetxnsacode}} |Transaction Date: {{TxnDate}} </strong></td>
+			</tr>
+		</table>
+	</div>
+	<div ng-show="showError==true">
+		  <p  style="color:red"> Total Amount must be equal to : {{mpesaAmount}} </p>
+	</div>
 	<div class="col-md-12 col-sm-12">
 		<div class="row client">
 			<div class="col-sm-12 col-md-12 paddingleft0px">
@@ -343,8 +354,11 @@
 										<label class="control-label">{{ 'label.input.submittedon' | translate
 											}}&nbsp;<span class="required">*</span></label>
 									</td>
-									<td class="col-sm-3">
+									<td class="col-sm-3"  ng-if="mpesaPayment==false">
 										<input id="submittedOnDate" sort type="text" datepicker-pop="dd MMMM yyyy" ng-model="formData.submittedOnDate" is-open="opened" max="restrictDate" class="form-control"/>
+									</td>
+									<td class="col-sm-3" ng-if="mpesaPayment==true" >
+										<input id="submittedOnDate" sort type="text" datepicker-pop="dd MMMM yyyy" value={{TxnDate}} ng-model="formData.submittedOnDate" is-open="opened" max="restrictDate" ng-disabled="true" class="form-control"/>
 									</td>
 									<td>&nbsp;</td>
 									<td class="col-sm-3">
@@ -363,7 +377,10 @@
 										<label class="control-label" for="receiptNumber">{{ 'label.input.receiptnumber' | translate}}<span
 												class="required">*</span></label>
 									</td>
-									<td class="col-sm-3">
+									<td class="col-sm-3" ng-if="mpesaPayment==true">
+										<input id="receiptNumber" class="form-control" type="text" value={{mpetxnsacode}} ng-model="formData.receiptNumber" ng-disabled="true" >
+									</td>
+									<td class="col-sm-3" ng-if="mpesaPayment==false">
 										<input id="receiptNumber" class="form-control" type="text" ng-model="formData.receiptNumber">
 									</td>
 									<td>&nbsp;</td>

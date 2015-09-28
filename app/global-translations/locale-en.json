@@ -3553,7 +3553,11 @@
     "label.heading.iscashpayment":"Is Cash Payment?",
     "label.button.paymenttype":"Add Payment Type",
     "label.input.iscashpayment":"Is Cash Payment?",
-    "label.anchor.editpaymenttype":"Edit Payment Type"
+    "label.anchor.editpaymenttype":"Edit Payment Type",
+    "label.anchor.uploadxls":"uploadFile",
+    "label.view.uploadxls":"view",
+    "label.anchor.mpesareconciliation":"Mpesa Reconciliation",
+    "label.view.label.view.mpesaTransaction": "Mpesa Transaction"
 
 }
 

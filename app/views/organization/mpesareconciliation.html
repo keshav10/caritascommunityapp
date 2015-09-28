@@ -1,0 +1,32 @@
+<div class="col-md-12" ng-controller="MpesaReconciliationController">
+    <ul class="breadcrumb">
+        <li class="active">Mpesa</li>
+    </ul>
+    <api-validate></api-validate>
+    <table class="table">
+        <thead>
+        <tr class="graybg">
+            <th>Transaction Date</th>
+            <th>Transaction Code</th>
+            <th>Client</th>
+            <th>Mobile No</th>
+            <th>Transaction Details</th>
+            <th></th>
+            <th></th>
+            <th>Amount</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="transactions in completetransaction">
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)">{{transactions.transactionTime}}</td>
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)">{{transactions.transactionCode}}</td>
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)">{{transactions.clientName}}-{{transactions.clientId}}</td>
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)">{{transactions.mobileNo}}</td>
+            <td  colspan="3" class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)">{{transactions.testMessage}}</td>
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.transactionDate,transactions.id)">{{transactions.transactionAmount}}</td>
+            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.transactionDate,transactions.id)">{{transactions.status}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

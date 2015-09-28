@@ -1,0 +1,46 @@
+<div class="col-md-12" ng-controller="UploadxlsController">
+    <ul class="breadcrumb">
+        <li><a href="#/organization">{{'label.anchor.organization' | translate}}</a></li>
+        <li><a>{{'label.anchor.uploadxls' | translate}}</a></li>
+    </ul>
+    <br>
+    <br>
+    <form>
+    <div>
+        <input type="file" ng-model="file1" />
+        <br>
+        <button type = "upload" value ="upload" ng-click = "uploadFile(file1)">upload</button>
+    </div>
+        <div ng-hide="">
+            <table class="table">
+                <thead>
+                <tr class="graybg">
+                    <th>Transaction Id</th>
+                    <th>Transaction Code</th>
+                    <th>Transaction Date</th>
+                    <th>Transaction Time</th>
+                    <th>client Id</th>
+                    <th>Client Name</th>
+                    <th>Mobile No</th>
+                    <th>office Id</th>
+                    <th>Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="transactions in completetransaction">
+                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.id}}</td>
+                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionCode}}</td>
+                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionDate}}</td>
+                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionTime}}</td>
+                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.clientId}}</td>
+                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.sender}}</td>
+                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.mobileNo}}</td>
+                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.officeId}}</td>
+                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionAmount}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        </form>
+
+</div>
