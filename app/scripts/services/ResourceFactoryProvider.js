@@ -462,10 +462,8 @@
                         get: {method: 'GET', params: {tellerId: "@tellerId", cashierId: "@cashierId"}, isArray: false}
                     }),
                     collectionSheetResource: defineResource(apiVer + "/collectionsheet", {}, {
-                    }),
-                    uploadxlSheetResource: defineResource(apiVer + "/uploadxls", {}, {
-                        create: {method: 'POST', params: {}}
                     })
+
                 };
             }];
         }
