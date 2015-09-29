@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        MpesaReconciliationController: function ($q,$http,scope, resourceFactory, location) {
+        MpesaReconciliationController: function ($q,$http,scope, resourceFactory, location,http) {
             scope.routeTo = function (id,mpesaamount,mpetxnsacode,txnDate,txnId) {
                 location.path('/clientpayments/' + id+'/'+mpesaamount+'/'+mpetxnsacode+'/'+txnDate+'/'+txnId);
             };
@@ -62,6 +62,13 @@
             }
             scope.FindByMobileNo=function(){
                 scope.searcText=scope.mobileNosearch;
+                http({
+                    method: 'GET',
+                    url: 'http://localhost:9292/mpesa/FindbyMobileNo?mobileNo=' + scope.searcText
+                }).success(function (data) {
+                    deferred.resolve(data);
+                    scope.completetransaction=data;
+                });
                 alert(scope.searcText);
             }
 
@@ -69,7 +76,7 @@
         }
     });
 
-    mifosX.ng.application.controller('MpesaReconciliationController', ['$q','$http','$scope', 'ResourceFactory', '$location','dateFilter', mifosX.controllers.MpesaReconciliationController]).run(function ($log) {
+    mifosX.ng.application.controller('MpesaReconciliationController', ['$q','$http','$scope', 'ResourceFactory', '$location','$http','dateFilter', mifosX.controllers.MpesaReconciliationController]).run(function ($log) {
         $log.info("MpesaReconciliationController initialized");
     });
 }(mifosX.controllers || {}));
