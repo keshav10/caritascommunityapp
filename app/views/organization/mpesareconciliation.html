@@ -3,7 +3,7 @@
         <li class="active">Mpesa</li>
     </ul>
     <ul></ul>
-    <div>
+    <div ng-show="find==true">
         <table>
             <tr>
                 <td ng-click="search('mobileNo')" class="btn btn-default">{{'Find by Mobile No' | translate}}</td>
@@ -12,9 +12,35 @@
             </tr>
         </table>
     </div>
-    <div>
-        
+    <div ng-show="mobileNo==true">
+        <label class="control-label col-sm-2" for="mobileNo">{{'label.input.mobilenumber' | translate}}</label>
+        <div class="col-sm-3">
+            <input type="text" id="mobileNo" name="mobileNo" ng-model="formData.mobileNo"
+                   ng-pattern="/^[0-9]+$/"  class="form-control"/>
+            <ul></ul>
+            <label class="control-label col-sm-3" for="mobileNo"></label>
+            <div col-md-offset-5>
+            <button id="cancel" type="reset" align="middle" class="btn btn-default" ng-click="cancelFindByMobileNo()">{{ 'label.button.cancel' | translate}}</button>
+            <button id="save" type="submit"  class="btn btn-primary" ng-click="submitFindByMobileNo()">{{ 'label.button.save' | translate}}</button>
+        </div>
+        <ul></ul>
     </div>
+    </div>
+    <div ng-show="TxnDate==true">
+        <table>
+            <tr>
+               <td>From Date</td><td colspan="2"> <input id="From Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"
+                                             ng-model="first.date" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control"/>
+            </td>
+            </tr>
+        </table>
+
+
+    </div>
+    <div ng-show="status==true">
+    ......
+    </div>
+
     <ul></ul>
     <table class="table">
         <thead>
