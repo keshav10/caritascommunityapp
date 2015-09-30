@@ -30,9 +30,9 @@
         <table>
             <tr>
                <td>From Date</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input id="From Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"
-                ng-model="first.date" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control"/></td>
+                ng-model="fromDateSearch" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control"/></td>
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;To Date &nbsp;&nbsp;&nbsp;&nbsp;</td><td><input id="To Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"
-                ng-model="first.date" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control"/></td>
+                ng-model="toDateSearch" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control"/></td>
             </tr>
             <tr>
                 <td> &nbsp; </td>
@@ -42,18 +42,19 @@
                 <button id="cancebyDate" type="reset" align="middle" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>
                 </td>
                 <td>
-                <button id="savebyDate " type="submit"  class="btn btn-primary" ng-click="submitFindByDate()">{{ 'label.button.save' | translate}}</button>
+                <button id="savebyDate " type="submit"  class="btn btn-primary" ng-click="FindByTxnDate()">{{ 'label.button.save' | translate}}</button>
                 </td>
             </tr>
         </table>
     </div>
     <div ng-show="status==true">
+        <form>
         <table><tr><td>
             Status
         </td>
              <td>&nbsp;&nbsp;&nbsp;&nbsp;
-        <select chosen="status1" id="officeId" ng-model="formData.officeId"  class="form-control"
-                ng-options="searchStatus1.id as searchStatus1.name for searchStatus1 in searchStatus" value="{{searchStatus1.id}}">
+        <select chosen="searchStatus"  ng-model="formDate.searchStatus1"  class="form-control"
+                ng-options="value.id as value.name for value in searchStatus track by value.id" value="{{value.id}}">
                 </select></td>
         </tr>
          <tr><td>&nbsp;</td></tr>
@@ -61,10 +62,11 @@
              <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                  <button id="cancebyStatus" type="reset" align="middle" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>
                  &nbsp;&nbsp;&nbsp;&nbsp;
-                 <button id="savebyStatus " type="submit"  class="btn btn-primary" ng-click="submitFindByStatus()">{{ 'label.button.save' | translate}}</button>
+                 <button id="savebyStatus " type="submit"  class="btn btn-primary" ng-click="FinByStatus()">{{ 'label.button.save' | translate}}</button>
              </td>
          </tr>
          </table>
+            </form>
       </div>
     <ul></ul>
     <table class="table">

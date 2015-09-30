@@ -1,39 +1,58 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        MpesaReconciliationController: function ($q,$http,scope, resourceFactory, location,http) {
-            scope.routeTo = function (id,mpesaamount,mpetxnsacode,txnDate,txnId) {
-                location.path('/clientpayments/' + id+'/'+mpesaamount+'/'+mpetxnsacode+'/'+txnDate+'/'+txnId);
+        MpesaReconciliationController: function ($q,$http,scope, resourceFactory, location,http,dateFilter) {
+            scope.routeTo = function (id, mpesaamount, mpetxnsacode, txnDate, txnId) {
+                location.path('/clientpayments/' + id + '/' + mpesaamount + '/' + mpetxnsacode + '/' + txnDate + '/' + txnId);
             };
-            scope.status=false;
-            scope.mobileNo=false;
-            scope.TxnDate=false;
-            scope.find=true;
-            scope.mobileNosearch="";
-            scope.completetransaction=[];
-            scope.searchStatus=[];
+
+            scope.status = false;
+            scope.mobileNo = false;
+            scope.TxnDate = false;
+            scope.formData = {};
+            scope.find = true;
+            scope.mobileNosearch = "";
+            scope.fromDateSearch = "";
+            scope.toDateSearch = "";
+            scope.statusSearch = "";
+            scope.completetransaction = [];
+            scope.searchStatus = [];
             scope.restrictDate = new Date();
-            scope.searchScope;
+            //scope.searchStatus1 = {};
             scope.currentScope;
             var deferred = $q.defer();
-            $http.get("http://localhost:9292/mpesa/getunmappedtransactions").success(function(data) {
+            $http.get("http://localhost:9292/mpesa/getunmappedtransactions").success(function (data) {
                 deferred.resolve(data);
-                scope.completetransaction=data;
+                scope.completetransaction = data;
             });
+           // scope.set = function () {
+               /* scope.status1 = ['PAID', 'CMP', 'BM'];*/
+           // }
 
-             scope.status1=['PAID','CMP','BM'];
+           // scope.select = function () {
 
-            scope.searchStatus=[{
-                     "id":"1",
-                     "name":"PAID"
-            },
+            scope.searchStatus = [
                 {
-                    "id":"2",
-                    "name":"CMP"
+                    "id": "1",
+                    "name": "PAID"
                 },
                 {
-                    "id":"3",
-                    "name":"BM"
-                }  ]
+                    "id": "2",
+                    "name": "CMP"
+                },
+                {
+                    "id": "3",
+                    "name": "BM"
+                }
+            ];
+
+            scope.changeStatus = function(status){
+                this.formData.searchStatus1 = status;
+                alert("status" + status)
+            }
+      //  }
+         //   scope.select();
+                //   scope.set();
+
              scope.cancel=function(){
                  scope.status=false;
                  scope.mobileNo=false;
@@ -59,6 +78,41 @@
                     scope.TxnDate=false;
                     scope.find=false;
                 }
+            }
+            scope.FindByTxnDate=function(){
+                scope.fromDate=dateFilter(scope.fromDateSearch, 'yyyy-MM-dd');
+                scope.toDate=dateFilter(scope.toDateSearch, 'yyyy-MM-dd');
+                alert(scope.fromDate);
+                alert(scope.toDate);
+                http({
+                    method: 'GET',
+                    url: 'http://localhost:9292/mpesa/FindbyTransactionDate?FromDate='+ scope.fromDate+'&ToDate='+scope.toDate
+                }).success(function (data) {
+                    deferred.resolve(data);
+                    scope.completetransaction=data;
+                });
+            }
+
+            scope.FinByStatus=function(){
+                scope.text='';
+                if(this.formDate.searchStatus1 == "1"){
+                    scope.text='PAID';
+                }
+                else if(this.formDate.searchStatus1 == "2"){
+                    scope.text='CMP';
+                }
+                else
+                {
+                    scope.text='BM';
+                }
+                http({
+                    method: 'GET',
+                    url: 'http://localhost:9292/mpesa/FindbyStatus?status='+ scope.text
+                }).success(function (data) {
+                    deferred.resolve(data);
+                    scope.completetransaction=data;
+                });
+
             }
             scope.FindByMobileNo=function(){
                 scope.searcText=scope.mobileNosearch;
