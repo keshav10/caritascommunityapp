@@ -1,6 +1,14 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        UploadxlsController: function (scope, location, http, API_VERSION, $upload, $rootScope) {
+        UploadxlsController: function (scope, location, http, API_VERSION, $upload, $rootScope, resourceFactory) {
+            scope.offices = [];
+
+            resourceFactory.officeResource.getAllOffices(function (data) {
+                scope.offices = data;
+                scope.formData = {
+                    officeId: scope.offices[0].id
+                }
+            });
             scope.onFileSelect = function ($files) {
                 scope.file = $files[0];
             };
@@ -23,7 +31,7 @@
 
         }
     });
-    mifosX.ng.application.controller('UploadxlsController', ['$scope','$location','$http','API_VERSION','$upload','$rootScope' ,mifosX.controllers.UploadxlsController]).run(function ($log) {
+    mifosX.ng.application.controller('UploadxlsController', ['$scope','$location','$http','API_VERSION','$upload','$rootScope', 'ResourceFactory' ,mifosX.controllers.UploadxlsController]).run(function ($log) {
         $log.info("UploadxlsController initialized");
     });
 }(mifosX.controllers || {}));
