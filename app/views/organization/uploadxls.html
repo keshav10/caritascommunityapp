@@ -7,13 +7,13 @@
     <br>
     <form  class="form-horizontal well" ng-submit="submit()" >
         <api-validate></api-validate>
-        <fieldset>
+        <div ng-hide= "submt">
         <div class="form-group">
             <label class="control-label col-sm-2" for="file">{{'label.input.selectfile' | translate}}<span
                     class="required">*</span></label>
 
             <div class="col-sm-3">
-                <input id="file" type="file">
+                <input id="file" type="file" ng-file-select="onFileSelect($files)">
             </div>
         </div>
 
@@ -36,7 +36,12 @@
                 {{'label.button.save' | translate}}
             </button>
         </div>
-            </fieldset>
+            </div>
+
+        <div ng-show = "submt">
+            <h3>File uploaded successfully</h3>
+        </div>
+
 
         </form>
 

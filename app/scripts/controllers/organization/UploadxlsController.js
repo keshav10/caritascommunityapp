@@ -2,6 +2,7 @@
     mifosX.controllers = _.extend(module, {
         UploadxlsController: function (scope, location, http, API_VERSION, $upload, $rootScope, resourceFactory) {
             scope.offices = [];
+            scope.submt = false;
 
             resourceFactory.officeResource.getAllOffices(function (data) {
                 scope.offices = data;
@@ -15,6 +16,7 @@
 
 
             scope.submit = function () {
+
                 $upload.upload({
                     url: $rootScope.hostUrl + API_VERSION + '/uploadxls/',
                     data: scope.formData,
@@ -24,6 +26,7 @@
                     if (!scope.$$phase) {
                         scope.$apply();
                     }
+                    scope.submt = true;
                     location.path('/uploadxls/');
                 });
 
