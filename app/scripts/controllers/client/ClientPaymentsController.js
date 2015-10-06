@@ -34,6 +34,8 @@
             scope.pageUrlSplit=scope.pageUrl.split("/");
             scope.isDisabled = true;
             scope.showinstallmentCharge=false;
+            scope.showError=false;
+            scope.LoanAccountNo=0;
 
             scope.routeToLoan = function (id) {
                 location.path('/viewloanaccount/' + id);
@@ -772,7 +774,8 @@
                         data: requests
                     }).success(function(data,status){
                         if(data.length==0){
-                            alert("Loan Transaction cannot be before the last transaction date");
+                            scope.showError=true;
+                           // alert("Loan Transaction cannot be before the last transaction date");
                             return;
                         }else{
                             for (var i = 0; i < data.length; i++) {
@@ -975,7 +978,8 @@
                         data: requests
                     }).success(function(data){
                         if(data.length==0){
-                            alert("Loan Transaction cannot be before the last transaction date");
+                            scope.showError=true;
+                           // alert("Loan Transaction cannot be before the last transaction date");
                             return;
                         }else{
                             for (var i = 0; i < data.length; i++) {
