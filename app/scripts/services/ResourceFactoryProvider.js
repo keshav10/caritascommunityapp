@@ -58,6 +58,9 @@
                     clientAccountChargeResource: defineResource(apiVer + "/clients/:clientId/clientsPayments", {clientId: '@clientId'}, {
                         getAllClients: {method: 'GET', params: {}}
                     }),
+                    clientAccountMpesaResource:  defineResource(apiVer+ "clients/:clientId/Mpesa",{clientId: '@clientId'},{
+                        getMpesaTxnSummary:{method: 'GET',params:{}}
+                    }),
                     clientNotesResource: defineResource(apiVer + "/clients/:clientId/notes", {clientId: '@clientId'}, {
                         getAllNotes: {method: 'GET', params: {}, isArray: true}
                     }),

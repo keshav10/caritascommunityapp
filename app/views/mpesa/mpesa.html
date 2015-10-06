@@ -3,6 +3,69 @@
         <li class="active">Mpesa</li>
     </ul>
     <api-validate></api-validate>
+    <ul></ul>
+    <script type="text/ng-template" id="showTxn.html">
+        <div class="modal-header silver">
+            <h3 class="bolder">Mpesa Transaction Summary</h3>
+        </div>
+        <div class="modal-body">
+            <api-validate></api-validate>
+            <table class="table">
+                <thead>
+                <tr class ="graybg">
+                <th>Client Name</th><th>Account No</th><th>Charge Amount</th><th>Transaction Date</th><th>Amount</th></tr></thead><tbody>
+                <tr ng-repeat="transaction in transactionData">
+                <td>{{transaction.clientName}}</td><td>{{transaction.accountNo}}</td><td>{{transaction.Amount}}</td>
+                <td>{{transaction.TxnDate}}</td><td>{{transaction.chargeAmount}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <br>
+            <button class="btn btn-warning" ng-click="cancel()">Close</button>
+        </div>
+    </script>
+    <div >
+        <form name="search">
+                <table>
+                    <tr>
+                        <td colspan="2">Mobile No&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input type="text" id="mobileNo" name="mobileNo" ng-model="mobileNosearch"
+                                                                             ng-pattern="/^[0-9]+$/"  class="form-control"/></td>
+
+                        <!--<td colspan="1">Mobile No&nbsp;&nbsp;</td><td><input type="text" id="mobileNo" name="mobileNo" ng-model="mobileNosearch"-->
+                                                                                       <!--ng-pattern="/^[0-9]+$/"  class="form-control"/>-->
+                    <!--</td>-->
+
+                <td>&nbsp;&nbsp;From Date&nbsp;&nbsp;</td><td><input id="From Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"
+                                                                                      ng-model="fromDateSearch" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control/"></td>
+                        <td>&nbsp;&nbsp;To Date &nbsp;&nbsp;</td><td><input id="To Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"
+                                                                                                    ng-model="toDateSearch" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control/"></td>
+
+
+                <td>&nbsp;&nbsp;Status&nbsp;&nbsp;</td><td><select chosen="searchStatus"  ng-model="formDate.searchStatus1"  class="form-control"
+                                                                   ng-options="value.id as value.name for value in searchStatus track by value.id" value="{{value.id}}">
+                    </select></td>
+
+                        <!--<td>-->
+                            <!--Status-->
+                        <!--</td>-->
+                        <!--<td>&nbsp;&nbsp;&nbsp;&nbsp;-->
+                            <!--<select chosen="searchStatus"  ng-model="formDate.searchStatus1"  class="form-control"-->
+                                    <!--ng-options="value.id as value.name for value in searchStatus track by value.id" value="{{value.id}}">-->
+                            <!--</select></td>-->
+
+
+                    </tr>
+                        <tr><td>&nbsp;</td></tr>
+                        <tr><td></td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button id="cancebyStatus" type="reset" align="middle" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <button id="savebyStatus " type="submit"  class="btn btn-primary" ng-click="Mpesasearch()">{{ 'label.button.save' | translate}}</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+    </div>
     <table class="table">
         <thead>
         <tr class="graybg">
@@ -19,15 +82,15 @@
         </thead>
         <tbody>
         <tr ng-repeat="transactions in completetransaction">
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.id}}</td>
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionCode}}</td>
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionDate}}</td>
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionTime}}</td>
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.clientId}}</td>
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.sender}}</td>
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.mobileNo}}</td>
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.officeId}}</td>
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionAmount}}</td>
+            <td ng-click="showTransactionDetail(17069,'2015-10-01','rec-234')">{{transactions.id}}</td>
+            <td ng-click="showTransactionDetail(17069,'2015-10-01','rec-234')">{{transactions.transactionCode}}</td>
+            <td ng-click="showTransactionDetail(17069,'2015-10-01','rec-234')">{{transactions.transactionDate}}</td>
+            <td ng-click="showTransactionDetail(17069,'2015-10-01','rec-234')">{{transactions.transactionTime}}</td>
+            <td ng-click="showTransactionDetail(17069,'2015-10-01','rec-234')">{{transactions.clientId}}</td>
+            <td ng-click="showTransactionDetail(17069,'2015-10-01','rec-234')">{{transactions.sender}}</td>
+            <td ng-click="showTransactionDetail(17069,'2015-10-01','rec-234')">{{transactions.mobileNo}}</td>
+            <td ng-click="showTransactionDetail(17069,'2015-10-01','rec-234')">{{transactions.officeId}}</td>
+            <td  ng-click="showTransactionDetail(17069,'2015-10-01','rec-234')">{{transactions.transactionAmount}}</td>
         </tr>
         </tbody>
     </table>

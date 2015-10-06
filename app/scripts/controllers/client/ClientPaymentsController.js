@@ -608,7 +608,6 @@
 
             scope.submitPayments = function () {
                 var requests = [];
-
                 var d = scope.formData.submittedOnDate;
                 var today = formatDate(d);
                if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
@@ -639,12 +638,12 @@
                                     bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                 }
 
-                                if (scope.formData.receiptNumber != undefined) {
-                                    bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
-                                }
                                 if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
                                     bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
 
+                                }
+                                else{
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                 }
                                 if (scope.formData.accountNumber != undefined) {
                                     bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
@@ -699,6 +698,9 @@
                                 if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
                                     bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
 
+                                }
+                                else{
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                 }
                                 if (scope.formData.accountNumber != undefined) {
                                     bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
@@ -769,6 +771,9 @@
                                 if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
                                     bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
 
+                                }
+                                else{
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                 }
                                 if (scope.formData.accountNumber != undefined) {
                                     bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
@@ -886,12 +891,12 @@
                                 if (scope.formData.paymentTypeId != undefined) {
                                     bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                 }
-                                if (scope.formData.receiptNumber != undefined) {
-                                    bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
-                                }
                                 if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
                                     bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
 
+                                }
+                                else{
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                 }
                                 if (scope.formData.accountNumber != undefined) {
                                     bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
@@ -941,12 +946,12 @@
                                 if (scope.formData.paymentTypeId != undefined) {
                                     bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                 }
-                                if (scope.formData.receiptNumber != undefined) {
-                                    bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
-                                }
                                 if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
                                     bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
 
+                                }
+                                else{
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                 }
                                 if (scope.formData.accountNumber != undefined) {
                                     bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
@@ -1010,12 +1015,12 @@
                                         if (scope.formData.paymentTypeId != undefined) {
                                             bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                         }
-                                        if (scope.formData.receiptNumber != undefined) {
-                                            bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
-                                        }
                                         if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
                                             bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
 
+                                        }
+                                        else{
+                                            bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                         }
                                         if (scope.formData.accountNumber != undefined) {
                                             bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
