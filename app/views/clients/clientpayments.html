@@ -22,15 +22,15 @@
 			</h3>
 		</div>
 	</div>
-	<div ng-show="showError==true">
-		<p>Loan Transaction cannot be before the last transaction date</p>
-	</div>
 	<div class="col-md-12 col-sm-12">
 		<div class="row client">
 			<div class="col-sm-12 col-md-12 paddingleft0px">
 				<div data-ng-show="loanAccounts || savingsAccounts">
 					<form name="clientpayments" class="form-horizontal well">
 						<api-validate></api-validate>
+						<div ng-show="showError==true">
+							<p style="color:red">Loan Transaction cannot be before the last transaction date</p>
+						</div>
 						<div>
 							<table class="table table-condensed">
 								<tr class="graybg" data-ng-show="loanAccounts">
