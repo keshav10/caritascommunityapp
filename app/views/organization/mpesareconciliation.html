@@ -3,15 +3,6 @@
         <li class="active">Mpesa</li>
     </ul>
     <ul></ul>
-    <!--<div ng-show="find==true">-->
-        <!--<table>-->
-            <!--<tr>-->
-                <!--<td ng-click="search('mobileNo')" class="btn btn-default">{{'Find by Mobile No' | translate}}</td>-->
-                <!--<td ng-click="search('TxnDate')" class="btn btn-default">{{'Find by Transaction Date' | translate}}</td>-->
-                <!--<td ng-click="search('status')" class="btn btn-default">{{'Find by Status' | translate}}</td>-->
-            <!--</tr>-->
-        <!--</table>-->
-    <!--</div>-->
     <script type="text/ng-template" id="showTxn.html">
         <div class="modal-header silver">
             <h3 class="bolder">Mpesa Transaction Summary</h3>
@@ -39,9 +30,6 @@
                     <td colspan="2">Mobile No&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input type="text" id="mobileNo" name="mobileNo" ng-model="mobileNosearch"
                                                                                      ng-pattern="/^[0-9]+$/"  class="form-control"/></td>
 
-                    <!--<td colspan="1">Mobile No&nbsp;&nbsp;</td><td><input type="text" id="mobileNo" name="mobileNo" ng-model="mobileNosearch"-->
-                    <!--ng-pattern="/^[0-9]+$/"  class="form-control"/>-->
-                    <!--</td>-->
 
                     <td>&nbsp;&nbsp;From Date&nbsp;&nbsp;</td><td><input id="From Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"
                                                                          ng-model="fromDateSearch" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control/"></td>
@@ -51,94 +39,23 @@
                        &nbsp;&nbsp;&nbsp;&nbsp; Status
                     </td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <select chosen="searchStatus"  ng-model="formDate.searchStatus1"  class="form-control"
+                        <select chosen="searchStatus"  ng-model="formData.searchStatus1"  class="form-control"
                                 ng-options="value.id as value.name for value in searchStatus track by value.id" value="{{value.id}}">
                         </select></td>
                 </tr>
                 <tr>
                     <td>
-                        <td colspan="4"></td><td><button id="cancebyStatus" type="reset" align="middle" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>
+                        <td colspan="4"></td><td><button id="cancle" type="reset" align="middle" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>
                     </td>
-                 <td><button id="savebyStatus " type="submit"  class="btn btn-primary" ng-click="Mpesasearch()">{{ 'label.button.save' | translate}}</button>
+
+                 <td><button id="submit" type="submit"  class="btn btn-primary" ng-click="Mpesasearch()">{{ 'label.button.save' | translate}}</button>
                  </td>
                 </tr>
                 </table>
             </form>
 
     </div>
-    <!--<div ng-show="mobileNo==true">-->
-        <!--<table>-->
-            <!--<tr>-->
-                <!--<td>Mobile No</td><td> &nbsp;&nbsp;&nbsp;&nbsp;</td><td><input type="text" id="mobileNo" name="mobileNo" ng-model="mobileNosearch"-->
-                                                                               <!--ng-pattern="/^[0-9]+$/"  class="form-control"/>-->
-            <!--</td></tr>-->
-             <!--<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>-->
-            <!--<tr>-->
-              <!--<td colspan="2"></td>-->
-             <!--<td><button id="cancel" type="reset" align="middle" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>-->
-             <!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-                    <!--<button id="save" type="submit"  class="btn btn-primary" ng-click="FindByMobileNo()">{{ 'label.button.save' | translate}}</button>-->
-                <!--</td>-->
-            <!--</tr>-->
-        <!--</table>-->
-        <!--&lt;!&ndash;-->
-        <!--<label class="control-label col-sm-2" for="mobileNo">{{'label.input.mobilenumber' | translate}}</label>-->
-        <!--<div class="col-sm-3">-->
-            <!--<input type="text" id="mobileNo" name="mobileNo" ng-model="mobileNosearch"-->
-                   <!--ng-pattern="/^[0-9]+$/"  class="form-control"/>-->
-            <!--<ul></ul>-->
-            <!--<label class="control-label col-sm-3" for="mobileNo"></label>-->
-            <!--<div col-md-offset-5>-->
-            <!--<button id="cancel" type="reset" align="middle" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>-->
-            <!--<button id="save" type="submit"  class="btn btn-primary" ng-click="FindByMobileNo()">{{ 'label.button.save' | translate}}</button>-->
-        <!--</div>-->
-        <!--<ul></ul>-->
-    <!--</div>-->
-    <!--&ndash;&gt;-->
-    <!--</div>-->
-    <!--<div ng-show="TxnDate==true">-->
-        <!--<table>-->
-            <!--<tr>-->
-               <!--<td>From Date</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input id="From Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"-->
-                <!--ng-model="fromDateSearch" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control"/></td>-->
-                <!--<td>&nbsp;&nbsp;&nbsp;&nbsp;To Date &nbsp;&nbsp;&nbsp;&nbsp;</td><td><input id="To Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"-->
-                <!--ng-model="toDateSearch" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control"/></td>-->
-            <!--</tr>-->
-            <!--<tr>-->
-                <!--<td> &nbsp; </td>-->
-            <!--</tr>-->
-            <!--<tr><td colspan="2"></td><td></td>-->
-                <!--<td>-->
-                <!--<button id="cancebyDate" type="reset" align="middle" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>-->
-                <!--</td>-->
-                <!--<td>-->
-                <!--<button id="savebyDate " type="submit"  class="btn btn-primary" ng-click="FindByTxnDate()">{{ 'label.button.save' | translate}}</button>-->
-                <!--</td>-->
-            <!--</tr>-->
-        <!--</table>-->
-    <!--</div>-->
-    <!--<div ng-show="status==true">-->
-        <!--<form>-->
-        <!--<table><tr><td>-->
-            <!--Status-->
-        <!--</td>-->
-             <!--<td>&nbsp;&nbsp;&nbsp;&nbsp;-->
-        <!--<select chosen="searchStatus"  ng-model="formDate.searchStatus1"  class="form-control"-->
-                <!--ng-options="value.id as value.name for value in searchStatus track by value.id" value="{{value.id}}">-->
-                <!--</select></td>-->
-        <!--</tr>-->
-         <!--<tr><td>&nbsp;</td></tr>-->
-         <!--<tr><td></td>-->
-             <!--<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-                 <!--<button id="cancebyStatus" type="reset" align="middle" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>-->
-                 <!--&nbsp;&nbsp;&nbsp;&nbsp;-->
-                 <!--<button id="savebyStatus " type="submit"  class="btn btn-primary" ng-click="FinByStatus()">{{ 'label.button.save' | translate}}</button>-->
-             <!--</td>-->
-         <!--</tr>-->
-         <!--</table>-->
-            <!--</form>-->
-      <!--</div>-->
-    <ul></ul>
+       <ul></ul>
     <div ng-show="Paidstatus==false">
     <table class="table">
         <thead>
@@ -152,36 +69,7 @@
             <th></th>
             <th>Amount</th>
             <th>Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="transactions in completetransaction">
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)">{{transactions.transactionTime}}</td>
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)">{{transactions.transactionCode}}</td>
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)">{{transactions.clientName}}-{{transactions.clientId}}</td>
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)">{{transactions.mobileNo}}</td>
-            <td  colspan="3" class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)">{{transactions.testMessage}}</td>
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.transactionDate,transactions.id)">{{transactions.transactionAmount}}</td>
-            <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.transactionDate,transactions.id)">{{transactions.status}}
-            </td>
-            </tr>
-        </tbody>
-    </table>
-    </div>
-
-<div ng-show="Paidstatus==true">
-    <table class="table">
-        <thead>
-        <tr class="graybg">
-            <th>Transaction Date</th>
-            <th>Transaction Code</th>
-            <th>Client</th>
-            <th>Mobile No</th>
-            <th>Transaction Details</th>
-            <th></th>
-            <th></th>
-            <th>Amount</th>
-            <th>Status</th>
+            <th>Pay</th>
         </tr>
         </thead>
         <tbody>
@@ -190,13 +78,17 @@
             <td>{{transactions.transactionCode}}</td>
             <td>{{transactions.clientName}}-{{transactions.clientId}}</td>
             <td>{{transactions.mobileNo}}</td>
-            <td  colspan="3">{{transactions.testMessage}}</td>
-            <td >{{transactions.transactionAmount}}</td>
-            <td >{{transactions.status}}
-            <a  ng-if="transactions.status=='PAID'" ng-click="showTransactionDetail1(transactions.clientId,transactions.transactionDate,transactions.transactionCode)">&nbsp;<i class="fa fa-hand-o-right"></i></a>
-            </td>
+            <td  colspan="3" >{{transactions.testMessage}}</td>
+            <td>{{transactions.transactionAmount}}</td>
+            <td>{{transactions.status}}
+           <td>
+            <a title="Pay" ng-if="transactions.status!='PAID'"
+               ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)" ><i
+                    class="icon-check icon-white"></i></a>
+            <a title="show Transaction Details" ng-if="transactions.status=='PAID'" ng-click="showTransactionDetail1(transactions.clientId,transactions.transactionDate,transactions.transactionCode)">&nbsp;<i class="fa fa-hand-o-right"></i></a>
+
         </tr>
         </tbody>
     </table>
-</div>
+    </div>
 </div>
