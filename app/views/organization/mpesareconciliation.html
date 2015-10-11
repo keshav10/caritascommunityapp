@@ -41,12 +41,14 @@
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;
                         <select chosen="searchStatus"  ng-model="formData.searchStatus1"  class="form-control"
                                 ng-options="value.id as value.name for value in searchStatus track by value.id" value="{{value.id}}">
+                            <option value="">--select status--</option>
                         </select></td>
                 </tr>
                 <tr>
                     <td>
                         <td colspan="4"></td><td><button id="cancle" type="reset" align="middle" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>
-                    </td>
+                             &nbsp;&nbsp;&nbsp;&nbsp;
+                                </td>
 
                  <td><button id="submit" type="submit"  class="btn btn-primary" ng-click="Mpesasearch()">{{ 'label.button.save' | translate}}</button>
                  </td>

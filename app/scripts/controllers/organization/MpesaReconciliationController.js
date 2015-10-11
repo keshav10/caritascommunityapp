@@ -23,6 +23,8 @@
             scope.TransactionDate;
             scope.clientId;
             scope.ReceiptNo;
+            scope.toDateSearch=new Date();
+
 
 
             var deferred = $q.defer();
@@ -43,6 +45,7 @@
                     "id": "3",
                     "name": "BM"
                 }
+
             ];
 
 
@@ -58,7 +61,15 @@
             scope.Mpesasearch=function() {
                 scope.fromDate = dateFilter(scope.fromDateSearch, 'yyyy-MM-dd');
                 scope.toDate = dateFilter(scope.toDateSearch, 'yyyy-MM-dd');
-                scope.searcText =scope.mobileNosearch;
+                scope.searcText=scope.mobileNosearch;
+                if(scope.mobileNosearch!=null) {
+                    var n =scope.mobileNosearch;
+                    var p= n.indexOf(0)
+                    if(p==0){
+                        scope.searcText=254+ n.substring(1, n.length)
+                        alert(scope.searcText);
+                    }
+                }
                 scope.text = '';
                   if (scope.formData.searchStatus1 == "1") {
                         scope.text = 'PAID';
