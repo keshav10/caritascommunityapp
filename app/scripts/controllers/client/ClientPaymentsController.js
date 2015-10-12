@@ -1241,7 +1241,12 @@
             };
 
             scope.cancel = function () {
-                location.path('/viewclient/' + scope.client.id);
+                if(routeParams.txnId!=null){
+                    location.path('/mpesareconciliation');
+                }
+                else {
+                    location.path('/viewclient/' + scope.client.id);
+                }
             };
 
             scope.viewstandinginstruction = function () {

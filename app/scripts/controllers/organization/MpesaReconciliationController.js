@@ -26,7 +26,6 @@
             scope.toDateSearch=new Date();
 
 
-
             var deferred = $q.defer();
             $http.get("http://localhost:9292/mpesa/getunmappedtransactions?offset="+1+"&limit="+1).success(function (data) {
                 deferred.resolve(data);
@@ -38,27 +37,27 @@
                     "name": "PAID"
                 },
                 {
-                    "id": "2",
-                    "name": "CMP"
+                    "id":"2",
+                    "name":"CMP"
                 },
                 {
                     "id": "3",
                     "name": "BM"
+                },
+                {
+                    "id": "4",
+                    "name":"UNMP"
+                },
+                {
+                    "id":"5",
+                    "name":"Select Option"
                 }
 
             ];
 
 
-            scope.changeStatus = function(status){
-                this.formData.searchStatus1 = status;
-               // alert("status" + status)
-            };
-      //  }
-         //   scope.select();
-                //   scope.set();
-
-            scope.formData.searchStatus1= scope.searchStatus[1].id;
             scope.Mpesasearch=function() {
+               // alert("search Id"+scope.formData.searchStatus1) ;
                 scope.fromDate = dateFilter(scope.fromDateSearch, 'yyyy-MM-dd');
                 scope.toDate = dateFilter(scope.toDateSearch, 'yyyy-MM-dd');
                 scope.searcText=scope.mobileNosearch;
@@ -70,16 +69,25 @@
                         alert(scope.searcText);
                     }
                 }
-                scope.text = '';
+                scope.text = "";
                   if (scope.formData.searchStatus1 == "1") {
                         scope.text = 'PAID';
-                    }
-                    else if (scope.formData.searchStatus1 == "2") {
-                        scope.text = 'CMP';
                     }
                     else if (scope.formData.searchStatus1 == "3") {
                         scope.text = 'BM';
                     }
+                  else if (scope.formData.searchStatus1 == "4") {
+                      scope.text = 'UNMP';
+                  }
+                  else if (scope.formData.searchStatus1 == "2") {
+                      scope.text = 'CMP';
+                  }
+                  else if(scope.formData.searchStatus1=="5"){
+                      scope.text= "";
+                  }
+                  else{
+                      scope.text = 'CMP';
+                  }
 
                 http({
                     method: 'GET',

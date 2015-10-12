@@ -1,18 +1,18 @@
 <div class="col-md-12" ng-controller="MpesaReconciliationController">
     <ul class="breadcrumb">
-        <li class="active">Mpesa</li>
+        <li class="active">{{'label.mpesa.view'|translate}}</li>
     </ul>
     <ul></ul>
     <script type="text/ng-template" id="showTxn.html">
         <div class="modal-header silver">
-            <h3 class="bolder">Mpesa Transaction Summary</h3>
+            <h3 class="bolder">{{'label.view.mpesa Transaction Summary'|translate}}</h3>
         </div>
         <div class="modal-body">
             <api-validate></api-validate>
             <table class="table">
                 <thead>
                 <tr class ="graybg">
-                    <th>Client Name</th><th>Account No</th><th>Charge Amount</th><th>Transaction Date</th><th>Amount</th></tr></thead><tbody>
+                    <th>{{'label.mpesa.clientName'|translate}}</th><th>{{'label.mpesa.Account No'|translate}}</th><th>{{'label.mpesa.Charge Amount'|translate}}</th><th>{{'label.mpesa.Transaction Date'|translate}}</th><th>{{'label.mpesa.Amount'|translate}}</th></tr></thead><tbody>
             <tr ng-repeat="transaction in transactionData">
                 <td>{{transaction.clientName}}</td><td>{{transaction.accountNo}}</td><td>{{transaction.Amount}}</td>
                 <td>{{transaction.TxnDate}}</td><td>{{transaction.chargeAmount}}</td>
@@ -27,21 +27,22 @@
         <form name="search">
             <table>
                 <tr>
-                    <td colspan="2">Mobile No&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input type="text" id="mobileNo" name="mobileNo" ng-model="mobileNosearch"
+                    <td colspan="2">{{'label.mpesa.Mobile No'|translate}}&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input type="text" id="mobileNo" name="mobileNo" ng-model="mobileNosearch"
                                                                                      ng-pattern="/^[0-9]+$/"  class="form-control"/></td>
 
 
-                    <td>&nbsp;&nbsp;From Date&nbsp;&nbsp;</td><td><input id="From Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"
+                    <td>&nbsp;&nbsp;{{'label.mpesa.From Date'|translate}}&nbsp;&nbsp;</td><td><input id="From Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"
                                                                          ng-model="fromDateSearch" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control/"></td>
-                    <td>&nbsp;&nbsp;To Date &nbsp;&nbsp;</td><td><input id="To Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"
+                    <td>&nbsp;&nbsp;{{'label.mpesa.to Date'|translate}} &nbsp;&nbsp;</td><td><input id="To Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"
                                                                         ng-model="toDateSearch" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control/"></td>
                     <td>
-                       &nbsp;&nbsp;&nbsp;&nbsp; Status
+                       &nbsp;&nbsp;&nbsp;&nbsp;{{'label.mpesa.Status'|translate}}
                     </td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <select chosen="searchStatus"  ng-model="formData.searchStatus1"  class="form-control"
-                                ng-options="value.id as value.name for value in searchStatus track by value.id" value="{{value.id}}">
-                            <option value="">--select status--</option>
+                        <select chosen="searchStatus"  ng-init="formData.searchStatus1 = searchStatus[1]" ng-model="formData.searchStatus1"  class="form-control"
+                                                        ng-options="searchStatus1.id as searchStatus1.name for searchStatus1 in searchStatus track by searchStatus1.id" value="{{searchStatus1.id}}">
+                            <option value=""></option>
+
                         </select></td>
                 </tr>
                 <tr>
@@ -62,20 +63,20 @@
     <table class="table">
         <thead>
         <tr class="graybg">
-            <th>Transaction Date</th>
-            <th>Transaction Code</th>
-            <th>Client</th>
-            <th>Mobile No</th>
-            <th>Transaction Details</th>
+            <th>{{'label.mpesa.Transaction Date'|translate}}</th>
+            <th>{{'label.mpesa.Transaction Code'|translate}}</th>
+            <th>{{'label.mpesa.Client'|translate}}</th>
+            <th>{{'label.mpesa.Mobile No'|translate}}</th>
+            <th>{{'label.mpesa.Transaction Details'|translate}}</th>
             <th></th>
             <th></th>
-            <th>Amount</th>
-            <th>Status</th>
-            <th>Pay</th>
+            <th>{{'label.mpesa.Amount'|translate}}</th>
+            <th>{{'label.mpesa.Status'|translate}}</th>
+            <th>{{'label.mpesa.Pay'|translate}}</th>
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="transactions in completetransaction">
+        <tr ng-repeat="transactions in completetransaction" ng-if="transactions.type!='WithDraw'">
             <td>{{transactions.transactionTime}}</td>
             <td>{{transactions.transactionCode}}</td>
             <td>{{transactions.clientName}}-{{transactions.clientId}}</td>

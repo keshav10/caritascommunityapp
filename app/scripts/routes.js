@@ -605,9 +605,6 @@
             .when('/centers', {
                 templateUrl: 'views/centers/centers.html'
             })
-            .when('/mpesa',{
-                templateUrl: 'views/mpesa/mpesa.html'
-            })
             .when('/uploadxls', {
                 templateUrl: 'views/organization/uploadxls.html'
             })

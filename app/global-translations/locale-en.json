@@ -3559,10 +3559,24 @@
     "label.anchor.mpesareconciliation":"Mpesa Reconciliation",
 
     "#-----------------------": "-----------------",
-    "label.view.label.view.mpesaTransaction": "Mpesa Transaction",
-    "label.mpesa.clientmap": "CMP",
-    "label.mpesa.paid":"PAID",
-    "label.mpesa.branchmap":"BM"
+    "label.view.mpesaTransaction ": "Mpesa Transaction",
+    "label.view.mpesa ":"Mpesa",
+    "label.view.mpesa Transaction Summary":"Mpesa Transaction Summary",
+    "label.mpesa.clientName": "Client Name",
+    "label.mpesa.Account No":"Account No",
+    "label.mpesa.Charge Amount":"Charge Amount",
+    "label.mpesa.Transaction Date":"Transaction Date",
+    "label.mpesa.Amount":"Amount",
+    "label.mpesa.Transaction Code":"Transaction Code",
+    "label.mpesa.Client":"Client",
+    "label.mpesa.Mobile No":"Mobile No",
+    "label.mpesa.Transaction Details":"Transaction Details",
+    "label.mpesa.Status":"Status",
+    "label.mpesa.Pay":"Pay",
+    "label.mpesa.view":"Mpesa",
+    "label.mpesa.From Date":"From Date",
+    "label.mpesa.to Date":"To Date"
+
 
 
 }
