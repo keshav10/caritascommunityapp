@@ -55,6 +55,9 @@
 
             ];
 
+            scope.redirectTo=function(){
+                location.path('/UnMappedTransaction');
+            }
 
             scope.Mpesasearch=function() {
                // alert("search Id"+scope.formData.searchStatus1) ;
@@ -114,7 +117,7 @@
 
 
             var ClientDeleteCtrl = function ($scope, $modalInstance) {
-                 $http.get("https://localhost:8443/mifosng-provider/api/v1/clients/"+scope.clientId+"/Mpesa?TransactionDate="+scope.TransactionDate+"&ReceiptNo="+scope.ReceiptNo).success(function(data) {
+                 $http.get("https://localhost:8443/mifosng-provider/api/v1/clients/"+scope.clientId+"/mpesa?TransactionDate="+scope.TransactionDate+"&ReceiptNo="+scope.ReceiptNo).success(function(data) {
                     deferred.resolve(data);
                     $scope.transactionData = data;
                 });

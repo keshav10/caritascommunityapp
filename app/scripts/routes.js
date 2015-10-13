@@ -695,6 +695,9 @@
             .when('/expertsearch', {
                 templateUrl: 'views/expertsearch.html'
             })
+            .when('/UnMappedTransaction', {
+                templateUrl: 'views/mpesa/UnMappedTransaction.html'
+            })
             .when('/profile', {
                 templateUrl: 'views/profile.html'
             })

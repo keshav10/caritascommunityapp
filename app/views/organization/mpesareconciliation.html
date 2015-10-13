@@ -85,11 +85,13 @@
             <td>{{transactions.transactionAmount}}</td>
             <td>{{transactions.status}}
            <td>
-            <a title="Pay" ng-if="transactions.status!='PAID'"
+            <a title="Pay" ng-if="transactions.status!='PAID'&& transactions.status!='UNMP'"
                ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)" ><i
                     class="icon-check icon-white"></i></a>
             <a title="show Transaction Details" ng-if="transactions.status=='PAID'" ng-click="showTransactionDetail1(transactions.clientId,transactions.transactionDate,transactions.transactionCode)">&nbsp;<i class="fa fa-hand-o-right"></i></a>
-
+            <a title="Pay" ng-if ="transactions.status=='UNMP'"
+               ng-click="redirectTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)" ><i
+                    class="icon-check icon-white"></i></a>
         </tr>
         </tbody>
     </table>
