@@ -10,7 +10,7 @@
                     url: "https://localhost:8443/mifosng-provider/api/v1/uploadxls",
                     method: "POST",
                     data: file1,
-                    headers: {'Content-Type': undefined,'X-Mifos-Platform-TenantId': 'caritas'}
+                    headers: {'Content-Type': undefined,'X-Mifos-Platform-TenantId': 'default'}
 
 
                 });
