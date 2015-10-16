@@ -97,6 +97,9 @@
             .when('/mpesareconciliation', {
                 templateUrl: 'views/organization/mpesareconciliation.html'
             })
+            .when('/mpesareconciliation/:status1', {
+                templateUrl: 'views/organization/mpesareconciliation.html'
+            })
             .when('/clientscreenreport/:clientId', {
                 templateUrl: 'views/clients/clientscreenreport.html'
             })
@@ -695,7 +698,7 @@
             .when('/expertsearch', {
                 templateUrl: 'views/expertsearch.html'
             })
-            .when('/UnMappedTransaction', {
+            .when('/UnMappedTransaction/:amount/:mpetxnsacode/:txnDate/:txnId/:clientName/:mobileNo', {
                 templateUrl: 'views/mpesa/UnMappedTransaction.html'
             })
             .when('/profile', {

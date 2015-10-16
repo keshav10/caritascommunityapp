@@ -46,7 +46,7 @@
                 scope.mpesaAmount=routeParams.amount;
                 scope.mpetxnsacode=routeParams.mpetxnsacode;
                 scope.TxnDate=dateFilter(routeParams.txnDate, 'dd MMMM yyyy');
-                scope.txnId=routeParams.txnId;
+                  scope.txnId=routeParams.txnId;
             }
 
             scope.routeToLoan = function (id) {
@@ -1085,6 +1085,12 @@
                                     scope.isDisabled = false;
                                     var tDate = dateFilter(scope.formData.submittedOnDate, 'yyyy-MM-dd');
                                     var reciptNo = scope.formData.receiptNumber;
+                                    if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                        tDate=dateFilter(routeParams.txnDate,  'yyyy-MM-dd');
+                                        reciptNo=scope.mpetxnsacode;
+                                    }
+
+
 
                                     scope.printbtn = true;
                                     scope.hidePentahoReport = true;

@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        MpesaReconciliationController: function ($q,$http,scope, resourceFactory, location,http,dateFilter,$modal) {
+        MpesaReconciliationController: function ($q,$http,scope, resourceFactory, location,http,dateFilter,$modal,sessionManager,routeParams) {
             scope.routeTo = function (id, mpesaamount, mpetxnsacode, txnDate, txnId) {
                 location.path('/clientpayments/' + id + '/' + mpesaamount + '/' + mpetxnsacode + '/' + txnDate + '/' + txnId);
             };
@@ -24,13 +24,26 @@
             scope.clientId;
             scope.ReceiptNo;
             scope.toDateSearch=new Date();
+            scope.status1;
 
 
             var deferred = $q.defer();
-            $http.get("http://localhost:9292/mpesa/getunmappedtransactions?offset="+1+"&limit="+1).success(function (data) {
-                deferred.resolve(data);
-                scope.completetransaction = data;
-            });
+            if(routeParams.status1!=null){
+                scope.toDate = dateFilter( scope.restrictDate, 'yyyy-MM-dd');
+                http({
+                    method: 'GET',
+                    url: 'http://localhost:9292/mpesa/Search?status=UNMP&FromDate='+''+'&ToDate='+scope.toDate+'&mobileNo='
+                }).success(function (data) {
+                    deferred.resolve(data);
+                    scope.completetransaction=data;
+                });
+            }
+            else {
+                $http.get("http://localhost:9292/mpesa/getunmappedtransactions?offset=" + 1 + "&limit=" + 1).success(function (data) {
+                    deferred.resolve(data);
+                    scope.completetransaction = data;
+                });
+            }
             scope.searchStatus = [
                 {
                     "id": "1",
@@ -55,8 +68,8 @@
 
             ];
 
-            scope.redirectTo=function(){
-                location.path('/UnMappedTransaction');
+            scope.redirectTo=function( mpesaamount, mpetxnsacode, txnDate, txnId,clientName,mobileNo){
+                location.path('/UnMappedTransaction/' + mpesaamount + '/' + mpetxnsacode + '/' + txnDate + '/' + txnId +'/'+clientName+'/'+mobileNo);
             }
 
             scope.Mpesasearch=function() {
@@ -102,6 +115,7 @@
 
             };
 
+
             //scope.transactions={"id":5,"ipnId":2972,"origin":"MPESA","destination":"254700733153","timeStamp":null,"testMessage":"BM46ST941 Confirmed.on 6/7/11 at 10:49 PM Ksh8,723.00 received from RONALD NDALO 254722291067.Account Number 5FML59-01 New Utility balance is Ksh6,375,223.00","user":"123","password":"123","transactionCode":"BM46ST941","mobileNo":"9632587410","accountName":"5FML5901","transactionDate":"1307385000000","transactionTime":"10:49 PM","transactionAmount":"8723.000000","sender":"RONALD NDALO","status":"UT","clientId":13,"officeId":4};
             scope.showTransactionDetail1 = function (Id,Date,recNo) {
                 var params = {};
@@ -115,11 +129,12 @@
                 });
             };
 
-
             var ClientDeleteCtrl = function ($scope, $modalInstance) {
-                 $http.get("https://localhost:8443/mifosng-provider/api/v1/clients/"+scope.clientId+"/mpesa?TransactionDate="+scope.TransactionDate+"&ReceiptNo="+scope.ReceiptNo).success(function(data) {
+
+                 $http.get("https://localhost:8443/mifosng-provider/api/v1/clients/"+scope.clientId+"/Mpesa?TransactionDate="+scope.TransactionDate+"&ReceiptNo="+scope.ReceiptNo).success(function(data) {
                     deferred.resolve(data);
                     $scope.transactionData = data;
+
                 });
                 $scope.cancel = function () {
                     $modalInstance.dismiss('cancel');
@@ -129,7 +144,7 @@
         }
     });
 
-    mifosX.ng.application.controller('MpesaReconciliationController', ['$q','$http','$scope', 'ResourceFactory', '$location','$http','dateFilter','$modal', mifosX.controllers.MpesaReconciliationController]).run(function ($log) {
+    mifosX.ng.application.controller('MpesaReconciliationController', ['$q','$http','$scope', 'ResourceFactory', '$location','$http','dateFilter','$modal','SessionManager','$routeParams', mifosX.controllers.MpesaReconciliationController]).run(function ($log) {
         $log.info("MpesaReconciliationController initialized");
     });
 }(mifosX.controllers || {}));
