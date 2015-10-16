@@ -36,6 +36,14 @@
             scope.showinstallmentCharge=false;
             scope.showError=false;
             scope.LoanAccountNo=0;
+            /*
+            storing the previous value of loan and savings Account
+            * */
+            scope.oldLoanAmount=[];
+            scope.oldSavingsAmount=[];
+            scope.oldsum=0;
+            scope.t=false;
+
 
             scope.routeToLoan = function (id) {
                 location.path('/viewloanaccount/' + id);
@@ -210,86 +218,110 @@
                 };
             };
 
+    scope.init=function()
+            {
+                scope.addSavingsCharges = false;
+                scope.addLoanCharges = false;
+                scope.showSavingCharges = false;
+                scope.showLoanCharge = false;
+                resourceFactory.clientAccountChargeResource.get({
+                    clientId: routeParams.id,
+                    command: 'loanrepaymentamount'
+                }, function (data) {
 
-            resourceFactory.clientAccountChargeResource.get({
-                clientId: routeParams.id,
-                command: 'loanrepaymentamount'
-            }, function (data) {
+                    scope.clientAccounts = data;
+                    if (data.paymentTypeOptions != null) {
+                        scope.paymentTypes = data.paymentTypeOptions;
+                        scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
+                    }
+                    if (data.savingsCharges) {
+                        scope.savingsCharges = data.savingsCharges;
+                    }
+                    if (data.loanCharges) {
+                        scope.loanCharges = data.loanCharges;
+                    }
+                    if (data.loanAccounts) {
+                        scope.loanAccounts = data.loanAccounts || [];
+                        for (var i in scope.loanAccounts) {
+                            scope.charges = 0;
+                            scope.chargeDescription = " ";
+                            scope.loanAccounts[i].relativeUrl = "loans/" + scope.loanAccounts[i].id + "/repayment?command=repayment";
+                            scope.loanAccounts[i].repaymentAmount = scope.loanAccounts[i].loanrepaymentamount;
+                            scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[i].loanrepaymentamount;
+                            for (var j in scope.loanCharges) {
+                                if (scope.loanAccounts[i].id == scope.loanCharges[j].id) {
+                                    scope.charges = scope.charges + scope.loanCharges[j].chargeDue;
+                                    scope.chargeDescription = scope.chargeDescription + "\n" + scope.loanCharges[j].chargeName + "=" +
+                                    scope.loanCharges[j].chargeDue + "\n";
+                                }
+                            }
+                            scope.loanAccounts[i].charges1 = scope.charges;
+                            scope.loanAccounts[i].chargeDescription1 = scope.chargeDescription;
+                            //store the previous value into the loanAccounts
+                            scope.loanAccounts[i].value = scope.oldLoanAmount[i];
 
-                scope.clientAccounts = data;
-                if (data.paymentTypeOptions != null) {
-                    scope.paymentTypes = data.paymentTypeOptions;
-                    scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
-                }
-                if (data.savingsCharges) {
-                    scope.savingsCharges = data.savingsCharges;
-                }
-                if (data.loanCharges) {
-                    scope.loanCharges = data.loanCharges;
-                }
-                if (data.loanAccounts) {
-                    scope.loanAccounts = data.loanAccounts || [];
-                    for (var i in scope.loanAccounts) {
-                        scope.charges=0;
-                        scope.chargeDescription=" ";
-                        scope.loanAccounts[i].relativeUrl = "loans/" + scope.loanAccounts[i].id + "/repayment?command=repayment";
-                        scope.loanAccounts[i].repaymentAmount = scope.loanAccounts[i].loanrepaymentamount;
-                        scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[i].loanrepaymentamount;
-                        for (var j in scope.loanCharges) {
-                            if (scope.loanAccounts[i].id == scope.loanCharges[j].id) {
-                                scope.charges = scope.charges + scope.loanCharges[j].chargeDue;
-                                scope.chargeDescription = scope.chargeDescription + "\n" + scope.loanCharges[j].chargeName + "=" +
-                                scope.loanCharges[j].chargeDue + "\n";
+                        }
+
+                    }
+                    if (data.savingsAccounts) {
+                        scope.savingsAccounts = data.savingsAccounts || [];
+                        for (var i in data.savingsAccounts) {
+                            scope.savingAccountCharges = 0;
+                            scope.savingChargesDescription = " ";
+                            scope.savingsAccounts[i].relativeUrl = "savingsaccounts/" + scope.savingsAccounts[i].id + "/transactions?command=deposit";
+                            scope.savingsAccounts[i].depositAmount = "";
+                            for (var j in scope.savingsCharges) {
+                                if (scope.savingsAccounts[i].id == scope.savingsCharges[j].id) {
+                                    scope.savingAccountCharges = scope.savingAccountCharges + scope.savingsCharges[j].chargeDue;
+                                    scope.savingChargesDescription = scope.savingChargesDescription + "\n" + scope.savingsCharges[j].chargeName + "=" +
+                                    scope.savingsCharges[j].chargeDue + "\n";
+                                }
+                            }
+                            scope.savingsAccounts[i].charges2 = scope.savingAccountCharges;
+                            scope.savingsAccounts[i].chargeDescription2 = scope.savingChargesDescription;
+                            // for displaying the old  savings values on the  screen
+                            scope.savingsAccounts[i].value = scope.oldSavingsAmount[i];
+
+
+                        }
+                    }
+                    if (data.savingsAccounts) {
+                        for (var i in data.savingsAccounts) {
+                            if (data.savingsAccounts[i].status.value == "Active") {
+                                scope.updateDefaultSavings = true;
+                                break;
                             }
                         }
-                        scope.loanAccounts[i].charges1 = scope.charges;
-                        scope.loanAccounts[i].chargeDescription1 = scope.chargeDescription;
                     }
-
-                }
-                if (data.savingsAccounts) {
-                    scope.savingsAccounts = data.savingsAccounts || [];
-                    for (var i in data.savingsAccounts) {
-                        scope.savingAccountCharges = 0;
-                        scope.savingChargesDescription = " ";
-                        scope.savingsAccounts[i].relativeUrl = "savingsaccounts/" + scope.savingsAccounts[i].id + "/transactions?command=deposit";
-                        scope.savingsAccounts[i].depositAmount = "";
-                        for (var j in scope.savingsCharges) {
-                            if (scope.savingsAccounts[i].id == scope.savingsCharges[j].id) {
-                                scope.savingAccountCharges = scope.savingAccountCharges + scope.savingsCharges[j].chargeDue;
-                                scope.savingChargesDescription = scope.savingChargesDescription + "\n" + scope.savingsCharges[j].chargeName + "=" +
-                                scope.savingsCharges[j].chargeDue + "\n";
-                            }
-                        }
-                        scope.savingsAccounts[i].charges2 = scope.savingAccountCharges;
-                        scope.savingsAccounts[i].chargeDescription2 = scope.savingChargesDescription;
-
-                    }
-                }
-                if (data.savingsAccounts) {
-                    for (var i in data.savingsAccounts) {
-                        if (data.savingsAccounts[i].status.value == "Active") {
-                            scope.updateDefaultSavings = true;
-                            break;
-                        }
-                    }
-                }
-            });
+                });
+            };
 //       on changing the date:-
 
+            //definr new function
+            scope.calculate=function() {
+                scope.formData.totalAmount = 0;
+                for (var l in scope.loanAccounts) {
+                    if (scope.loanAccounts[l].active) {
+                        if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
 
+                            scope.formData.totalAmount = scope.formData.totalAmount + scope.oldLoanAmount[l];
+                        }
+                    }
+                }
+                alert(scope.formData.totalAmount)
+            }
             scope.$watch('formData.submittedOnDate',function(){
                 scope.onDateChange();
             });
             scope.onDateChange = function () {
-                // if(scope.processDate) {
+                scope.t=true;
+                scope.calculate();
                 var params = {};
                // params.dateFormat = scope.df;
                 params.submittedOnDate = dateFilter(this.formData.submittedOnDate, scope.df);
                 //alert(params.transactionDate);
                 params.clientId = routeParams.id;
                 params.command = 'loanrepaymentamount';
-               // alert(params.transactionDate);
 
                 resourceFactory.clientAccountChargeResource.get(params, function (data) {
                     scope.clientAccounts = data;
@@ -320,6 +352,8 @@
                             }
                             scope.loanAccounts[i].charges1 = scope.charges;
                             scope.loanAccounts[i].chargeDescription1 = scope.chargeDescription;
+                            //store the previous value into the loanAccounts
+                             scope.loanAccounts[i].value=scope.oldLoanAmount[i];
 
                         }
                     }
@@ -340,6 +374,8 @@
                             }
                             scope.savingsAccounts[i].charges2 = scope.savingAccountCharges;
                             scope.savingsAccounts[i].chargeDescription2 = scope.savingChargesDescription;
+                            // for displaying the old  savings values on the  screen
+                            scope.savingsAccounts[i].value=scope.oldSavingsAmount[i];
                         }
                     }
                     if (data.savingsAccounts) {
@@ -362,6 +398,7 @@
                 for (var l in scope.loanAccounts) {
                     if (scope.loanAccounts[l].active) {
                         if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
+                            scope.oldLoanAmount[l] = scope.loanAccounts[l].repaymentAmount;
                             scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[l].repaymentAmount;
                         }
                     }
@@ -369,12 +406,16 @@
                 for (var l in scope.savingsAccounts) {
                     if (scope.savingsAccounts[l].active) {
                         if (scope.savingsAccounts[l].depositAmount != null && scope.savingsAccounts[l].depositAmount != "") {
+                            scope.oldSavingsAmount[l]=scope.savingsAccounts[l].depositAmount;
                             scope.formData.totalAmount = scope.formData.totalAmount + scope.savingsAccounts[l].depositAmount;
 
                         }
                     }
                 }
+
+               //scope.formData.totalAmount=scope.oldsum;
                };
+
             //for adding the Loan Charges:-
             scope.showAddLoanCharges = function (id) {
                 scope.showSavingCharges = false;
@@ -417,7 +458,8 @@
                         resourceType: 'charges',
                         loanId: scope.loanId
                     }, scope.LoanData, function (data) {
-                        route.reload();
+                        //route.reload();
+                        scope.init();
                         scope.addLoanCharges = false;
 
                     });
@@ -453,7 +495,9 @@
                   scope.waiveData.dateFormat=scope.df;
                   scope.waiveData.locale=scope.optlang.code;
                   resourceFactory.savingsResource.save(scope.waiveSavingChargeData,scope.waiveData , function (data) {
-                      route.reload();
+                     // route.reload();
+                      //added
+                      scope.init();
                    });
                   };
             scope.savingChargesCancel = function(){
@@ -490,7 +534,8 @@
                         scope.LoanwaiveData.dateFormat=scope.df;
                         scope.LoanwaiveData.locale=scope.optlang.code;
                         resourceFactory.LoanAccountResource.save({loanId: id, resourceType: 'charges', chargeId: chargeId, 'command': 'waive'}, scope.LoanwaiveData, function (data) {
-                            route.reload();
+                           // route.reload();
+                            scope.init();
                         });
                     }
                 });
@@ -583,13 +628,14 @@
                     scope.savingData.monthDayFormat= "dd MMMM";
                     //scope.savingData.officeId=1;
                     resourceFactory.savingsChargeResource.save({accountId: id}, scope.savingData, function (data) {
-                        route.reload();
+                       // route.reload();
+                        scope.init();
                     });
 
                 }
 
             }
-
+            scope.init();
 
 //complete the add savings Charges:-
 
@@ -605,6 +651,14 @@
                 var headers = [{name: "Content-type", value: "application/json"}];
                 for (var l in scope.loanAccounts) {
                     if (scope.loanAccounts[l].active) {
+                        /*if old value of Loan Accoount is present
+                        * */
+                        if(scope.oldLoanAmount[l]!=null&& scope.oldLoanAmount[l]!=""){
+                            if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {}
+                                 else {
+                                scope.loanAccounts[l].repaymentAmount = scope.oldLoanAmount[l];
+                            }
+                        }
                         if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
                             var actualDisbursementDate = new Date(scope.loanAccounts[l].timeline.actualDisbursementDate);
                             if (d >= actualDisbursementDate) {
@@ -657,6 +711,17 @@
                 }
                 for (var s in scope.savingsAccounts) {
                     if (scope.savingsAccounts[s].active) {
+                        alert(scope.oldSavingsAmount[s]);
+                        if(scope.oldSavingsAmount[s]!=null&& scope.oldSavingsAmount[s]!=""){
+                            if(scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != ""){
+                                    alert("1");
+                            }
+                            else {
+                                alert("2");
+                                alert(scope.oldSavingsAmount[s]);
+                                scope.savingsAccounts[s].depositAmount = scope.oldSavingsAmount[s];
+                            }
+                        }
                         if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != "") {
                             var activatedOnDate = new Date(scope.savingsAccounts[s].timeline.activatedOnDate);
                             if (d >= activatedOnDate) {

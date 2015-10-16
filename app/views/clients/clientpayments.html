@@ -65,7 +65,7 @@
 										<i tooltip="{{loanaccount.loanType.value}}" class="icon-group icon-large"></i>
 									</td>
 									<td ng-if="loanaccount.status.active" align="right">
-										<input class="col-sm-8" id="repaymentAmount" type="text" name="repaymentAmount"
+										<input class="col-sm-8" id="repaymentAmount" type="text" name="repaymentAmount" ng-value="loanaccount.value|number"
 											   ng-model="loanaccount.repaymentAmount" ng-keyup="keyPress()" class="form-control" number-format />
 										<input id="loanactiveCheckbox" ng-change="keyPress()" ng-model="loanaccount.active"
 											   ng-init="loanaccount.active=true" ng-checked="true" type="checkbox"/></td>
@@ -213,7 +213,7 @@
 									<td></td>
 									<td></td>
 									<td   align="right">
-										<input class="col-sm-8" id="depositAmount" type="text" name="depositAmount"
+										<input class="col-sm-8" id="depositAmount" type="text" name="depositAmount" ng-value="savingaccount.value"
 											   ng-model="savingaccount.depositAmount" ng-keyup="keyPress()" class="form-control" number-format />
 										<input ng-hide="false" id="savingactiveCheckbox" ng-change="keyPress()" ng-model="savingaccount.active"
 											   ng-init="savingaccount.active=true" ng-checked="true" type="checkbox" />
