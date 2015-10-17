@@ -855,7 +855,7 @@
                 }
             };
 
-            scope.submitPaymentsAndPrint = function(){
+            scope.submitPaymentsAndPrint = function() {
                 var requests = [];
                 var d = scope.formData.submittedOnDate;
                 var today = formatDate(d);
