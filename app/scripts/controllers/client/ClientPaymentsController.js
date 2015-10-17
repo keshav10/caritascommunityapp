@@ -850,23 +850,23 @@
                         }
 
 
-            scope.submitPaymentsAndPrint = function(){
+            scope.submitPaymentsAndPrint = function() {
                 var requests = [];
                 var d = scope.formData.submittedOnDate;
                 var today = formatDate(d);
-                if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
-                    var today=scope.TxnDate;
+                if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
+                    var today = scope.TxnDate;
                 }
                 var submitProcess = false;
                 var requestId = 1;
                 var req = 0;
                 //Header Requests
                 var headers = [{name: "Content-type", value: "application/json"}];
-                for(var l in scope.loanAccounts) {
+                for (var l in scope.loanAccounts) {
                     if (scope.loanAccounts[l].active) {
                         if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
                             var actualDisbursementDate = new Date(scope.loanAccounts[l].timeline.actualDisbursementDate);
-                            if(d >= actualDisbursementDate){
+                            if (d >= actualDisbursementDate) {
                                 submitProcess = true;
                                 var request = {};
                                 request.requestId = requestId;
@@ -879,11 +879,11 @@
                                 if (scope.formData.paymentTypeId != undefined) {
                                     bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                 }
-                                if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
                                     bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
 
                                 }
-                                else{
+                                else {
                                     bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                 }
                                 if (scope.formData.accountNumber != undefined) {
@@ -896,31 +896,32 @@
                                     bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
                                 }
 
-                                if(scope.formData.bankNumber != undefined) {
+                                if (scope.formData.bankNumber != undefined) {
                                     var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
                                     bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
 
-                                bodyJson += ",\"locale\":\"en\"";
-                                bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
-                                bodyJson += "}";
-                                request.body = bodyJson;
+                                    bodyJson += ",\"locale\":\"en\"";
+                                    bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
+                                    bodyJson += "}";
+                                    request.body = bodyJson;
 
-                                requests[req++] = request;
-                                requestId++
-                             }else{
-                                submitProcess = false;
-                                alert("Loan Account : "+scope.loanAccounts[l].id+"\nTransaction date cannot be before account activation date.");
+                                    requests[req++] = request;
+                                    requestId++
+                                } else {
+                                    submitProcess = false;
+                                    alert("Loan Account : " + scope.loanAccounts[l].id + "\nTransaction date cannot be before account activation date.");
 
-                                return;
+                                    return;
+                                }
                             }
                         }
                     }
                 }
-                for(var s in scope.savingsAccounts) {
+                for (var s in scope.savingsAccounts) {
                     if (scope.savingsAccounts[s].active) {
                         if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != "") {
                             var activatedOnDate = new Date(scope.savingsAccounts[s].timeline.activatedOnDate);
-                            if(d >= activatedOnDate) {
+                            if (d >= activatedOnDate) {
                                 submitProcess = true;
                                 var request = {};
                                 request.requestId = requestId;
@@ -962,9 +963,9 @@
                                 requests[req++] = request;
                                 requestId++
 
-                            }else{
+                            } else {
                                 submitProcess = false;
-                                alert("Saving Account : "+scope.savingsAccounts[s].id+"\nTransaction date cannot be before account activation date.");
+                                alert("Saving Account : " + scope.savingsAccounts[s].id + "\nTransaction date cannot be before account activation date.");
 
                                 return;
                             }
@@ -974,10 +975,10 @@
                 for (var s in scope.savingsAccounts) {
                     if (scope.savingsAccounts[s].active) {
                         for (var J in  scope.savingsCharges) {
-                            if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != ""&& scope.savingsAccounts[s].depositAmount >0) {
+                            if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != "" && scope.savingsAccounts[s].depositAmount > 0) {
                                 if (scope.savingsAccounts[s].accountNo == scope.savingsCharges[J].accountNo) {
                                     if (scope.savingsAccounts[s].depositAmount < scope.savingsCharges[J].chargeDue) {
-                                        scope.chargeAmount =  scope.savingsAccounts[s].depositAmount;
+                                        scope.chargeAmount = scope.savingsAccounts[s].depositAmount;
                                         scope.savingsAccounts[s].depositAmount = scope.savingsAccounts[s].depositAmount - scope.savingsCharges[J].chargeDue;
 
                                     }
@@ -1001,11 +1002,11 @@
                                         if (scope.formData.paymentTypeId != undefined) {
                                             bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                         }
-                                        if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                        if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
                                             bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
 
                                         }
-                                        else{
+                                        else {
                                             bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                         }
                                         if (scope.formData.accountNumber != undefined) {
@@ -1018,7 +1019,7 @@
                                             bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
                                         }
 
-                                        if(scope.formData.bankNumber != undefined) {
+                                        if (scope.formData.bankNumber != undefined) {
                                             var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
                                             bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
 
@@ -1041,27 +1042,27 @@
                         }
                     }
                 }
-                if(scope.mpesaAmount!=null) {
-                    scope.formData.receiptNumber=scope.mpetxnsacode;
+                if (scope.mpesaAmount != null) {
+                    scope.formData.receiptNumber = scope.mpetxnsacode;
                     if (scope.mpesaAmount != scope.formData.totalAmount) {
                         submitProcess = false;
-                        scope.showError=true;
+                        scope.showError = true;
                     }
                 }
-                if(submitProcess){
+                if (submitProcess) {
                     http({
                         method: 'POST',
                         url: $rootScope.hostUrl + API_VERSION + '/batches/?enclosingTransaction=true',
                         dataType: 'json',
                         data: requests
-                    }).success(function(data){
-                        if(data.length==0){
+                    }).success(function (data) {
+                        if (data.length == 0) {
                             alert("Loan Transaction cannot be before the last transaction date");
                             return;
-                        }else{
+                        } else {
                             for (var i = 0; i < data.length; i++) {
-                                if (data[i].statusCode === 200){
-                                    if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                if (data[i].statusCode === 200) {
+                                    if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
                                         http({
                                             method: 'GET',
                                             url: 'http://localhost:9292/mpesa/postpayment?id=' + scope.txnId
@@ -1071,26 +1072,25 @@
                                     scope.isDisabled = false;
                                     var tDate = dateFilter(scope.formData.submittedOnDate, 'yyyy-MM-dd');
                                     var reciptNo = scope.formData.receiptNumber;
-                                    if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
-                                        tDate=dateFilter(routeParams.txnDate,  'yyyy-MM-dd');
-                                        reciptNo=scope.mpetxnsacode;
+                                    if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
+                                        tDate = dateFilter(routeParams.txnDate, 'yyyy-MM-dd');
+                                        reciptNo = scope.mpetxnsacode;
                                     }
-
 
 
                                     scope.printbtn = true;
                                     scope.hidePentahoReport = true;
                                     scope.formData.outputType = 'PDF';
                                     scope.baseURL = $rootScope.hostUrl + API_VERSION + "/runreports/" + encodeURIComponent("Payment Receipts");
-                                    scope.baseURL += "?output-type=" + encodeURIComponent(scope.formData.outputType) + "&tenantIdentifier=" + $rootScope.tenantIdentifier+"&locale="+scope.optlang.code;
+                                    scope.baseURL += "?output-type=" + encodeURIComponent(scope.formData.outputType) + "&tenantIdentifier=" + $rootScope.tenantIdentifier + "&locale=" + scope.optlang.code;
 
                                     var reportParams = "";
                                     var paramName = "R_clientId";
-                                    reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(routeParams.id)+ "&";
+                                    reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(routeParams.id) + "&";
                                     paramName = "R_tDate";
-                                    reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(tDate)+ "&";
+                                    reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(tDate) + "&";
                                     paramName = "R_reciptNo";
-                                    if(reciptNo == undefined || reciptNo == "" || paramName == "-"){
+                                    if (reciptNo == undefined || reciptNo == "" || paramName == "-") {
                                         reciptNo = "-";
                                     }
                                     reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(reciptNo);
@@ -1101,22 +1101,24 @@
                                     scope.baseURL = $sce.trustAsResourceUrl(scope.baseURL);
 
                                 }
-                            }}
-                    }).error(function(data){
+                            }
+                        }
+                    }).error(function (data) {
                     });
-                }else{
+                } else {
 
-                    if(scope.mpesaAmount!=null){}
+                    if (scope.mpesaAmount != null) {
+                    }
                     else {
                         alert("Please enter amount");
                     }
                 }
 
-            scope.printReport = function () {
-                window.print();
-                window.close();
-            };
-
+                scope.printReport = function () {
+                    window.print();
+                    window.close();
+                };
+            }
             var m_names = new Array("January", "February", "March",
                 "April", "May", "June", "July", "August", "September",
                 "October", "November", "December");
@@ -1418,6 +1420,7 @@
                     // this will be used to display the score on the viewclient.html
                     scope.inventureScore = inventureScore;
                 };
+            };
                 scope.showSignature = function () {
                     $modal.open({
                         templateUrl: 'clientSignature.html',
@@ -1491,6 +1494,8 @@
                         $modalInstance.dismiss('cancel');
                     };
                 };
+
+            }
                         });
 
 
