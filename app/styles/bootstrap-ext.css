@@ -260,3 +260,12 @@ select[multiple]{
 .alert {
 	border-radius: 0px;	
 }
+
+
+.custom-upload .fake-file input
+{
+    font-size:16px;
+    height:40px;
+    width:300px;
+}
+

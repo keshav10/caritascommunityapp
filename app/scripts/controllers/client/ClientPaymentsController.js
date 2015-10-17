@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        ClientPaymentsController: function (scope, routeParams, route, location, resourceFactory, http, $modal, API_VERSION, $rootScope, $upload, dateFilter, $sce,$location,$http,$q) {
+        ClientPaymentsController: function (scope, routeParams, route, location, resourceFactory, http, $modal, API_VERSION, $rootScope, $upload, dateFilter, $sce) {
             scope.client = [];
             scope.identitydocuments = [];
             scope.buttons = [];
@@ -40,6 +40,7 @@
             scope.mpesaPayment=false;
             scope.showError=false;
             scope.txnId;
+            scope.isDisabled = true;
 
             if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null){
                 scope.mpesaPayment=true;
@@ -48,7 +49,6 @@
                 scope.TxnDate=dateFilter(routeParams.txnDate, 'dd MMMM yyyy');
                   scope.txnId=routeParams.txnId;
             }
-
             scope.routeToLoan = function (id) {
                 location.path('/viewloanaccount/' + id);
             };
@@ -112,11 +112,8 @@
                     ]
                 };
                 scope.buttonsArray.singlebuttons = scope.buttons;
-                resourceFactory.runReportsResource.get({
-                    reportSource: 'ClientSummary',
-                    genericResultSet: 'false',
-                    R_clientId: routeParams.id
-                }, function (data) {
+
+                resourceFactory.runReportsResource.get({reportSource: 'ClientSummary', genericResultSet: 'false', R_clientId: routeParams.id}, function (data) {
                     scope.client.ClientSummary = data[0];
                 });
             });
@@ -209,10 +206,7 @@
             };
             var ClientUnassignCtrl = function ($scope, $modalInstance) {
                 $scope.unassign = function () {
-                    resourceFactory.clientResource.save({
-                        clientId: routeParams.id,
-                        command: 'unassignstaff'
-                    }, scope.staffData, function (data) {
+                    resourceFactory.clientResource.save({clientId: routeParams.id, command: 'unassignstaff'}, scope.staffData, function (data) {
                         $modalInstance.close('unassign');
                         route.reload();
                     });
@@ -221,6 +215,7 @@
                     $modalInstance.dismiss('cancel');
                 };
             };
+
 
 
             resourceFactory.clientAccountChargeResource.get({
@@ -257,7 +252,6 @@
                         scope.loanAccounts[i].charges1 = scope.charges;
                         scope.loanAccounts[i].chargeDescription1 = scope.chargeDescription;
                     }
-
                 }
                 if (data.savingsAccounts) {
                     scope.savingsAccounts = data.savingsAccounts || [];
@@ -275,7 +269,6 @@
                         }
                         scope.savingsAccounts[i].charges2 = scope.savingAccountCharges;
                         scope.savingsAccounts[i].chargeDescription2 = scope.savingChargesDescription;
-
                     }
                 }
                 if (data.savingsAccounts) {
@@ -287,6 +280,7 @@
                     }
                 }
             });
+
 //       on changing the date:-
 
 
@@ -365,19 +359,17 @@
                 });
 
             };
-
-
-
-
-            scope.keyPress = function(){
+       scope.keyPress = function(){
                 scope.formData.totalAmount = 0;
-                for (var l in scope.loanAccounts) {
+                for(var l in scope.loanAccounts) {
+
                     if (scope.loanAccounts[l].active) {
                         if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
                             scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[l].repaymentAmount;
                         }
                     }
                 }
+
                 for (var l in scope.savingsAccounts) {
                     if (scope.savingsAccounts[l].active) {
                         if (scope.savingsAccounts[l].depositAmount != null && scope.savingsAccounts[l].depositAmount != "") {
@@ -613,17 +605,16 @@
                if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
                    var today=scope.TxnDate;
                 }
-
                 var submitProcess = false;
                 var requestId = 1;
                 var req = 0;
                 //Header Requests
                 var headers = [{name: "Content-type", value: "application/json"}];
-                for (var l in scope.loanAccounts) {
+                for(var l in scope.loanAccounts) {
                     if (scope.loanAccounts[l].active) {
                         if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
                             var actualDisbursementDate = new Date(scope.loanAccounts[l].timeline.actualDisbursementDate);
-                            if (d >= actualDisbursementDate) {
+                            if(d >= actualDisbursementDate){
                                 submitProcess = true;
                                 var request = {};
                                 request.requestId = requestId;
@@ -633,6 +624,7 @@
                                 var bodyJson = "{";
                                 bodyJson += "\"transactionAmount\":\"" + scope.loanAccounts[l].repaymentAmount + "\"";
                                 bodyJson += ",\"transactionDate\":\"" + today + "\"";
+
 
                                 if (scope.formData.paymentTypeId != undefined) {
                                     bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
@@ -667,6 +659,7 @@
                                 requests[req++] = request;
                                 requestId++
 
+
                             } else{
                                 submitProcess = false;
                                 alert("Loan Account : " + scope.loanAccounts[l].id + "\nTransaction date cannot be before account activation date.");
@@ -676,11 +669,12 @@
                         }
                     }
                 }
-                for (var s in scope.savingsAccounts) {
+                for(var s in scope.savingsAccounts) {
                     if (scope.savingsAccounts[s].active) {
                         if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != "") {
                             var activatedOnDate = new Date(scope.savingsAccounts[s].timeline.activatedOnDate);
-                            if (d >= activatedOnDate) {
+                            if(d >= activatedOnDate){
+
                                 submitProcess = true;
                                 var request = {};
                                 request.requestId = requestId;
@@ -731,10 +725,7 @@
                             }
                         }
                     }
-
-
-
-                }
+              }
 
                 for (var s in scope.savingsAccounts) {
                     if (scope.savingsAccounts[s].active) {
@@ -788,7 +779,6 @@
                                     var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
                                     bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
                                 }
-
                                 bodyJson += ",\"locale\":\"en\"";
                                 bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
                                 bodyJson += "}";
@@ -796,7 +786,6 @@
 
                                 requests[req++] = request;
                                 requestId++
-                               alert(scope.formData.paymentTypeId);
 
                             } else {
                                 submitProcess = false;
@@ -805,9 +794,7 @@
                             }
                         }
                         }
-                    }
-                    }
-                }
+                    }}}
                 if(scope.mpesaAmount!=null) {
                     scope.formData.receiptNumber=scope.mpetxnsacode;
                     if (scope.mpesaAmount != scope.formData.totalAmount) {
@@ -856,28 +843,30 @@
                     else {
                         alert("Please enter amount");
                     }
-                }
-            };
+                     submitProcess = false;
+                       alert("Saving Account : "+scope.savingsAccounts[s].id+"\nTransaction date cannot be before account activation date.");
+                        return;
+                            }
+                        }
+
 
             scope.submitPaymentsAndPrint = function(){
                 var requests = [];
-
                 var d = scope.formData.submittedOnDate;
                 var today = formatDate(d);
                 if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
                     var today=scope.TxnDate;
                 }
-
                 var submitProcess = false;
                 var requestId = 1;
                 var req = 0;
                 //Header Requests
                 var headers = [{name: "Content-type", value: "application/json"}];
-                for (var l in scope.loanAccounts) {
+                for(var l in scope.loanAccounts) {
                     if (scope.loanAccounts[l].active) {
                         if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
                             var actualDisbursementDate = new Date(scope.loanAccounts[l].timeline.actualDisbursementDate);
-                            if (d >= actualDisbursementDate) {
+                            if(d >= actualDisbursementDate){
                                 submitProcess = true;
                                 var request = {};
                                 request.requestId = requestId;
@@ -887,7 +876,6 @@
                                 var bodyJson = "{";
                                 bodyJson += "\"transactionAmount\":\"" + scope.loanAccounts[l].repaymentAmount + "\"";
                                 bodyJson += ",\"transactionDate\":\"" + today + "\"";
-
                                 if (scope.formData.paymentTypeId != undefined) {
                                     bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                 }
@@ -911,7 +899,6 @@
                                 if(scope.formData.bankNumber != undefined) {
                                     var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
                                     bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
-                                }
 
                                 bodyJson += ",\"locale\":\"en\"";
                                 bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
@@ -920,19 +907,20 @@
 
                                 requests[req++] = request;
                                 requestId++
-                            } else {
+                             }else{
                                 submitProcess = false;
-                                alert("Loan Account : " + scope.loanAccounts[l].id + "\nTransaction date cannot be before account activation date.");
+                                alert("Loan Account : "+scope.loanAccounts[l].id+"\nTransaction date cannot be before account activation date.");
+
                                 return;
                             }
                         }
                     }
                 }
-                for (var s in scope.savingsAccounts) {
+                for(var s in scope.savingsAccounts) {
                     if (scope.savingsAccounts[s].active) {
                         if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != "") {
                             var activatedOnDate = new Date(scope.savingsAccounts[s].timeline.activatedOnDate);
-                            if (d >= activatedOnDate) {
+                            if(d >= activatedOnDate) {
                                 submitProcess = true;
                                 var request = {};
                                 request.requestId = requestId;
@@ -942,15 +930,14 @@
                                 var bodyJson = "{";
                                 bodyJson += "\"transactionAmount\":\"" + scope.savingsAccounts[s].depositAmount + "\"";
                                 bodyJson += ",\"transactionDate\":\"" + today + "\"";
-
                                 if (scope.formData.paymentTypeId != undefined) {
                                     bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                 }
-                                if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
                                     bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
 
                                 }
-                                else{
+                                else {
                                     bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                 }
                                 if (scope.formData.accountNumber != undefined) {
@@ -963,12 +950,10 @@
                                     bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
                                 }
 
-                                if(scope.formData.bankNumber != undefined) {
+                                if (scope.formData.bankNumber != undefined) {
                                     var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
                                     bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
-
                                 }
-
                                 bodyJson += ",\"locale\":\"en\"";
                                 bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
                                 bodyJson += "}";
@@ -976,15 +961,16 @@
 
                                 requests[req++] = request;
                                 requestId++
-                            } else {
+
+                            }else{
                                 submitProcess = false;
-                                alert("Saving Account : " + scope.savingsAccounts[s].id + "\nTransaction date cannot be before account activation date.");
+                                alert("Saving Account : "+scope.savingsAccounts[s].id+"\nTransaction date cannot be before account activation date.");
+
                                 return;
                             }
                         }
                     }
                 }
-
                 for (var s in scope.savingsAccounts) {
                     if (scope.savingsAccounts[s].active) {
                         for (var J in  scope.savingsCharges) {
@@ -1125,7 +1111,7 @@
                         alert("Please enter amount");
                     }
                 }
-            };
+
             scope.printReport = function () {
                 window.print();
                 window.close();
@@ -1139,7 +1125,8 @@
                 var month = d.getMonth();
                 var day = d.getDate();
                 day = day + "";
-                if (day.length == 1) {
+
+                if (day.length == 1){
                     day = "0" + day;
                 }
                 return day + ' ' + m_names[month] + ' ' + d.getFullYear();
@@ -1184,10 +1171,8 @@
                 scope.clientNotes = data;
             });
             scope.getClientIdentityDocuments = function () {
-                resourceFactory.clientResource.getAllClientDocuments({
-                    clientId: routeParams.id,
-                    anotherresource: 'identifiers'
-                }, function (data) {
+         resourceFactory.clientResource.getAllClientDocuments({clientId: routeParams.id, anotherresource: 'identifiers'}, function (data) {
+
                     scope.identitydocuments = data;
                     for (var i = 0; i < scope.identitydocuments.length; i++) {
                         resourceFactory.clientIdentifierResource.get({clientIdentityId: scope.identitydocuments[i].id}, function (data) {
@@ -1212,10 +1197,9 @@
             });
 
             scope.dataTableChange = function (clientdatatable) {
-                resourceFactory.DataTablesResource.getTableDetails({
-                    datatablename: clientdatatable.registeredTableName,
-                    entityId: routeParams.id, genericResultSet: 'true'
-                }, function (data) {
+           resourceFactory.DataTablesResource.getTableDetails({datatablename: clientdatatable.registeredTableName,
+                    entityId: routeParams.id, genericResultSet: 'true'}, function (data) {
+
                     scope.datatabledetails = data;
                     scope.datatabledetails.isData = data.data.length > 0 ? true : false;
                     scope.datatabledetails.isMultirow = data.columnHeaders[0].columnName == "id" ? true : false;
@@ -1252,8 +1236,7 @@
                 }
                 else {
                     location.path('/viewclient/' + scope.client.id);
-                }
-            };
+                }};
 
             scope.viewstandinginstruction = function () {
                 location.path('/liststandinginstructions/' + scope.client.officeId + '/' + scope.client.id);
@@ -1262,11 +1245,7 @@
                 location.path('/createstandinginstruction/' + scope.client.officeId + '/' + scope.client.id + '/fromsavings');
             };
             scope.deleteAll = function (apptableName, entityId) {
-                resourceFactory.DataTablesResource.delete({
-                    datatablename: apptableName,
-                    entityId: entityId,
-                    genericResultSet: 'true'
-                }, {}, function (data) {
+                resourceFactory.DataTablesResource.delete({datatablename: apptableName, entityId: entityId, genericResultSet: 'true'}, {}, function (data) {
                     route.reload();
                 });
             };
@@ -1284,10 +1263,7 @@
             };
 
             scope.deleteDocument = function (documentId, index) {
-                resourceFactory.clientDocumentsResource.delete({
-                    clientId: routeParams.id,
-                    documentId: documentId
-                }, '', function (data) {
+                resourceFactory.clientDocumentsResource.delete({clientId: routeParams.id, documentId: documentId}, '', function (data) {
                     scope.clientdocuments.splice(index, 1);
                 });
             };
@@ -1301,10 +1277,7 @@
             };
 
             scope.downloadDocument = function (documentId) {
-                resourceFactory.clientDocumentsResource.get({
-                    clientId: routeParams.id,
-                    documentId: documentId
-                }, '', function (data) {
+                resourceFactory.clientDocumentsResource.get({clientId: routeParams.id, documentId: documentId}, '', function (data) {
                     scope.clientdocuments.splice(index, 1);
                 });
             };
@@ -1333,17 +1306,9 @@
             };
 
             scope.saveNote = function () {
-                resourceFactory.clientResource.save({
-                    clientId: routeParams.id,
-                    anotherresource: 'notes'
-                }, this.formData, function (data) {
+    resourceFactory.clientResource.save({clientId: routeParams.id, anotherresource: 'notes'}, this.formData, function (data) {
                     var today = new Date();
-                    temp = {
-                        id: data.resourceId,
-                        note: scope.formData.note,
-                        createdByUsername: "test",
-                        createdOn: today
-                    };
+                    temp = { id: data.resourceId, note: scope.formData.note, createdByUsername: "test", createdOn: today };
                     scope.clientNotes.push(temp);
                     scope.formData.note = "";
                     scope.predicate = '-id';
@@ -1450,92 +1415,87 @@
                         "measures": [(inventureScore - 300)],
                         "markers": [(inventureScore - 300)]
                     };
-                }
-
-                // this will be used to display the score on the viewclient.html
-                scope.inventureScore = inventureScore;
-            };
-
-            scope.showSignature = function () {
-                $modal.open({
-                    templateUrl: 'clientSignature.html',
-                    controller: ViewLargerClientSignature,
-                    size: "lg"
-                });
-            };
-
-            scope.showWithoutSignature = function () {
-                $modal.open({
-                    templateUrl: 'clientWithoutSignature.html',
-                    controller: ViewClientWithoutSignature,
-                    size: "lg"
-                });
-            };
-
-            scope.showPicture = function () {
-                $modal.open({
-                    templateUrl: 'photo-dialog.html',
-                    controller: ViewLargerPicCtrl,
-                    size: "lg"
-                });
-            };
-
-            var ViewClientWithoutSignature = function ($scope, $modalInstance) {
-                $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
+                    // this will be used to display the score on the viewclient.html
+                    scope.inventureScore = inventureScore;
                 };
-            };
-            var ViewLargerClientSignature = function ($scope, $modalInstance) {
-                var loadSignature = function () {
-                    http({
-                        method: 'GET',
-                        url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents'
-                    }).then(function (docsData) {
-                        var docId = -1;
-                        for (var i = 0; i < docsData.data.length; ++i) {
-                            if (docsData.data[i].name == 'clientSignature') {
-                                docId = docsData.data[i].id;
-                                scope.signature_url = $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents/' + docId + '/attachment?tenantIdentifier=' + $rootScope.tenantIdentifier;
-                            }
-                        }
-                        if (scope.signature_url != null) {
-                            http({
-                                method: 'GET',
-                                url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents/' + docId + '/attachment?tenantIdentifier=' + $rootScope.tenantIdentifier
-                            }).then(function (docsData) {
-                                $scope.largeImage = scope.signature_url;
-                            });
-                        }
+                scope.showSignature = function () {
+                    $modal.open({
+                        templateUrl: 'clientSignature.html',
+                        controller: ViewLargerClientSignature,
+                        size: "lg"
                     });
                 };
-                loadSignature();
-                $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
-                };
-            };
 
-            var ViewLargerPicCtrl = function ($scope, $modalInstance) {
-                var loadImage = function () {
-                    if (scope.client.imagePresent) {
+                scope.showWithoutSignature = function () {
+                    $modal.open({
+                        templateUrl: 'clientWithoutSignature.html',
+                        controller: ViewClientWithoutSignature,
+                        size: "lg"
+                    });
+                };
+
+                scope.showPicture = function () {
+                    $modal.open({
+                        templateUrl: 'photo-dialog.html',
+                        controller: ViewLargerPicCtrl,
+                        size: "lg"
+                    });
+                };
+                var ViewClientWithoutSignature = function ($scope, $modalInstance) {
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
+                };
+                var ViewLargerClientSignature = function ($scope, $modalInstance) {
+                    var loadSignature = function () {
                         http({
                             method: 'GET',
-                            url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/images?maxWidth=860'
-                        }).then(function (imageData) {
-                            $scope.largeImage = imageData.data;
+                            url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents'
+                        }).then(function (docsData) {
+                            var docId = -1;
+                            for (var i = 0; i < docsData.data.length; ++i) {
+                                if (docsData.data[i].name == 'clientSignature') {
+                                    docId = docsData.data[i].id;
+                                    scope.signature_url = $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents/' + docId + '/attachment?tenantIdentifier=' + $rootScope.tenantIdentifier;
+                                }
+                            }
+                            if (scope.signature_url != null) {
+                                http({
+                                    method: 'GET',
+                                    url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents/' + docId + '/attachment?tenantIdentifier=' + $rootScope.tenantIdentifier
+                                }).then(function (docsData) {
+                                    $scope.largeImage = scope.signature_url;
+                                });
+                            }
                         });
-                    }
+                    };
+                    loadSignature();
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
                 };
-                loadImage();
-                $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
+
+                var ViewLargerPicCtrl = function ($scope, $modalInstance) {
+                    var loadImage = function () {
+                        if (scope.client.imagePresent) {
+                            http({
+                                method: 'GET',
+                                url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/images?maxWidth=860'
+                            }).then(function (imageData) {
+                                $scope.largeImage = imageData.data;
+                            });
+                        }
+                    };
+                    loadImage();
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
                 };
-            };
+                        });
 
-        }
-
-    });
 
     mifosX.ng.application.controller('ClientPaymentsController', ['$scope', '$routeParams', '$route', '$location', 'ResourceFactory', '$http', '$modal', 'API_VERSION', '$rootScope', '$upload', 'dateFilter', '$sce','$location','$q','$http', mifosX.controllers.ClientPaymentsController]).run(function ($log) {
         $log.info("ClientPaymentsController initialized");
+
     });
 }(mifosX.controllers || {}));

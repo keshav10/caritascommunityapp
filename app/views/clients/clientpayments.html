@@ -33,9 +33,9 @@
 	<div ng-show="showError==true">
 		  <p  style="color:red"> Total Amount must be equal to : {{mpesaAmount}} </p>
 	</div>
-	<div class="col-md-12 col-sm-12">
+		<div class="col-md-12 col-sm-12">
 		<div class="row client">
-			<div class="col-sm-12 col-md-12 paddingleft0px">
+			<div class="col-sm-10 col-md-10 paddingleft0px">
 				<div data-ng-show="loanAccounts || savingsAccounts">
 					<form name="clientpayments" class="form-horizontal well">
 						<api-validate></api-validate>
@@ -196,7 +196,7 @@
 										</div>
 									</form>
 								</div></td></tr>
-								<tr class="graybg" data-ng-show="savingsAccounts">
+						<tr class="graybg" data-ng-show="savingsAccounts">
 									<th>{{'label.heading.deposits' | translate}}</th>
 									<th>{{'label.heading.accnum' | translate}}</th>
 									<th>{{'label.heading.savingaccount' | translate}}</th>
@@ -208,7 +208,8 @@
 									<th>{{'label.heading.Savingcharges'|translate}}</th>
 									<th>{{'label.heading.addsavingcharges'|translate}}</th>
 								</tr>
-								    <tr ng-repeat="savingaccount in savingsAccounts | orderBy:'id':true | filter:isSavingNotClosed">
+
+								<tr ng-repeat="savingaccount in savingsAccounts | orderBy:'id':true | filter:isSavingNotClosed">
 									<td><input id="activatedOnDate" type="hidden" name="activatedOnDate" ng-model="savingaccount.timeline.activatedOnDate"/></td>
 									<td class="pointer" data-ng-click="routeToSaving(savingaccount.id, savingaccount.depositType.code)">
 										<i tooltip-placement="right" tooltip="{{savingaccount.status.value}}" class="icon-stop {{savingaccount.status.code | StatusLookup}}"></i>
@@ -338,10 +339,12 @@
 										</fieldset>
 									</form>
 								</div></td></tr>
+
 								<tr class="graybg">
 									<th colspan="7">{{'label.clientpayments.totalAmount' | translate}}</th>
 									<th><input class="col-sm-8" id="totalAmount" type="text" ng-disabled="true" name="totalAmount"
 											   ng-model="formData.totalAmount" class="form-control" number-format /></th>
+
 									<th></th>
 									<th></th>
 								</tr>
@@ -354,12 +357,14 @@
 										<label class="control-label">{{ 'label.input.submittedon' | translate
 											}}&nbsp;<span class="required">*</span></label>
 									</td>
+
 									<td class="col-sm-3"  ng-if="mpesaPayment==false">
 										<input id="submittedOnDate" sort type="text" datepicker-pop="dd MMMM yyyy" ng-model="formData.submittedOnDate" is-open="opened" max="restrictDate" class="form-control"/>
 									</td>
 									<td class="col-sm-3" ng-if="mpesaPayment==true" >
 										<input id="submittedOnDate" sort type="text" datepicker-pop="dd MMMM yyyy" value={{TxnDate}} ng-model="formData.submittedOnDate" is-open="opened" max="restrictDate" ng-disabled="true" class="form-control"/>
 									</td>
+
 									<td>&nbsp;</td>
 									<td class="col-sm-3">
 										<label class="control-label" for="paymentTypeId">{{ 'label.input.paymenttype' | translate}}<span
@@ -374,6 +379,7 @@
 								</tr>
 								<tr>
 									<td class="col-sm-3">
+
 										<label class="control-label" for="receiptNumber">{{ 'label.input.receiptnumber' | translate}}<span
 												class="required">*</span></label>
 									</td>
@@ -413,17 +419,22 @@
 									</td>
 									<td class="col-sm-3">
 										<input id="bankNumber" class="form-control" sort type="text" ng-model="formData.bankNumber" datepicker-pop="dd MMMM yyyy" is-open="opened" max="restrictDate" >
+
+										<label class="control-label" for="bankNumber">{{ 'label.input.banknumber' | translate}}</label>
+
 									</td>
 									<td>&nbsp;</td>
 									<td></td>
 									<td></td>
 								</tr>
 							</table>
+
 							<div class="col-md-offset-5">
 								<button id="cancel" type="reset" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>
 								<button id="save" type="submit" ng-show="isDisabled" class="btn btn-primary" ng-click="submitPayments()">{{ 'label.button.save' | translate}}</button>
 								<button id="precipitant" ng-show="isDisabled" type="submit" class="btn btn-primary" ng-click="submitPaymentsAndPrint()">{{ 'label.button.submitandprint' | translate}}</button>
 							</div>
+
 							<div>
 								<button ng-show="printbtn" ng-click="printReport()" class="btn btn-primary"><i class="icon-print icon-white">{{'label.button.print' |
 									translate}}

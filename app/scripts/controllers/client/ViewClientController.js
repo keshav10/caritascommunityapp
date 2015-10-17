@@ -22,7 +22,8 @@
                     location.path('/viewrecurringdepositaccount/' + id);
                 }
             };
-            scope.routeToClientPayments = function (clientid) {
+
+			 scope.routeToClientPayments = function (clientid) {
                 console.log('Redirecting to payments for: ' + clientid);
                 location.path('/clientpayments/' + clientid);
             };

@@ -505,6 +505,7 @@
                         get: {method: 'GET' , params: {paymentTypeId: '@paymentTypeId'}},
                         update: {method: 'PUT', params: {paymentTypeId: '@paymentTypeId'}}
                     })
+
                 };
             }];
         }

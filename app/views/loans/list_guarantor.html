@@ -57,7 +57,9 @@
                 </tr>
                 <tr>
                     <th class="table-bold-loan">{{'label.heading.arrearsby' | translate}}</th>
-                    <td><span class="padded-td">{{loandetails.summary.totalOverdue | number}}<span
+
+                    <td><span class="padded-td">{{loandetails.summary.totalOverdue}}<span
+
                             data-ng-hide="loandetails.summary.totalOverdue>=0">{{'label.heading.notprovided' | translate}}</span></span>
                     </td>
                 </tr>
@@ -65,6 +67,7 @@
         </div>
     </div>
 
+<<<<<<< HEAD
 
     <div ng-show="guarantorDetails" class="marginbuttontop25px">
         <table class="table">
@@ -228,7 +231,6 @@
             </div>
         </script>
     </div>
-
 
     <div ng-show="guarantorDetails" class="col-md-offset-10" style="margin-bottom: 40px">
         <a id="cancel" href="#/viewloanaccount/{{loandetails.id}}" class="btn btn-default">{{ 'label.button.cancel' |

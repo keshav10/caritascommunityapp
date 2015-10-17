@@ -5,42 +5,44 @@
     </ul>
     <br>
     <br>
-    <form>
-    <div>
-        <input type="file" ng-model="file1" />
-        <br>
-        <button type = "upload" value ="upload" ng-click = "uploadFile(file1)">upload</button>
-    </div>
-        <div ng-hide="">
-            <table class="table">
-                <thead>
-                <tr class="graybg">
-                    <th>Transaction Id</th>
-                    <th>Transaction Code</th>
-                    <th>Transaction Date</th>
-                    <th>Transaction Time</th>
-                    <th>client Id</th>
-                    <th>Client Name</th>
-                    <th>Mobile No</th>
-                    <th>office Id</th>
-                    <th>Amount</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="transactions in completetransaction">
-                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.id}}</td>
-                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionCode}}</td>
-                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionDate}}</td>
-                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionTime}}</td>
-                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.clientId}}</td>
-                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.sender}}</td>
-                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.mobileNo}}</td>
-                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.officeId}}</td>
-                    <td class="pointer" data-ng-click="routeTo(transactions.clientId,transactions.transactionAmount)">{{transactions.transactionAmount}}</td>
-                </tr>
-                </tbody>
-            </table>
+
+    <form  class="form-horizontal well" ng-submit="submit()" >
+        <api-validate></api-validate>
+        <div ng-hide= "submt">
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="file">{{'label.input.selectfile' | translate}}<span
+                    class="required">*</span></label>
+
+            <div class="col-sm-3">
+                <input id="file" type="file" ng-file-select="onFileSelect($files)">
+            </div>
         </div>
+
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">{{ 'label.input.office' | translate }}<span class="required">*</span></label>
+
+            <div class="col-sm-3">
+                <select chosen="offices" id="officeId" ng-model="formData.officeId" class="form-control"
+                        ng-options="office.id as office.name for office in offices"
+                        value="{{office.id}}"></select>
+            </div>
+        </div>
+
+        <div class="col-md-offset-3">
+            <a id="cancel" href="#/uploadxls/">
+                <button type="reset" class="btn btn-default">{{'label.button.cancel' | translate}}</button>
+            </a>
+            <button id="save" type="submit"  class="btn btn-primary">
+                {{'label.button.save' | translate}}
+            </button>
+        </div>
+            </div>
+
+        <div ng-show = "submt">
+            <h3>File uploaded successfully</h3>
+        </div>
+
         </form>
 
 </div>
