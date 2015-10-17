@@ -224,6 +224,7 @@
                 scope.addLoanCharges = false;
                 scope.showSavingCharges = false;
                 scope.showLoanCharge = false;
+                scope.t=false;
                 resourceFactory.clientAccountChargeResource.get({
                     clientId: routeParams.id,
                     command: 'loanrepaymentamount'
@@ -315,7 +316,7 @@
             });
             scope.onDateChange = function () {
                 scope.t=true;
-                scope.calculate();
+                alert( scope.formData.totalAmount);
                 var params = {};
                // params.dateFormat = scope.df;
                 params.submittedOnDate = dateFilter(this.formData.submittedOnDate, scope.df);
@@ -394,9 +395,23 @@
 
 
             scope.keyPress = function(){
-                scope.formData.totalAmount = 0;
+
+                    if(scope.t!=true){
+                        scope.formData.totalAmount= scope.formData.totalAmount;
+
+                    }else {
+                        scope.formData.totalAmount = 0;
+
+                        
+                    }
                 for (var l in scope.loanAccounts) {
                     if (scope.loanAccounts[l].active) {
+                        if(scope.oldLoanAmount[l]!=null&& scope.oldLoanAmount[l]!=""){
+                            if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {}
+                            else {
+                                scope.loanAccounts[l].repaymentAmount = scope.oldLoanAmount[l];
+                            }
+                        }
                         if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
                             scope.oldLoanAmount[l] = scope.loanAccounts[l].repaymentAmount;
                             scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[l].repaymentAmount;
@@ -413,7 +428,7 @@
                     }
                 }
 
-               //scope.formData.totalAmount=scope.oldsum;
+               scope.formData.totalAmount=scope.formData.totalAmount;
                };
 
             //for adding the Loan Charges:-
