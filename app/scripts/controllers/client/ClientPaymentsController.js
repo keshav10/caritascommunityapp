@@ -1113,12 +1113,12 @@
                         alert("Please enter amount");
                     }
                 }
-
+            }
                 scope.printReport = function () {
                     window.print();
                     window.close();
                 };
-            }
+
             var m_names = new Array("January", "February", "March",
                 "April", "May", "June", "July", "August", "September",
                 "October", "November", "December");
