@@ -395,27 +395,27 @@
 
 
             scope.keyPress = function(){
-
-                    if(scope.t!=true){
-                        scope.formData.totalAmount= scope.formData.totalAmount;
-
-                    }else {
-                        scope.formData.totalAmount = 0;
-
-                        
-                    }
+                scope.formData.totalAmount = 0;
+                scope.p=true;
                 for (var l in scope.loanAccounts) {
                     if (scope.loanAccounts[l].active) {
-                        if(scope.oldLoanAmount[l]!=null&& scope.oldLoanAmount[l]!=""){
-                            if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {}
-                            else {
-                                scope.loanAccounts[l].repaymentAmount = scope.oldLoanAmount[l];
-                            }
-                        }
                         if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
+                           // alert(scope.loanAccounts[l].repaymentAmount);
+                            //scope.p=false;
                             scope.oldLoanAmount[l] = scope.loanAccounts[l].repaymentAmount;
                             scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[l].repaymentAmount;
                         }
+                        else{
+                            if(scope.oldLoanAmount[l]!=null&& scope.oldLoanAmount[l]!="" &&scope.p==true){
+                               // alert("6");
+                            //  alert(scope.oldLoanAmount[l]);
+                               // scope.oldLoanAmount[l] = scope.oldLoanAmount[l];
+                                scope.formData.totalAmount = scope.formData.totalAmount + scope.oldLoanAmount[l];
+                            }
+
+
+                        }
+
                     }
                 }
                 for (var l in scope.savingsAccounts) {
@@ -428,7 +428,7 @@
                     }
                 }
 
-               scope.formData.totalAmount=scope.formData.totalAmount;
+               //scope.formData.totalAmount=scope.formData.totalAmount;
                };
 
             //for adding the Loan Charges:-
