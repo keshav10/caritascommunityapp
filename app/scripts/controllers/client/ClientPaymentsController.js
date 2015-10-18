@@ -309,15 +309,13 @@
                         }
                     }
                 }
-                alert(scope.formData.totalAmount)
+
             }
             scope.$watch('formData.submittedOnDate',function(){
                 scope.onDateChange();
             });
             scope.onDateChange = function () {
-                scope.t=true;
-                alert( scope.formData.totalAmount);
-                var params = {};
+                     var params = {};
                // params.dateFormat = scope.df;
                 params.submittedOnDate = dateFilter(this.formData.submittedOnDate, scope.df);
                 //alert(params.transactionDate);
@@ -396,24 +394,16 @@
 
             scope.keyPress = function(){
                 scope.formData.totalAmount = 0;
-                scope.p=true;
                 for (var l in scope.loanAccounts) {
                     if (scope.loanAccounts[l].active) {
                         if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
-                           // alert(scope.loanAccounts[l].repaymentAmount);
-                            //scope.p=false;
-                            scope.oldLoanAmount[l] = scope.loanAccounts[l].repaymentAmount;
+                             scope.oldLoanAmount[l] = scope.loanAccounts[l].repaymentAmount;
                             scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[l].repaymentAmount;
                         }
                         else{
-                            if(scope.oldLoanAmount[l]!=null&& scope.oldLoanAmount[l]!="" &&scope.p==true){
-                               // alert("6");
-                            //  alert(scope.oldLoanAmount[l]);
-                               // scope.oldLoanAmount[l] = scope.oldLoanAmount[l];
-                                scope.formData.totalAmount = scope.formData.totalAmount + scope.oldLoanAmount[l];
+                            if(scope.oldLoanAmount[l]!=null&& scope.oldLoanAmount[l]!=""){
+                                   scope.formData.totalAmount = scope.formData.totalAmount + scope.oldLoanAmount[l];
                             }
-
-
                         }
 
                     }
@@ -424,6 +414,11 @@
                             scope.oldSavingsAmount[l]=scope.savingsAccounts[l].depositAmount;
                             scope.formData.totalAmount = scope.formData.totalAmount + scope.savingsAccounts[l].depositAmount;
 
+                        }
+                        else{
+                            if(scope.oldSavingsAmount[l]!=null&& scope.oldSavingsAmount[l]!=""){
+                                scope.formData.totalAmount = scope.formData.totalAmount + scope.oldSavingsAmount[l];
+                            }
                         }
                     }
                 }
@@ -726,15 +721,12 @@
                 }
                 for (var s in scope.savingsAccounts) {
                     if (scope.savingsAccounts[s].active) {
-                        alert(scope.oldSavingsAmount[s]);
                         if(scope.oldSavingsAmount[s]!=null&& scope.oldSavingsAmount[s]!=""){
                             if(scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != ""){
-                                    alert("1");
+
                             }
                             else {
-                                alert("2");
-                                alert(scope.oldSavingsAmount[s]);
-                                scope.savingsAccounts[s].depositAmount = scope.oldSavingsAmount[s];
+                                   scope.savingsAccounts[s].depositAmount = scope.oldSavingsAmount[s];
                             }
                         }
                         if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != "") {
