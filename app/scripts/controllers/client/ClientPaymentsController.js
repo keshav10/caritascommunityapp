@@ -267,6 +267,7 @@
                             scope.loanAccounts[i].chargeDescription1 = scope.chargeDescription;
                             //store the previous value into the loanAccounts
                             scope.loanAccounts[i].value = scope.oldLoanAmount[i];
+                            scope.oldLoanAmount[i] =0;
                             //scope.formData.totalAmount = scope.formData.totalAmount + scope.oldLoanAmount[i];
 
                         }
@@ -278,7 +279,7 @@
                             scope.savingAccountCharges = 0;
                             scope.savingChargesDescription = " ";
                             scope.savingsAccounts[i].relativeUrl = "savingsaccounts/" + scope.savingsAccounts[i].id + "/transactions?command=deposit";
-                            scope.savingsAccounts[i].depositAmount = "";
+                            scope.savingsAccounts[i].depositAmount = 0;
                             for (var j in scope.savingsCharges) {
                                 if (scope.savingsAccounts[i].id == scope.savingsCharges[j].id) {
                                     scope.savingAccountCharges = scope.savingAccountCharges + scope.savingsCharges[j].chargeDue;
@@ -290,6 +291,7 @@
                             scope.savingsAccounts[i].chargeDescription2 = scope.savingChargesDescription;
                             // for displaying the old  savings values on the  screen
                             scope.savingsAccounts[i].value = scope.oldSavingsAmount[i];
+                            scope.oldSavingsAmount[i] =0;
                             // scope.formData.totalAmount = scope.formData.totalAmount + scope.oldSavingsAmount[i];
                         }
                     }
@@ -366,6 +368,7 @@
                             scope.loanAccounts[i].chargeDescription1 = scope.chargeDescription;
                             //store the previous value into the loanAccounts
                              scope.loanAccounts[i].value=scope.oldLoanAmount[i];
+                            scope.loanAccounts[i].repaymentAmount =scope.oldLoanAmount[i];
                             scope.formData.totalAmount = scope.formData.totalAmount + scope.oldLoanAmount[i];
 
                         }
@@ -428,7 +431,7 @@
                     else{
                         scope.loanAccounts[l].repaymentAmount=0;
                         scope.oldLoanAmount[l]=0;
-                    }
+                                            }
                 }
                 for (var l in scope.savingsAccounts) {
                     if (scope.savingsAccounts[l].active) {
