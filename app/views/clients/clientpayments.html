@@ -213,8 +213,9 @@
 									<td></td>
 									<td></td>
 									<td   align="right">
-										<input class="col-sm-8" id="depositAmount" type="text" name="depositAmount" ng-value="savingaccount.value"
+										<input class="col-sm-8" id="depositAmount" type="text" name="depositAmount" ng-value="savingaccount.value|number"
 											   ng-model="savingaccount.depositAmount" ng-keyup="keyPress()" class="form-control" number-format />
+
 										<input ng-hide="false" id="savingactiveCheckbox" ng-change="keyPress()" ng-model="savingaccount.active"
 											   ng-init="savingaccount.active=true" ng-checked="true" type="checkbox" />
 									</td>
@@ -332,8 +333,10 @@
 								</div></td></tr>
 								<tr class="graybg">
 									<th colspan="7">{{'label.clientpayments.totalAmount' | translate}}</th>
-									<th><input class="col-sm-8" id="totalAmount" type="text" ng-disabled="true" name="totalAmount" ng-value=formData.totalAmount|number
+									<th><input class="col-sm-8" id="totalAmount" type="text" ng-disabled="true" name="totalAmount"
 											   ng-model="formData.totalAmount" class="form-control" number-format /></th>
+
+
 									<th></th>
 									<th></th>
 								</tr>
