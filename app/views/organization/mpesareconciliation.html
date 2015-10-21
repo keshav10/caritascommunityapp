@@ -39,11 +39,13 @@
                        &nbsp;&nbsp;&nbsp;&nbsp;{{'label.mpesa.Status'|translate}}
                     </td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <select chosen="searchStatus"  ng-init="formData.searchStatus1 = searchStatus[1]" ng-model="formData.searchStatus1"  class="form-control"
+                        <select   chosen="searchStatus"  ng-init="formData.searchStatus1 = searchStatus[p]" ng-model="formData.searchStatus1"  class="form-control"
                                                         ng-options="searchStatus1.id as searchStatus1.name for searchStatus1 in searchStatus track by searchStatus1.id" value="{{searchStatus1.id}}">
                             <option value=""></option>
 
-                        </select></td>
+                        </select>
+
+                    </td>
                 </tr>
                 <tr>
                     <td>

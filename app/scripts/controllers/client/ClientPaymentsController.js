@@ -1234,7 +1234,12 @@
 
             scope.cancel = function () {
                 if(routeParams.txnId!=null){
-                    location.path('/mpesareconciliation');
+                    if(routeParams.txnId=='UNMP'){
+                        location.path('/mpesareconciliation/'+'UNMP');
+                    }
+                    else {
+                        location.path('/mpesareconciliation');
+                    }
                 }
                 else {
                     location.path('/viewclient/' + scope.client.id);

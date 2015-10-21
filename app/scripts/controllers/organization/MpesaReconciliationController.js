@@ -25,11 +25,13 @@
             scope.ReceiptNo;
             scope.toDateSearch=new Date();
             scope.status1;
+            scope.p=1;
 
 
             var deferred = $q.defer();
             if(routeParams.status1!=null){
                 scope.toDate = dateFilter( scope.restrictDate, 'yyyy-MM-dd');
+                scope.p=3;
                 http({
                     method: 'GET',
                     url: 'http://localhost:9292/mpesa/Search?status=UNMP&FromDate='+''+'&ToDate='+scope.toDate+'&mobileNo='

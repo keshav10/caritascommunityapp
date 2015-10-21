@@ -17,7 +17,7 @@
            // }
 
             scope.routeTo = function (id) {
-                location.path('/clientpayments/' + id + '/' + scope.mpesaAmount + '/' + scope.mpetxnsacode + '/' + scope.TxnDate + '/' + scope.txnId);
+                location.path('/clientpayments/' + id + '/' + scope.mpesaAmount + '/' + scope.mpetxnsacode + '/' + scope.TxnDate + '/' + 'UNMP');
             };
 
             scope.return=function(){
