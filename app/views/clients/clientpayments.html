@@ -66,7 +66,7 @@
 									</td>
 									<td ng-if="loanaccount.status.active" align="right">
 										<input class="col-sm-8" id="repaymentAmount" type="text" name="repaymentAmount"
-											   ng-model="loanaccount.repaymentAmount" ng-keyup="keyPress()" class="form-control" number-format />
+											   ng-model="loanaccount.repaymentAmount" ng-change="keyPress()" class="form-control" number-format />
 										<input id="loanactiveCheckbox" ng-change="keyPress()" ng-model="loanaccount.active"
 											   ng-init="loanaccount.active=true" ng-checked="true" type="checkbox"/></td>
 									<td> &nbsp;&nbsp;&nbsp;&nbsp;{{loanaccount.charges1|number}}
@@ -134,12 +134,11 @@
 												<div class="col-sm-6">
 													<select id="chargeId" ng-model="formData.chargeId" class="form-control"
 															ng-options="charge.id as (charge.name+' '+'('+charge.currency.name+')') for charge in charges"
-															value="{{charge.id}}" ng-change="selectCharge()">
-														<option value="">{{'label.selectcharge' | translate}}</option>
-													</select>
+															value="{{formData.chargeId}}" ng-change="selectCharge(formData.chargeId)">
+												</select>
 												</div>
 											</div>
-											<div ng-hide="isCollapsed">
+											<div >
 												<div class="form-group">
 													<label class="control-label col-sm-6" for="amount">{{ 'label.input.amount' | translate }}<span
 															class="required">*</span>
@@ -214,7 +213,7 @@
 									<td></td>
 									<td   align="right">
 										<input class="col-sm-8" id="depositAmount" type="text" name="depositAmount" ng-value="savingaccount.value|number"
-											   ng-model="savingaccount.depositAmount" ng-keyup="keyPress()" class="form-control" number-format />
+											   ng-model="savingaccount.depositAmount" ng-change="keyPress()" class="form-control" number-format />
 
 										<input ng-hide="false" id="savingactiveCheckbox" ng-change="keyPress()" ng-model="savingaccount.active"
 											   ng-init="savingaccount.active=true" ng-checked="true" type="checkbox" />
@@ -263,7 +262,7 @@
 															ng-options="charge.id as (charge.name+&nbsp;+'('+charge.currency.name+')') for charge in chargeOptions"
 															value="{{formData.chargeId}}"
 															ng-change="chargeSelected(formData.chargeId)" class="form-control" required>
-														<option style="display:none" value="">{{ 'label.selectcharge' | translate }}</option>
+
 													</select>
 													<form-validate valattributeform="savingccountchargeform" valattribute="charge"/>
 												</div>
