@@ -329,6 +329,7 @@
                 scope.showLoanCharge = false;
                 scope.showinstallmentCharge =false;
                 scope.addLoanCharges = false;
+                scope.showSavingCharges = false;
                 //scope.totalAmount = scope.formData.totalAmount;
                      var params = {};
                // params.dateFormat = scope.df;
@@ -420,11 +421,9 @@
                 for (var l in scope.loanAccounts) {
                     if (scope.loanAccounts[l].active) {
                         if(angular.isUndefined(scope.loanAccounts[l].repaymentAmount)){
-                            alert(angular.isUndefined(scope.loanAccounts[l].repaymentAmount));
                             scope.loanAccounts[l].repaymentAmount = 0;
                             scope.oldLoanAmount[l] = scope.loanAccounts[l].repaymentAmount;
                             scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[l].repaymentAmount;
-                            alert(scope.loanAccounts[l].repaymentAmount);
                         } else if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
                              scope.oldLoanAmount[l] = scope.loanAccounts[l].repaymentAmount;
                             scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[l].repaymentAmount;
@@ -443,23 +442,18 @@
                 for (var l in scope.savingsAccounts) {
                     if (scope.savingsAccounts[l].active) {
                         if(angular.isUndefined(scope.savingsAccounts[l].depositAmount)){
-                            //alert(angular.isUndefined(scope.loanAccounts[l].repaymentAmount));
                             scope.savingsAccounts[l].depositAmount= 0;
                             scope.oldSavingsAmount[l] = scope.savingsAccounts[l].depositAmount;
                             scope.formData.totalAmount = scope.formData.totalAmount +scope.savingsAccounts[l].depositAmount;
-                           // alert(scope.loanAccounts[l].repaymentAmount);
-                            alert("undefined"+scope.formData.totalAmount);
                         }
                         else if (scope.savingsAccounts[l].depositAmount != null && scope.savingsAccounts[l].depositAmount != "") {
                             scope.oldSavingsAmount[l] = scope.savingsAccounts[l].depositAmount;
                             scope.formData.totalAmount = scope.formData.totalAmount + scope.savingsAccounts[l].depositAmount;
-                            alert("defined"+scope.formData.totalAmount);
 
                         }
 
                          else  if   (scope.oldSavingsAmount[l] != null && scope.oldSavingsAmount[l] != "") {
                                 scope.formData.totalAmount = scope.formData.totalAmount + scope.oldSavingsAmount[l];
-                            alert("oldvalue"+scope.formData.totalAmount);
                             }
                         }
 
@@ -485,15 +479,20 @@
                 scope.oldTotalAmount=false;
                 scope.loanId = id;
                 scope.oldTotalAmount=false;
+                scope.formData.chargeId="";
+                scope.LoanData.dueDate="";
+                scope.formData.dueDate=" ";
                 scope.totalAmount = scope.formData.totalAmount;
                 resourceFactory.loanChargeTemplateResource.get({loanId: scope.loanId}, function (data) {
                     scope.charges = data.chargeOptions;
+
+                    //scope.isCollapsed = false;
                 });
 
-                scope.selectCharge = function (chargeid) {
+                scope.selectCharge = function () {
+
                     resourceFactory.chargeResource.get({
-                       // chargeId: scope.formData.chargeId,
-                        chargeId:chargeid,
+                        chargeId: scope.formData.chargeId,
 
                     template: true
                     }, function (data) {
@@ -518,9 +517,7 @@
                         resourceType: 'charges',
                         loanId: scope.loanId
                     }, scope.LoanData, function (data) {
-                        //route.reload();
-                       // scope.init();
-                      //  scope.addLoanCharges = false;
+
                         scope.onDateChange();
 
                     });
@@ -638,17 +635,20 @@
                 scope.addLoanCharges = false;
                 scope.showLoanCharge = false;
                 scope.addSavingsCharges = true;
+                scope.isCollapsed = true;
                 scope.showinstallmentCharge =false;
                 scope.offices = [];
                 scope.cancelRoute = id;
                 scope.totalAmount = scope.formData.totalAmount;
                 scope.date = {};
+                scope.formData.chargeId="";
 
                 resourceFactory.savingsChargeResource.get({
                     accountId: routeParams.id,
                     resourceType: 'template'
                 }, function (data) {
                     scope.chargeOptions = data.chargeOptions;
+                    //scope.isCollapsed = false;
                 });
 
                 scope.chargeSelected = function (id) {
@@ -657,6 +657,7 @@
                         scope.chargeCalculationType = data.chargeCalculationType.id;
                         scope.chargeTimeType = data.chargeTimeType.id;
                         scope.chargeDetails = data;
+                        scope.isCollapsed = false;
                         scope.formData.amount = data.amount;
                         scope.withDrawCharge = data.chargeTimeType.value === "Withdrawal Fee" ? true : false;
                         scope.formData.feeInterval = data.feeInterval;
