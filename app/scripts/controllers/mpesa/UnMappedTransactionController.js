@@ -17,11 +17,11 @@
            // }
 
             scope.routeTo = function (id) {
-                location.path('/clientpayments/' + id + '/' + scope.mpesaAmount + '/' + scope.mpetxnsacode + '/' + scope.TxnDate + '/' + 'UNMP');
+                location.path('/clientpayments/' + id + '/' + scope.mpesaAmount + '/' + scope.mpetxnsacode + '/' + scope.TxnDate + '/' + scope.txnId+ '/' +'UNMP');
             };
 
             scope.return=function(){
-                location.path('/mpesareconciliation/'+'UNMP');
+                location.path('/mpesa/'+'UNMP');
             }
             scope.groupsPerPage = 15;
             scope.getResultsPage = function (pageNumber) {

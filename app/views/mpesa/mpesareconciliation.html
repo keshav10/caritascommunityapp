@@ -1,4 +1,4 @@
-<div class="col-md-12" ng-controller="MpesaReconciliationController">
+<div class="col-md-12" ng-controller="mpesareconciliationController">
     <ul class="breadcrumb">
         <li class="active">{{'label.mpesa.view'|translate}}</li>
     </ul>
@@ -39,11 +39,13 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;{{'label.mpesa.Status'|translate}}
                     </td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <select chosen="searchStatus"  ng-init="formData.searchStatus1 = searchStatus[1]" ng-model="formData.searchStatus1"  class="form-control"
-                                ng-options="searchStatus1.id as searchStatus1.name for searchStatus1 in searchStatus track by searchStatus1.id" value="{{searchStatus1.id}}">
+                        <select   chosen="searchStatus"  ng-init="formData.searchStatus1 = searchStatus[p]" ng-model="formData.searchStatus1"  class="form-control"
+                                  ng-options="searchStatus1.id as searchStatus1.name for searchStatus1 in searchStatus track by searchStatus1.id" value="{{searchStatus1.id}}">
                             <option value=""></option>
 
-                        </select></td>
+                        </select>
+
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -76,7 +78,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="transactions in completetransaction" ng-if="transactions.type!='WithDraw'">
+            <tr ng-repeat="transactions in completetransaction" ng-if="transactions.type!='WithDraw' && transactions.officeId==1">
                 <td>{{transactions.transactionTime}}</td>
                 <td>{{transactions.transactionCode}}</td>
                 <td>{{transactions.clientName}}-{{transactions.clientId}}</td>
@@ -85,14 +87,13 @@
                 <td>{{transactions.transactionAmount}}</td>
                 <td>{{transactions.status}}
                 <td>
-                    <a title="Pay" ng-if="transactions.status!='PAID'"
+                    <a title="Pay" ng-if="transactions.status!='PAID'&& transactions.status!='UNMP'"
                        ng-click="routeTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)" ><i
                             class="icon-check icon-white"></i></a>
                     <a title="show Transaction Details" ng-if="transactions.status=='PAID'" ng-click="showTransactionDetail1(transactions.clientId,transactions.transactionDate,transactions.transactionCode)">&nbsp;<i class="fa fa-hand-o-right"></i></a>
                     <a title="Pay" ng-if ="transactions.status=='UNMP'"
-                       ng-click="redirectTo(transactions.clientId,transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id)" ><i
+                       ng-click="redirectTo(transactions.transactionAmount,transactions.transactionCode,transactions.transactionDate,transactions.id,transactions.sender,transactions.mobileNo)" ><i
                             class="icon-check icon-white"></i></a>
-
             </tr>
             </tbody>
         </table>

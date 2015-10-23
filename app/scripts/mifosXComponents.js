@@ -241,7 +241,8 @@ define(['Q', 'underscore', 'mifosX'], function (Q) {
             'accounting/DefineOpeningBalancesController',
             'organization/UploadxlsController',
             'organization/MpesaReconciliationController',
-            'mpesa/UnMappedTransactionController'
+            'mpesa/UnMappedTransactionController',
+            'mpesa/mpesareconciliationController'
         ],
         filters: [
             'StatusLookup',

@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        MpesaReconciliationController: function ($q,$http,scope, resourceFactory, location,http,dateFilter,$modal,sessionManager,routeParams) {
+        mpesareconciliationController: function ($q,$http,scope, resourceFactory, location,http,dateFilter,$modal,sessionManager,routeParams) {
             scope.routeTo = function (id, mpesaamount, mpetxnsacode, txnDate, txnId) {
                 location.path('/clientpayments/' + id + '/' + mpesaamount + '/' + mpetxnsacode + '/' + txnDate + '/' + txnId);
             };
@@ -76,7 +76,7 @@
             }
 
             scope.Mpesasearch=function() {
-               // alert("search Id"+scope.formData.searchStatus1) ;
+                // alert("search Id"+scope.formData.searchStatus1) ;
                 scope.fromDate = dateFilter(scope.fromDateSearch, 'yyyy-MM-dd');
                 if(scope.toDateSearch=="" ||scope.toDateSearch==null) {
                     scope.toDate = dateFilter(scope.restrictDate, 'yyyy-MM-dd');
@@ -95,24 +95,24 @@
                     }
                 }
                 scope.text = "";
-                  if (scope.formData.searchStatus1 == "1") {
-                        scope.text = 'PAID';
-                    }
-                    else if (scope.formData.searchStatus1 == "3") {
-                        scope.text = 'BM';
-                    }
-                  else if (scope.formData.searchStatus1 == "4") {
-                      scope.text = 'UNMP';
-                  }
-                  else if (scope.formData.searchStatus1 == "2") {
-                      scope.text = 'CMP';
-                  }
-                  else if(scope.formData.searchStatus1=="5"){
-                      scope.text= "";
-                  }
-                  else{
-                      scope.text = 'CMP';
-                  }
+                if (scope.formData.searchStatus1 == "1") {
+                    scope.text = 'PAID';
+                }
+                else if (scope.formData.searchStatus1 == "3") {
+                    scope.text = 'BM';
+                }
+                else if (scope.formData.searchStatus1 == "4") {
+                    scope.text = 'UNMP';
+                }
+                else if (scope.formData.searchStatus1 == "2") {
+                    scope.text = 'CMP';
+                }
+                else if(scope.formData.searchStatus1=="5"){
+                    scope.text= "";
+                }
+                else{
+                    scope.text = 'CMP';
+                }
 
                 http({
                     method: 'GET',
@@ -140,7 +140,7 @@
 
             var ClientDeleteCtrl = function ($scope, $modalInstance) {
 
-                 $http.get("https://localhost:8443/mifosng-provider/api/v1/clients/"+scope.clientId+"/Mpesa?TransactionDate="+scope.TransactionDate+"&ReceiptNo="+scope.ReceiptNo).success(function(data) {
+                $http.get("https://localhost:8443/mifosng-provider/api/v1/clients/"+scope.clientId+"/Mpesa?TransactionDate="+scope.TransactionDate+"&ReceiptNo="+scope.ReceiptNo).success(function(data) {
                     deferred.resolve(data);
                     $scope.transactionData = data;
 
@@ -153,7 +153,7 @@
         }
     });
 
-    mifosX.ng.application.controller('MpesaReconciliationController', ['$q','$http','$scope', 'ResourceFactory', '$location','$http','dateFilter','$modal','SessionManager','$routeParams', mifosX.controllers.MpesaReconciliationController]).run(function ($log) {
-        $log.info("MpesaReconciliationController initialized");
+    mifosX.ng.application.controller('mpesareconciliationController', ['$q','$http','$scope', 'ResourceFactory', '$location','$http','dateFilter','$modal','SessionManager','$routeParams', mifosX.controllers.mpesareconciliationController]).run(function ($log) {
+        $log.info("mpesareconciliationController initialized");
     });
 }(mifosX.controllers || {}));

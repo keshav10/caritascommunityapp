@@ -76,6 +76,10 @@
             .when('/clients', {
                 templateUrl: 'views/clients/clients.html'
             })
+            .when('/mpesa', {
+                templateUrl: 'views/mpesa/mpesareconciliation.html'
+            })
+
             .when('/createclient', {
                 templateUrl: 'views/clients/createclient.html'
             })
@@ -89,20 +93,22 @@
             .when('/clientpayments/:id', {
                 templateUrl: 'views/clients/clientpayments.html'
             })
-            //.when('/clientpayments/:id/:amount', {
-            //    templateUrl: 'views/clients/clientpayments.html'
-            //})
             .when('/clientpayments/:id/:amount/:mpetxnsacode/:txnDate/:txnId', {
                 templateUrl: 'views/clients/clientpayments.html'
             })
+            .when('/clientpayments/:id/:amount/:mpetxnsacode/:txnDate/:txnId/:type', {
+                templateUrl: 'views/clients/clientpayments.html'
+            })
+
             .when('/mpesareconciliation', {
                 templateUrl: 'views/organization/mpesareconciliation.html'
             })
             .when('/mpesareconciliation/:status1', {
                 templateUrl: 'views/organization/mpesareconciliation.html'
             })
-
-
+            .when('/mpesa/:status1', {
+                templateUrl: 'views/mpesa/mpesareconciliation.html'
+            })
 
             .when('/clientscreenreport/:clientId', {
                 templateUrl: 'views/clients/clientscreenreport.html'
