@@ -103,7 +103,8 @@
 
             scope.leftnav = false;
             scope.$on("UserAuthenticationSuccessEvent", function (event, data) {
-                alert(data.officeId);
+                
+                $rootScope.ofId=data.officeId;
                 scope.authenticationFailed = false;
                 scope.resetPassword = data.shouldRenewPassword;
                 if (sessionManager.get(data)) {

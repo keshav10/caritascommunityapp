@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        mpesareconciliationController: function ($q,$http,scope, resourceFactory, location,http,dateFilter,$modal,sessionManager,routeParams) {
+        mpesareconciliationController: function ($q,$http,scope, resourceFactory, location,http,dateFilter,$modal,sessionManager,routeParams,$rootScope) {
             scope.routeTo = function (id, mpesaamount, mpetxnsacode, txnDate, txnId) {
                 location.path('/clientpayments/' + id + '/' + mpesaamount + '/' + mpetxnsacode + '/' + txnDate + '/' + txnId);
             };
@@ -27,8 +27,9 @@
             scope.status1;
             scope.p=1;
             scope.toDate;
+            scope.officeId=$rootScope.ofId
 
-
+           //alert($rootScope.ofId);
             var deferred = $q.defer();
             if(routeParams.status1!=null){
                 scope.toDate = dateFilter( scope.restrictDate, 'yyyy-MM-dd');
@@ -42,7 +43,7 @@
                 });
             }
             else {
-                $http.get("http://localhost:9292/mpesa/getunmappedtransactions?officeId="+1).success(function (data) {
+                $http.get("http://localhost:9292/mpesa/getunmappedtransactions?officeId="+scope.officeId).success(function (data) {
                     deferred.resolve(data);
                     scope.completetransaction = data;
                 });
@@ -116,7 +117,7 @@
 
                 http({
                     method: 'GET',
-                    url: 'http://localhost:9292/mpesa/Search?status='+ scope.text+'&FromDate='+ scope.fromDate+'&ToDate='+scope.toDate+'&mobileNo='+scope.searcText+'&officeId='+1
+                    url: 'http://localhost:9292/mpesa/Search?status='+ scope.text+'&FromDate='+ scope.fromDate+'&ToDate='+scope.toDate+'&mobileNo='+scope.searcText
                 }).success(function (data) {
                     deferred.resolve(data);
                     scope.completetransaction=data;
@@ -153,7 +154,7 @@
         }
     });
 
-    mifosX.ng.application.controller('mpesareconciliationController', ['$q','$http','$scope', 'ResourceFactory', '$location','$http','dateFilter','$modal','SessionManager','$routeParams', mifosX.controllers.mpesareconciliationController]).run(function ($log) {
+    mifosX.ng.application.controller('mpesareconciliationController', ['$q','$http','$scope', 'ResourceFactory', '$location','$http','dateFilter','$modal','SessionManager','$routeParams','$rootScope', mifosX.controllers.mpesareconciliationController]).run(function ($log) {
         $log.info("mpesareconciliationController initialized");
     });
 }(mifosX.controllers || {}));
