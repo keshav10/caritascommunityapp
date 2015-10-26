@@ -119,6 +119,8 @@
     "label.heading.loans.repayments":"Repayments",
     "label.heading.deposits":"Deposits",
     "label.heading.savings.deposits":"Deposits",
+    "label.heading.nationalId":"NationalId",
+    "label.heading.mpesaUnmappedTransaction":" Mpesa UnMappedTransaction Details",
 
     "#Menu Links": "..",
     "label.menu.selectloanofficer": "Select Staff",

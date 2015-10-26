@@ -77,7 +77,6 @@
             }
 
             scope.Mpesasearch=function() {
-                // alert("search Id"+scope.formData.searchStatus1) ;
                 scope.fromDate = dateFilter(scope.fromDateSearch, 'yyyy-MM-dd');
                 if(scope.toDateSearch=="" ||scope.toDateSearch==null) {
                     scope.toDate = dateFilter(scope.restrictDate, 'yyyy-MM-dd');
@@ -92,18 +91,20 @@
                     var p= n.indexOf(0)
                     if(p==0){
                         scope.searcText=254+ n.substring(1, n.length)
-                        alert(scope.searcText);
+
                     }
                 }
                 scope.text = "";
                 if (scope.formData.searchStatus1 == "1") {
                     scope.text = 'PAID';
+
                 }
                 else if (scope.formData.searchStatus1 == "3") {
                     scope.text = 'BM';
                 }
                 else if (scope.formData.searchStatus1 == "4") {
                     scope.text = 'UNMP';
+
                 }
                 else if (scope.formData.searchStatus1 == "2") {
                     scope.text = 'CMP';
@@ -112,7 +113,12 @@
                     scope.text= "";
                 }
                 else{
-                    scope.text = 'CMP';
+                    if(scope.p==3){
+                        scope.text = 'UNMP';
+                    }
+                    else {
+                        scope.text = 'CMP';
+                    }
                 }
 
                 http({

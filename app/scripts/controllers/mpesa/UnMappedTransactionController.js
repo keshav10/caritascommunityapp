@@ -66,6 +66,8 @@
                                 client.accountNo = result.entityAccountNo;
                                 client.id = result.entityId;
                                 client.officeName = result.parentName;
+                                client.externalId = result.entityExternalId;
+                                client.nationalId = result.entityNationalId;
                                 scope.clients.push(client);
                             }else if (result.entityType  == 'CLIENTIDENTIFIER'){
                                 client.displayName = result.parentName;
