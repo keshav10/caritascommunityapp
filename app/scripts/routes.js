@@ -100,12 +100,6 @@
                 templateUrl: 'views/clients/clientpayments.html'
             })
 
-            .when('/mpesareconciliation', {
-                templateUrl: 'views/organization/mpesareconciliation.html'
-            })
-            .when('/mpesareconciliation/:status1', {
-                templateUrl: 'views/organization/mpesareconciliation.html'
-            })
             .when('/mpesa/:status1', {
                 templateUrl: 'views/mpesa/mpesareconciliation.html'
             })
