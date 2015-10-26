@@ -69,11 +69,11 @@
 											   ng-model="loanaccount.repaymentAmount" ng-change="keyPress()" class="form-control" number-format />
 										<input id="loanactiveCheckbox" ng-change="keyPress()" ng-model="loanaccount.active"
 											   ng-init="loanaccount.active=true" ng-checked="true" type="checkbox"/></td>
-									<td> &nbsp;&nbsp;&nbsp;&nbsp;{{loanaccount.charges1|number}}
+									<td ng-if="loanaccount.status.active"> &nbsp;&nbsp;&nbsp;&nbsp;{{loanaccount.charges1|number}}
 										<i class="icon-question-sign" tooltip={{loanaccount.chargeDescription1}} tooltip-append-to-body="true"></i>&nbsp;
 										<a ng-click="loancharge(loanaccount.id)">&nbsp;<i class="fa fa-hand-o-right"></i></a>
 									</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a ng-click="showAddLoanCharges(loanaccount.id)">&nbsp;<i class="icon-plus icon-blue"></i></a>
+									<td ng-if="loanaccount.status.active">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a ng-click="showAddLoanCharges(loanaccount.id)">&nbsp;<i class="icon-plus icon-blue"></i></a>
 									</td></tr>
 
 								<!-- for displaying charges
