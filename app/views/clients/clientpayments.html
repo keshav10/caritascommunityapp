@@ -39,6 +39,9 @@
 				<div data-ng-show="loanAccounts || savingsAccounts">
 					<form name="clientpayments" class="form-horizontal well">
 						<api-validate></api-validate>
+						<div ng-show="showError==true">
+							<p style="color:red">Loan Transaction cannot be before the last transaction date</p>
+						</div>
 						<div>
 							<table class="table table-condensed">
 								<tr class="graybg" data-ng-show="loanAccounts">
@@ -74,14 +77,14 @@
 									</td>
 									<td ng-if="loanaccount.status.active" align="right">
 										<input class="col-sm-8" id="repaymentAmount" type="text" name="repaymentAmount"
-											   ng-model="loanaccount.repaymentAmount" ng-keyup="keyPress()" class="form-control" number-format />
+											   ng-model="loanaccount.repaymentAmount" ng-change="keyPress()" class="form-control" number-format />
 										<input id="loanactiveCheckbox" ng-change="keyPress()" ng-model="loanaccount.active"
 											   ng-init="loanaccount.active=true" ng-checked="true" type="checkbox"/></td>
-									<td> &nbsp;&nbsp;&nbsp;&nbsp;{{loanaccount.charges1|number}}
+									<td ng-if="loanaccount.status.active"> &nbsp;&nbsp;&nbsp;&nbsp;{{loanaccount.charges1|number}}
 										<i class="icon-question-sign" tooltip={{loanaccount.chargeDescription1}} tooltip-append-to-body="true"></i>&nbsp;
 										<a ng-click="loancharge(loanaccount.id)">&nbsp;<i class="fa fa-hand-o-right"></i></a>
 									</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a ng-click="showAddLoanCharges(loanaccount.id)">&nbsp;<i class="icon-plus icon-blue"></i></a>
+									<td ng-if="loanaccount.status.active">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a ng-click="showAddLoanCharges(loanaccount.id)">&nbsp;<i class="icon-plus icon-blue"></i></a>
 									</td></tr>
 
 								<!-- for displaying charges
@@ -142,9 +145,9 @@
 												<div class="col-sm-6">
 													<select id="chargeId" ng-model="formData.chargeId" class="form-control"
 															ng-options="charge.id as (charge.name+' '+'('+charge.currency.name+')') for charge in charges"
-															value="{{charge.id}}" ng-change="selectCharge()">
-														<option value="">{{'label.selectcharge' | translate}}</option>
-													</select>
+															value="{{formData.chargeId}}" ng-change="selectCharge()" class="form-control" required>
+														    <option value="">{{'label.selectcharge' | translate}}</option>
+												</select>
 												</div>
 											</div>
 											<div ng-hide="isCollapsed">
@@ -218,13 +221,14 @@
 									<td  colspan ="2" class="pointer" data-ng-click="routeToSaving(savingaccount.id, savingaccount.depositType.code)">{{savingaccount.productName}}</td>
 									<!--<td></td>
 									-->
-									<td  colspan="2" class="pointer center" data-ng-click="routeToSaving(savingaccount.id, savingaccount.depositType.code)">{{savingaccount.accountBalance|number}}</td>
+									<td  colspan="2"class="pointer center" data-ng-click="routeToSaving(savingaccount.id, savingaccount.depositType.code)">{{savingaccount.accountBalance|number}}</td>
 									<!--<td></td>
 									-->
 									<td></td>
 									<td   align="right">
-										<input class="col-sm-8" id="depositAmount" type="text" name="depositAmount"
-											   ng-model="savingaccount.depositAmount" ng-keyup="keyPress()" class="form-control" number-format />
+										<input class="col-sm-8" id="depositAmount" type="text" name="depositAmount" ng-value="savingaccount.value|number"
+											   ng-model="savingaccount.depositAmount" ng-change="keyPress()" class="form-control" number-format />
+
 										<input ng-hide="false" id="savingactiveCheckbox" ng-change="keyPress()" ng-model="savingaccount.active"
 											   ng-init="savingaccount.active=true" ng-checked="true" type="checkbox" />
 									</td>
@@ -272,12 +276,12 @@
 															ng-options="charge.id as (charge.name+&nbsp;+'('+charge.currency.name+')') for charge in chargeOptions"
 															value="{{formData.chargeId}}"
 															ng-change="chargeSelected(formData.chargeId)" class="form-control" required>
-														<option style="display:none" value="">{{ 'label.selectcharge' | translate }}</option>
+														<option value="">{{'label.selectcharge' | translate}}</option>
 													</select>
 													<form-validate valattributeform="savingccountchargeform" valattribute="charge"/>
 												</div>
 											</div>
-											<div ng-show="chargeDetails">
+											<div ng-hide="isCollapsed">
 												<div class="form-group">
 													<label class="control-label col-sm-6">{{ 'label.input.amount' | translate }}<span
 															class="required">*</span></label>
@@ -345,7 +349,6 @@
 									<th colspan="7">{{'label.clientpayments.totalAmount' | translate}}</th>
 									<th><input class="col-sm-8" id="totalAmount" type="text" ng-disabled="true" name="totalAmount"
 											   ng-model="formData.totalAmount" class="form-control" number-format /></th>
-
 									<th></th>
 									<th></th>
 								</tr>
@@ -427,13 +430,11 @@
 									<td></td>
 								</tr>
 							</table>
-
 							<div class="col-md-offset-5">
 								<button id="cancel" type="reset" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>
 								<button id="save" type="submit" ng-show="isDisabled" class="btn btn-primary" ng-click="submitPayments()">{{ 'label.button.save' | translate}}</button>
 								<button id="precipitant" ng-show="isDisabled" type="submit" class="btn btn-primary" ng-click="submitPaymentsAndPrint()">{{ 'label.button.submitandprint' | translate}}</button>
 							</div>
-
 							<div>
 								<button ng-show="printbtn" ng-click="printReport()" class="btn btn-primary"><i class="icon-print icon-white">{{'label.button.print' |
 									translate}}
