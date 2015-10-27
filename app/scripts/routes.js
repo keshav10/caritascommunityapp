@@ -741,6 +741,9 @@
             .when('/tellers', {
                 templateUrl: 'views/organization/cashmgmt/tellers.html'
             })
+            .when('/sms', {
+                templateUrl: 'views/organization/sms.html'
+            })
             .when('/createTeller', {
                 templateUrl: 'views/organization/cashmgmt/createTeller.html'
             })

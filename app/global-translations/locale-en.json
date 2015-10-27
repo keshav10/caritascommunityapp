@@ -3595,7 +3595,15 @@
     "label.mpesa.Pay":"Pay",
     "label.mpesa.view":"Mpesa",
     "label.mpesa.From Date":"From Date",
-    "label.mpesa.to Date":"To Date"
+    "label.mpesa.to Date":"To Date",
+
+    "#----------------":"----------------",
+    "label.view.smsmanagement" : "Send Sms/Email",
+    "label.anchor.sms":"Sms/Email Management",
+    "label.anchor.sendoption":"send option sms/Email",
+    "label.input.sms":"Sms",
+    "label.input.email":"Email"
+
 
 
 
