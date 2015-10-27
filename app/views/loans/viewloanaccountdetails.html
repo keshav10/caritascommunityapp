@@ -8,7 +8,7 @@
         </ul>
     </div>
     <div>
-        <div class="form-horizontal" ng-show="report">
+        <div class="form-horizontal" ng-show="report" ng-if="repaymentscheduleReport==false">
         	<div class="form-group" ng-show="viewLoanReport">
                  <label class="control-label col-sm-2">{{'label.input.fromdate' | translate}}<span
                          class="required">*</span></label>
@@ -27,19 +27,34 @@
                             max="restrictDate"/>
                  </div>
              </div>
-             <div class="col-md-11 center" ng-show="viewLoanReport">
+             <div class="col-md-11 center" ng-show="viewLoanReport"  >
                  <button ng-click="viewLoanDetails()" class="btn btn-default ng-binding">{{'label.button.back' | translate}} </button>
                  <button ng-click="viewprintdetails()" class="btn btn-primary ng-binding">{{'label.button.viewprint' | translate}} </button>
              </div>
 
-
         </div>
+
+        <div class="form-horizontal" ng-show="repaymentscheduleReport">
+            <div class="col-md-11 center" ng-show="repaymentscheduleReport">
+                <button ng-click="viewLoanDetails()" class="btn btn-default ng-binding">{{'label.button.back' | translate}} </button>
+                <!--
+                <button ng-click="viewrepaymentScheduledetails()" class="btn btn-primary ng-binding">{{'label.button.viewprint' | translate}} </button>
+                -->
+            </div>
+        </div>
+
+
+
+
         <div ng-hide="hidePentahoReport" ng-show="report" class="col-md-12 alert-block span tab-content">
             <button ng-show="printbtn" ng-click="printReport()" class="btn btn-primary">{{'label.button.print' |
                 translate}}
             </button>
-            <div id="printcontent">
+            <div id="printcontent" ng-if="repaymentscheduleReport==false" >
                 <iframe id="rptLoadingFrame" ng-show="viewReport" ng-src="{{viewReportDetails}}" frameborder="0" width="100%" height="800px"></iframe>
+            </div>
+            <div id="printcontent1" ng-if="repaymentscheduleReport==true" >
+                <iframe id="rptLoadingFrame1" ng-show="viewReport" ng-src="{{viewReportDetail}}" frameborder="0" width="100%" height="800px"></iframe>
             </div>
             <div class="col-md-13 center" ng-show="viewTransactionReport">
                 <button ng-click="viewLoanDetails()" class="btn btn-default ng-binding">{{'label.button.back' | translate}} </button>
@@ -382,6 +397,7 @@
                     </tab>
 
                     <tab heading="{{'label.heading.repaymentschedule' | translate}}">
+                        <button class="btn btn-primary pull-right" ng-show="checkStatus()" ng-click="viewrepaymentScheduledetails()">{{'label.button.viewprint' | translate}}</button>
 
                         <table class="table table-striped .width100">
                             <colgroup span="4"></colgroup>

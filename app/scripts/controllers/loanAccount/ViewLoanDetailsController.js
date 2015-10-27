@@ -13,6 +13,7 @@
             scope.loandetails = [];
             scope.editId = null;
             scope.editgroupId = null;
+            scope.repaymentscheduleReport=false;
 
             scope.showAddInvestment = true;
 
@@ -492,13 +493,18 @@
                 });
             };
 
-            scope.export = function () {
+            scope.export = function (parameter) {
+
+                scope.viewLoanReport = true;
+                scope.viewTransactionReport = false;
                 scope.report = true;
                 scope.printbtn = false;
                 scope.viewReport = false;
-                scope.viewLoanReport = true;
-                scope.viewTransactionReport = false;
+                scope.repaymentscheduleReport=false;
+
             };
+
+
 
             scope.viewJournalEntries = function(){
                 location.path("/searchtransaction/").search({loanId: scope.loandetails.id});
@@ -508,6 +514,7 @@
                 scope.report = false;
                 scope.hidePentahoReport = true;
                 scope.viewReport = false;
+                scope.repaymentscheduleReport=false;
             };
 
             scope.viewLoanCollateral = function (collateralId){
@@ -528,6 +535,7 @@
 
             scope.viewprintdetails = function () {
                 //scope.printbtn = true;
+                scope.repaymentscheduleReport=false;
                 scope.report = true;
                 scope.viewTransactionReport = false;
                 scope.viewReport = true;
@@ -831,6 +839,27 @@
                     }, function (data) {
                         scope.showAddInvestment = true;
                     });
+            };
+
+            scope.viewrepaymentScheduledetails = function () {
+                scope.repaymentscheduleReport=true;
+                scope.report = true;
+                scope.viewTransactionReport = false;
+                scope.viewReport = true;
+               // scope.hidePentahoReport = true;
+                scope.formData.outputType = 'PDF';
+                scope.baseURL = $rootScope.hostUrl + API_VERSION + "/runreports/" + encodeURIComponent("Loan Repaymen schedule");
+                scope.baseURL += "?output-type=" + encodeURIComponent(scope.formData.outputType) + "&tenantIdentifier=" + $rootScope.tenantIdentifier+"&locale="+scope.optlang.code;
+
+                var reportParams = "";
+                var  paramName = "R_selectLoan";
+                reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(scope.loandetails.accountNo);
+                if (reportParams > "") {
+                    scope.baseURL += "&" + reportParams;
+                }
+                // allow untrusted urls for iframe http://docs.angularjs.org/error/$sce/insecurl
+                scope.viewReportDetail = $sce.trustAsResourceUrl(scope.baseURL);
+
             };
         }
     });
