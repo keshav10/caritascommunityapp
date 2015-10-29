@@ -9,7 +9,7 @@
             <api-validate></api-validate>
             <fieldset>
                 <legend>{{'label.view.smsmanagement' | translate}}</legend>
-                <div class="col-sm-offset-2">
+                <div class="col-sm-offset-3">
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <label for="sms">{{'label.input.sms'|translate}}</label>
                     <input id="sms" type="radio" ng-model="sendby" value="sms"/>
@@ -20,16 +20,53 @@
                 </div>
                 <ul></ul>
                 <div>
-                    <label class="control-label col-sm-2">{{ 'label.input.office' | translate }}<span class="required">*</span></label>
+                    <label class="control-label col-sm-3">{{ 'label.input.office' | translate }}</label>
                     <div class="col-sm-3">
                         <select chosen="offices" id="officeId" ng-model="formData.officeId" class="form-control"
                                 ng-options="office.id as office.name for office in offices"
                                 value="{{office.id}}" ng-change="fetchClientByOfficeId(formData.officeId)"></select>
                     </div>
-                </div>
+                    </div>
                 <ul></ul>
+                <br></br>
                 <div>
-                    <label>description</label>
+                    <label class="control-label col-sm-3"  ><button id="select"  class="btn btn-primary" ng-click="select()">{{'label.button.select' | translate}}</button>
+                       <ul></ul>
+                    <button id="selectAll" type="button" class="btn btn-primary" ng-click="selectAll()">{{'label.button.selectAll' | translate}}</button>
+                    <ul></ul>
+                   <button id="clear"  class="btn btn-primary"  ng-click="clear()">{{'labell.button.clear' | translate}}</button>
+                    </label>
+                    <div class="col-sm-3">
+                        <select id="id" ng-model="formData.id" name="client" class="form-control multiselectmin" multiple required>
+                            <option ng-repeat="client in clients" value="{{client.mobileNo}}" ng-selected=selected>
+                                {{client.displayName}}-{{client.mobileNo}}
+                            </option>
+                        </select>
+                    </div>
+                    <label class="control-label col-sm-2">{{'label.input.Text' | translate}}</label>
+                    <div class="col-sm-3">
+                        <textarea id="msg" name="MessageText" ng-model="formData.messageText" rows="4"
+                                  cols="" class="form-control" >
+
+                        </textarea>
+</div>
+                </div>
+                <br></br>
+                <br></br>
+                <br></br>
+                <div>
+                 <label class="control-label col-sm-3">{{ 'label.input.selected' | translate }}</label>
+                    <div class="col-sm-3">
+                    <textarea id="mobile" name="Mobile" ng-model="formData.mobileNo" rows="4"
+                    cols="" class="form-control" >
+
+                    </textarea>
+                   </div>
+                    <label class="control-label col-sm-3"  >
+                    <button id="cancle"  class="btn btn-default" ng-click="cancle()">{{'label.button.cancel' | translate}}</button></label>
+                    <label class="control-label">
+                    <button id="send"  class="btn btn-primary" ng-click="">{{'label.button.send' | translate}}</button>
+                 </label>
                 </div>
                 </fieldset>
             </form>

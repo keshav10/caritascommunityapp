@@ -229,7 +229,7 @@
 
     "label.button.clientpayments": "Client Payments",
     "label.button.addinvestment": "Add Investment",
-
+    "label.button.send": "Send",
 
     "#Misc Labels": "..",
     "label.uniquelyidentifiedwithid": "Uniquely identified with Id",
@@ -3533,6 +3533,7 @@
     "label.input.teller.cashiertxn.txnNote": "Notes/Comments",
     "label.button.addpaymentdetail": "Add Payment Detail",
     "label.anchor.individualcollectionsheet": "Individual Collection Sheet",
+    "label.input.Text":"Text",
 
     "------------------": "------------",
 
@@ -3602,7 +3603,12 @@
     "label.anchor.sms":"Sms/Email Management",
     "label.anchor.sendoption":"send option sms/Email",
     "label.input.sms":"Sms",
-    "label.input.email":"Email"
+    "label.input.email":"Email",
+    "label.button.select":"select",
+    "label.button.selectAll":"selectAll",
+    "labell.button.clear":"clear",
+    "label.input.selected":"Selected MobileNo for Send"
+
 
 
 
