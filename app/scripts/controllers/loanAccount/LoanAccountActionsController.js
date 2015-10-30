@@ -28,7 +28,7 @@
                         scope.formData[scope.modelName] =  new Date();
                         scope.showApprovalAmount = true;
                         scope.formData.approvedLoanAmount =  data.approvalAmount;
-                        scope.taskPermissionName = 'APPROVE_LOAN';
+
                     });
                     resourceFactory.LoanAccountResource.getLoanAccountDetails({loanId: routeParams.id, associations: 'multiDisburseDetails'}, function (data) {
                         scope.expectedDisbursementDate = new Date(data.timeline.expectedDisbursementDate);
@@ -42,6 +42,7 @@
                             scope.showTrancheAmountTotal += Number(data.disbursementDetails[i].principal) ;
                         }
                     });
+                    scope.taskPermissionName = 'APPROVE_LOAN';
                     break;
                 case "reject":
                     scope.title = 'label.heading.rejectloanaccount';
@@ -390,6 +391,7 @@
                 var params = {command: scope.action};
                 if(scope.action == "recoverguarantee"){
                     params.command = "recoverGuarantees";
+                    this.formData.guarantorRecoveryDate = dateFilter(this.formData.guarantorRecoveryDate, scope.df);
                 }
                 if(scope.action == "approve"){
                     this.formData.expectedDisbursementDate = dateFilter(scope.expectedDisbursementDate, scope.df);
@@ -490,6 +492,7 @@
                         location.path('/viewloanaccount/' + data.loanId);
                     });
                 }
+
             };
 
             scope.$watch('formData.transactionDate',function(){

@@ -275,6 +275,7 @@
                 }else{
                     alert("Please enter amount");
                 }
+
             };
 
             var m_names = new Array("January", "February", "March",

@@ -22,10 +22,12 @@
                     location.path('/viewrecurringdepositaccount/' + id);
                 }
             };
+
             scope.routeToClientPayments = function (clientid) {
                 console.log('Redirecting to payments for: ' + clientid);
                 location.path('/clientpayments/' + clientid);
             };
+
             scope.haveFile = [];
             resourceFactory.clientResource.get({clientId: routeParams.id}, function (data) {
                 scope.client = data;
@@ -52,6 +54,7 @@
                     }
                 });
 
+
                 scope.navigateToSavingsOrDepositAccount = function (eventName, accountId, savingProductType) {
                     switch(eventName) {
 
@@ -70,11 +73,13 @@
                     }
                 }
 
+
                 
                 var clientStatus = new mifosX.models.ClientStatus();
 
                 if (clientStatus.statusKnown(data.status.value)) {
                     scope.buttons = clientStatus.getStatus(data.status.value);
+
                     scope.savingsActionbuttons = [
                             {
                                 name: "button.deposit",
@@ -101,6 +106,7 @@
                                 taskPermissionName: "WITHDRAW_RECURRINGDEPOSITACCOUNT"
                             }
                         ];
+
                 }
 
                 if (data.status.value == "Pending" || data.status.value == "Active") {

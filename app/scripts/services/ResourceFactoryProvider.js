@@ -41,7 +41,7 @@
                         update: { method: 'PUT'}
                     }),
                     clientResource: defineResource(apiVer + "/clients/:clientId/:anotherresource", {clientId: '@clientId', anotherresource: '@anotherresource'}, {
-                        getAllClients: {method: 'GET', params: {limit: 2500}},
+                        getAllClients: {method: 'GET', params: {limit:30000}},
                         getClientClosureReasons: {method: 'GET', params: {}},
                         getAllClientDocuments: {method: 'GET', params: {}, isArray: true},
                         update: { method: 'PUT'}
@@ -54,6 +54,12 @@
                     }),
                     clientAccountResource: defineResource(apiVer + "/clients/:clientId/accounts", {clientId: '@clientId'}, {
                         getAllClients: {method: 'GET', params: {}}
+                    }),
+                    clientAccountChargeResource: defineResource(apiVer + "/clients/:clientId/clientsPayments", {clientId: '@clientId'}, {
+                        getAllClients: {method: 'GET', params: {}}
+                    }),
+                    clientAccountMpesaResource:  defineResource(apiVer+ "clients/:clientId/mpesa",{clientId: '@clientId'},{
+                        getMpesaTxnSummary:{method: 'GET',params:{}}
                     }),
                     clientNotesResource: defineResource(apiVer + "/clients/:clientId/notes", {clientId: '@clientId'}, {
                         getAllNotes: {method: 'GET', params: {}, isArray: true}
@@ -296,6 +302,19 @@
                     savingsTemplateResource: defineResource(apiVer + "/savingsaccounts/template", {}, {
                         get: {method: 'GET', params: {}}
                     }),
+
+                    savingsInvestmentResource: defineResource(apiVer + "/savingsaccounts/:savingId/savingInvestment",{
+                        savingId:'@savingId'},{
+                        get: {method: 'GET', params: {}, isArray: true},
+                        delete:{method:'DELETE',params:{loanId: '@loanId'}},
+                        update: { method: 'PUT'}
+                    }),
+                    loanInvestmentResource: defineResource(apiVer + "/loans/:loanId/loanInvestment",{
+                        loanId: '@loanId'}, {
+                        get: {method: 'GET', params:{}, isArray: true},
+                        delete:{method: 'DELETE', params:{loanId: '@loanId'}},
+                        update: { method: 'PUT'}
+                    }),
                     savingsResource: defineResource(apiVer + "/savingsaccounts/:accountId/:resourceType/:chargeId", {accountId: '@accountId', resourceType: '@resourceType', chargeId: '@chargeId'}, {
                         get: {method: 'GET', params: {}},
                         getAllNotes: {method: 'GET', params: {}, isArray: true},
@@ -486,6 +505,7 @@
                         get: {method: 'GET' , params: {paymentTypeId: '@paymentTypeId'}},
                         update: {method: 'PUT', params: {paymentTypeId: '@paymentTypeId'}}
                     })
+
                 };
             }];
         }

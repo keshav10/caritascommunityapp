@@ -8,6 +8,7 @@
     <api-validate></api-validate>
     <form name="onholdtransactionform" novalidate="" class="form-horizontal well" ng-repeat="transaction in transactions.currentPageItems|limitTo:1">
         <fieldset>
+
             <label class="col-sm-2" ng-show="fromPath === 'viewsavingaccount'">{{'label.heading.clientname' | translate}}:</label>
             <div class="col-sm-3" ng-show="fromPath === 'viewsavingaccount'">{{transaction.savingsClientName}}</div>
             <label class="col-sm-2" ng-show="fromPath === 'viewsavingaccount'">{{'label.heading.savingsaccountno' | translate}}:</label>
@@ -58,5 +59,6 @@
             </ul>
         </div>
     </form>
-</div>
+
+          </div>
 

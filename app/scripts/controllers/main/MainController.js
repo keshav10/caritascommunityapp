@@ -12,6 +12,7 @@
             scope.domReady = true;
             scope.activity = {};
             scope.activityQueue = [];
+            scope.n=0;
             if (localStorageService.getFromLocalStorage('Location')) {
                 scope.activityQueue = localStorageService.getFromLocalStorage('Location');
             }
@@ -102,6 +103,8 @@
 
             scope.leftnav = false;
             scope.$on("UserAuthenticationSuccessEvent", function (event, data) {
+                
+                $rootScope.ofId=data.officeId;
                 scope.authenticationFailed = false;
                 scope.resetPassword = data.shouldRenewPassword;
                 if (sessionManager.get(data)) {
@@ -113,6 +116,7 @@
                     location.path('/home').replace();
                 } else {
                     scope.loggedInUserId = data.userId;
+
                 }
                 ;
             });
@@ -323,13 +327,17 @@
             
             sessionManager.restore(function (session) {
                 scope.currentSession = session;
+
                 scope.start(scope.currentSession);
                 if (session.user != null && session.user.userPermissions) {
                     $rootScope.setPermissions(session.user.userPermissions);
                     localStorageService.addToLocalStorage('userPermissions', session.user.userPermissions);
+                   // localStorageService.addToLocalStorage('officeId',session.user.officeId);
                 }
                 ;
             });
+
+    //alert(session.user.officeId);
         }
     });
     mifosX.ng.application.controller('MainController', [
