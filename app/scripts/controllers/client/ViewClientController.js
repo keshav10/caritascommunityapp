@@ -22,6 +22,7 @@
                     location.path('/viewrecurringdepositaccount/' + id);
                 }
             };
+
 			 scope.routeToClientPayments = function (clientid) {
                 console.log('Redirecting to payments for: ' + clientid);
                 location.path('/clientpayments/' + clientid);
@@ -52,11 +53,55 @@
                     }
                 });
 
+                scope.navigateToSavingsOrDepositAccount = function (eventName, accountId, savingProductType) {
+                    switch(eventName) {
+
+                        case "deposit":
+                            if(savingProductType==100)
+                                location.path('/savingaccount/' + accountId + '/deposit');
+                            if(savingProductType==300)
+                                location.path('/recurringdepositaccount/' + accountId + '/deposit');
+                            break;
+                        case "withdraw":
+                            if(savingProductType==100)
+                                location.path('/savingaccount/' + accountId + '/withdrawal');
+                            if(savingProductType==300)
+                                location.path('/recurringdepositaccount/' + accountId + '/withdrawal');
+                            break;
+                    }
+                }
+
                 
                 var clientStatus = new mifosX.models.ClientStatus();
 
                 if (clientStatus.statusKnown(data.status.value)) {
                     scope.buttons = clientStatus.getStatus(data.status.value);
+                    scope.savingsActionbuttons = [
+                            {
+                                name: "button.deposit",
+                                type: "100",
+                                icon: "icon-arrow-right",
+                                taskPermissionName: "DEPOSIT_SAVINGSACCOUNT"
+                            },
+                            /*{
+                                name: "button.withdraw",
+                                type: "100",
+                                icon: "icon-arrow-left",
+                                taskPermissionName: "WITHDRAW_SAVINGSACCOUNT"
+                            },*/
+                            {
+                                name: "button.deposit",
+                                type: "300",
+                                icon: "icon-arrow-right",
+                                taskPermissionName: "DEPOSIT_RECURRINGDEPOSITACCOUNT"
+                            },
+                            /*{
+                                name: "button.withdraw",
+                                type: "300",
+                                icon: "icon-arrow-left",
+                                taskPermissionName: "WITHDRAW_RECURRINGDEPOSITACCOUNT"
+                            }*/
+                        ];
                 }
 
                 if (data.status.value == "Pending" || data.status.value == "Active") {
@@ -81,6 +126,7 @@
                 });
             });
             scope.deleteClient = function () {
+                alert("1");
                 $modal.open({
                     templateUrl: 'deleteClient.html',
                     controller: ClientDeleteCtrl
@@ -184,7 +230,7 @@
                 $scope.delete = function () {
                     http({
                         method: 'DELETE',
-                        url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/images',
+                        url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/images'
                     }).then(function (imageData) {
                         if (!scope.$$phase) {
                             scope.$apply();
@@ -215,7 +261,7 @@
                                 name: 'clientSignature',
                                 description: 'client signature'
                             },
-                            file: scope.file,
+                            file: scope.file
                         }).then(function (imageData) {
                                 // to fix IE not refreshing the model
                                 if (!scope.$$phase) {
@@ -238,6 +284,7 @@
                 });
             };
             var ClientDeleteCtrl = function ($scope, $modalInstance) {
+
                 $scope.delete = function () {
                     resourceFactory.clientResource.delete({clientId: routeParams.id}, {}, function (data) {
                         $modalInstance.close('delete');

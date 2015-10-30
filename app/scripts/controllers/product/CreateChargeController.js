@@ -43,14 +43,21 @@
                         if (chargeTimeType === scope.chargeTimeTypeOptions[i].id) {
                             if (scope.chargeTimeTypeOptions[i].value == "Annual Fee" || scope.chargeTimeTypeOptions[i].value == "Monthly Fee") {
                                 scope.showdatefield = true;
+                                scope.addfeefrequency = false;
                                 scope.repeatsEveryLabel = 'label.input.months';
                                 //to show 'repeats every' field for monthly fee
                                 if (scope.chargeTimeTypeOptions[i].value == "Monthly Fee") {
                                     scope.repeatEvery = true;
+                                    scope.addfeefrequency = false;
                                 } else {
                                     scope.repeatEvery = false;
                                 }
-                            } else if (scope.chargeTimeTypeOptions[i].value == "Weekly Fee") {
+                            }else if (scope.chargeTimeTypeOptions[i].value == "Savings Late Fee"){
+                                scope.repeatEvery = false;
+                                scope.showdatefield = false;
+                                scope.addfeefrequency = true;
+                            }
+                            else if (scope.chargeTimeTypeOptions[i].value == "Weekly Fee") {
                                 scope.repeatEvery = true;
                                 scope.showdatefield = false;
                                 scope.repeatsEveryLabel = 'label.input.weeks';
@@ -58,6 +65,7 @@
                             else {
                                 scope.showdatefield = false;
                                 scope.repeatEvery = false;
+                                scope.addfeefrequency = false;
                             }
 
                         }

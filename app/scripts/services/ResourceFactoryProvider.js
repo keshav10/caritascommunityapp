@@ -41,7 +41,7 @@
                         update: { method: 'PUT'}
                     }),
                     clientResource: defineResource(apiVer + "/clients/:clientId/:anotherresource", {clientId: '@clientId', anotherresource: '@anotherresource'}, {
-                        getAllClients: {method: 'GET', params: {limit: 1000}},
+                        getAllClients: {method: 'GET', params: {limit:30000}},
                         getClientClosureReasons: {method: 'GET', params: {}},
                         getAllClientDocuments: {method: 'GET', params: {}, isArray: true},
                         update: { method: 'PUT'}
@@ -54,6 +54,12 @@
                     }),
                     clientAccountResource: defineResource(apiVer + "/clients/:clientId/accounts", {clientId: '@clientId'}, {
                         getAllClients: {method: 'GET', params: {}}
+                    }),
+                    clientAccountChargeResource: defineResource(apiVer + "/clients/:clientId/clientsPayments", {clientId: '@clientId'}, {
+                        getAllClients: {method: 'GET', params: {}}
+                    }),
+                    clientAccountMpesaResource:  defineResource(apiVer+ "clients/:clientId/mpesa",{clientId: '@clientId'},{
+                        getMpesaTxnSummary:{method: 'GET',params:{}}
                     }),
                     clientNotesResource: defineResource(apiVer + "/clients/:clientId/notes", {clientId: '@clientId'}, {
                         getAllNotes: {method: 'GET', params: {}, isArray: true}
@@ -209,9 +215,10 @@
                     globalSearchTemplateResource: defineResource(apiVer + "/search/template", {}, {
                         get: {method: 'GET', params: {}}
                     }),
-                    globalAdHocSearchResource: defineResource(apiVer + "/search/advance", {}, {
+                    globalAdHocSearchResource: defineResource(apiVer + "/search/advance/", {}, {
                         get: {method: 'GET', params: {}},
-                        search: { method: 'POST', isArray: true }
+                        search: { method: 'POST', isArray: true },
+                        getClientDetails : {method: 'POST', params: {clientInfo: true},isArray: true}
                     }),
                     fundsResource: defineResource(apiVer + "/funds/:fundId", {fundId: '@fundId'}, {
                         getAllFunds: {method: 'GET', params: {}, isArray: true},
@@ -294,6 +301,19 @@
                     }),
                     savingsTemplateResource: defineResource(apiVer + "/savingsaccounts/template", {}, {
                         get: {method: 'GET', params: {}}
+                    }),
+
+                    savingsInvestmentResource: defineResource(apiVer + "/savingsaccounts/:savingId/savingInvestment",{
+                        savingId:'@savingId'},{
+                        get: {method: 'GET', params: {}, isArray: true},
+                        delete:{method:'DELETE',params:{loanId: '@loanId'}},
+                        update: { method: 'PUT'}
+                    }),
+                    loanInvestmentResource: defineResource(apiVer + "/loans/:loanId/loanInvestment",{
+                        loanId: '@loanId'}, {
+                        get: {method: 'GET', params:{}, isArray: true},
+                        delete:{method: 'DELETE', params:{loanId: '@loanId'}},
+                        update: { method: 'PUT'}
                     }),
                     savingsResource: defineResource(apiVer + "/savingsaccounts/:accountId/:resourceType/:chargeId", {accountId: '@accountId', resourceType: '@resourceType', chargeId: '@chargeId'}, {
                         get: {method: 'GET', params: {}},
@@ -437,10 +457,13 @@
                     tellerResource: defineResource(apiVer + "/tellers/:tellerId", {tellerId: "@tellerId"}, {
                         getAllTellers: {method: 'GET', params: {}, isArray: true},
                         get: {method: 'GET', params: {tellerId: '@tellerId'}},
-                        update: { method: 'PUT', params: {tellerId: '@tellerId'}}
+                        update: { method: 'PUT', params: {tellerId: '@tellerId'}},
+                        delete: { method: 'DELETE', params: {tellerId: '@tellerId'}}
                     }),
                     tellerCashierResource: defineResource(apiVer + "/tellers/:tellerId/cashiers/:cashierId", {tellerId: "@tellerId", cashierId: "@cashierId"}, {
                         getAllCashiersForTeller: {method: 'GET', params: {tellerId: "@tellerId"}, isArray: false},
+                        getCashier: {method: 'GET', params:{tellerId: "@tellerId", cashierId: "@cashierId"}},
+                        update: { method: 'PUT', params: {tellerId: "@tellerId", cashierId: "@cashierId"}},
                         delete: { method: 'DELETE', params: {tellerId: "@tellerId", cashierId: "@cashierId"}}
                     }),
                     tellerCashierTemplateResource: defineResource(apiVer + "/tellers/:tellerId/cashiers/template", {tellerId: "@tellerId"}, {
@@ -462,7 +485,27 @@
                         get: {method: 'GET', params: {tellerId: "@tellerId", cashierId: "@cashierId"}, isArray: false}
                     }),
                     collectionSheetResource: defineResource(apiVer + "/collectionsheet", {}, {
+                    }),
+                    workingDaysResource: defineResource(apiVer + "/workingdays", {}, {
+                        get: {method: 'GET', params: {}},
+                        put: {method: 'PUT', params:{}}
+                    }),
+                    workingDaysResourceTemplate: defineResource(apiVer + "/workingdays/template", {}, {
+                       get: {method: 'GET', params: {}}
+                    }),
+                    passwordPrefTemplateResource: defineResource(apiVer + "/passwordpreferences/template", {}, {
+                        get: {method: 'GET', params: {}, isArray : true},
+                        put: {method: 'PUT', params:{}}
+                    }),
+                    passwordPrefResource : defineResource(apiVer + "/passwordpreferences", {}, {
+                        put: {method: 'PUT', params:{}}
+                    }),
+                    paymentTypeResource: defineResource(apiVer + "/paymenttypes/:paymentTypeId", {paymentTypeId: "@paymentTypeId"}, {
+                        getAll: {method: 'GET', params: {}, isArray: true},
+                        get: {method: 'GET' , params: {paymentTypeId: '@paymentTypeId'}},
+                        update: {method: 'PUT', params: {paymentTypeId: '@paymentTypeId'}}
                     })
+
                 };
             }];
         }

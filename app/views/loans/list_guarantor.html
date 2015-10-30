@@ -57,7 +57,9 @@
                 </tr>
                 <tr>
                     <th class="table-bold-loan">{{'label.heading.arrearsby' | translate}}</th>
+
                     <td><span class="padded-td">{{loandetails.summary.totalOverdue}}<span
+
                             data-ng-hide="loandetails.summary.totalOverdue>=0">{{'label.heading.notprovided' | translate}}</span></span>
                     </td>
                 </tr>
@@ -65,10 +67,19 @@
         </div>
     </div>
 
+<<<<<<< HEAD
 
     <div ng-show="guarantorDetails" class="marginbuttontop25px">
         <table class="table">
             <thead>
+            <tr>
+                <td colspan='8'>
+                    <div class="pull-right">
+                        <input type="checkbox" data-ng-model="hideDeletedGuarantors" ng-true-value="true" ng-false-value="" ng-checked="isHideDeletedGuarantorsCheckboxChecked" ng-change="updateCheckBoxStatus()">&nbsp;&nbsp;
+                        <label class="control-label">{{'label.input.hide.deleted.guarantor' | translate }}</label>&nbsp;&nbsp;
+                    </div>
+                </td>
+            </tr>
             <tr class="graybg">
                 <th>{{'label.heading.fullname' | translate}}</th>
                 <th>{{'label.heading.relationship' | translate}}</th>
@@ -78,14 +89,6 @@
                 <th>{{'label.heading.guarantee.amount.remaining' | translate}}</th>
                 <th>{{'label.heading.guarantee.status' | translate}}</th>
                 <th></th>
-            </tr>
-            <tr>
-                <td colspan='8'>
-                    <div class="pull-right">
-                        <input type="checkbox" data-ng-model="hideDeletedGuarantors" ng-true-value="true" ng-false-value="" ng-checked="isHideDeletedGuarantorsCheckboxChecked" ng-change="updateCheckBoxStatus()">&nbsp;&nbsp;
-                        <label class="control-label">{{'label.input.hide.deleted.guarantor' | translate }}</label>&nbsp;&nbsp;
-                    </div>
-                </td>
             </tr>
             </thead>
             <tbody data-ng-repeat="guarantor in guarantorDetails | filter:{status:hideDeletedGuarantors}"  >
@@ -99,8 +102,8 @@
                 </td>
                 <td>{{guarantor.guarantorType.code | translate}}</td>
                 <td>{{guarantorfund.savingsAccount.accountNo}}</td>
-                <td>{{guarantorfund.amount}}</td>
-                <td>{{guarantorfund.amountRemaining}}</td>
+                <td>{{guarantorfund.amount | number}}</td>
+                <td>{{guarantorfund.amountRemaining | number}}</td>
                 <td>{{guarantorfund.status.code | translate}}</td>
                 <td>
                     <button class="btn btn-info" data-ng-click="showDetails($parent.$index,$index)"
@@ -191,7 +194,7 @@
                     </tr>
                     <tr data-ng-show="guarantorFundDetail && guarantorFundDetail.amount">
                         <td>{{'label.heading.guarantee.amount' | translate}}</td>
-                        <td>{{guarantorFundDetail.amount}}</td>
+                        <td>{{guarantorFundDetail.amount | number}}</td>
                     </tr>
                     <tr data-ng-show="guarantorFundDetail && guarantorFundDetail.amountReleased">
                         <td>{{'label.heading.guarantee.amount.released' | translate}}</td>
@@ -199,7 +202,7 @@
                     </tr>
                     <tr data-ng-show="guarantorFundDetail && guarantorFundDetail.amountRemaining">
                         <td>{{'label.heading.guarantee.amount.remaining' | translate}}</td>
-                        <td>{{guarantorFundDetail.amountRemaining}}</td>
+                        <td>{{guarantorFundDetail.amountRemaining | number}}</td>
                     </tr>
                     <tr data-ng-show="guarantorFundDetail && guarantorFundDetail.status">
                         <td>{{'label.heading.guarantee.status' | translate}}</td>
@@ -228,7 +231,6 @@
             </div>
         </script>
     </div>
-
 
     <div ng-show="guarantorDetails" class="col-md-offset-10" style="margin-bottom: 40px">
         <a id="cancel" href="#/viewloanaccount/{{loandetails.id}}" class="btn btn-default">{{ 'label.button.cancel' |

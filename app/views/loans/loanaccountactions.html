@@ -41,7 +41,7 @@
                min="'2000-01-01'" max="restrictDate"/>
     </div>
 </div>
-<div class="form-group" ng-show="disbursementDetails">
+<div class="form-group" ng-show="showApprovalAmount">
     <label class="control-label col-sm-2">{{ 'label.heading.approvedamount' |
         translate}}</label>
 
@@ -50,7 +50,7 @@
                number-format required late-Validate>
     </div>
 </div>
-<div class="form-group col-sm-3" ng-show="disbursementDetails" style="width: 100%;padding-left: 26px">
+<div class="form-group col-sm-3" ng-show="approveTranches" style="width: 100%;padding-left: 26px">
     <label class="control-label col-sm-2">{{ 'label.heading.tranchedetails' | translate }}</label>
 
     <div>
@@ -286,6 +286,8 @@
                    number-format required late-Validate>
         </div>
     </div>
+    </div>
+
     <table class="table width100" ng-show="addDisburseDetails && disbursementDetails.length > 0">
         <thead>
         <tr class="graybg">
@@ -309,8 +311,7 @@
                        placeholder="{{'label.input.principal' | translate}}">
             </td>
             <td ng-hide="disbursementDetail.id"><a ng-click="deleteTranches($index)"><i
-                    class="icon-remove icon-white"></i></a>
-            </td>
+                    class="icon-remove icon-white"></i></a></td>
         </tr>
         </tbody>
     </table>
@@ -344,13 +345,20 @@
         </tr>
         </tbody>
     </table>
-</div>
 <div class="form-group" ng-show="showDelete || showwaiveforspecicficduedate">
-    <label class="control-label col-sm-2">{{ 'label.areyousure' | translate}}</label>
+    <div class="col-sm-3" ng-show="action == 'recoverguarantee'">
+        <label >Date For Recovering From Guarantors <span class="required">*</span></label>
+    </div>
+    <div class="col-sm-3" ng-show="action == 'recoverguarantee'">
+    <input  type="text" sort datepicker-pop="dd MMMM yyyy" class="form-control"
+           ng-model="formData.guarantorRecoveryDate" is-open="opened" min="'2000-01-01'" max="restrictDate" required late-Validate />
+    </div>
+    <label ng-show="action != 'recoverguarantee'" class="control-label col-sm-3">{{ 'label.areyousure' | translate}}</label>
 </div>
+
 <div class="col-md-offset-2" ng-show="showDelete || showwaiveforspecicficduedate">
     <button type="reset" ng-click="cancel()" class="btn btn-default">{{ 'label.button.cancel' | translate}}</button>
-    <button type="submit" has-permission='{{taskPermissionName}}' ng-click="submit()" class="btn btn-primary">{{
+    <button type="button" has-permission='{{taskPermissionName}}' ng-click="submit()" class="btn btn-primary">{{
         'label.button.confirm' |
         translate}}
     </button>
