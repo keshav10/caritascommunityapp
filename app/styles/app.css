@@ -1148,6 +1148,9 @@ input#search:-ms-input-placeholder {
 .multiselectmin{
     height: 100px !important;
 }
+.multiselectsms{
+    height: 200px !important;
+}
 .margintopminustenpx{
     margin-top: -10px;
 }

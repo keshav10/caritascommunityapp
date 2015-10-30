@@ -8,7 +8,9 @@
             scope.hjk = false;
             scope.formData={};
             scope.mobileNo={};
+            scope
             scope.selected=false;
+            scope.client=[];
 
 
             resourceFactory.officeResource.getAllOffices(function (data) {
@@ -17,6 +19,23 @@
                     officeId: scope.offices[0].id
                 }
             });
+
+            scope.addClient = function () {
+                for (var i in this.formData.id) {
+                    for (var j in scope.clients) {
+                        if (scope.clients[j].id == this.formData.id[i]) {
+                            var temp = {};
+                            scope.mobNo=scope.clients[j].displayName+"-"+scope.clients[j].mobileNo;
+                            temp.id = this.formData.id[i];
+                            temp.name = scope.mobNo;
+                            scope.client.push(temp);
+                            scope.clients.splice(j, 1);
+                        }
+
+                    }
+                }
+
+            };
 
             scope.select=function(){
                 scope.selected=false;
@@ -30,15 +49,21 @@
                 var tempString = "";
                 scope.mobileNo="";
                 for (var l in scope.clients) {
-                    scope.mobileNo= scope.mobileNo+scope.clients[l].mobileNo+",";
+                    var temp = {};
+                    scope.mobileNo= scope.clients[l].displayName+ "-"+scope.clients[l].mobileNo;
+                    temp.id=scope.clients[l].id;
+                    temp.name=scope.mobileNo;
+                    scope.client.push(temp);
                 }
-                scope.formData.mobileNo= scope.mobileNo;
+                //scope.client= scope.mobileNo;
+                scope.clients="";
             }
 
             scope.clear=function(){
                 scope.selected=false;
                 scope.formData.mobileNo=" ";
                 scope.formData.id="";
+                scope.formData.client="";
             }
             scope.cancle=function(){
                 //scope.selected=false;
