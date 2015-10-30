@@ -37,6 +37,21 @@
 
             };
 
+            scope.removeClient = function () {
+                for (var i in this.formData.client) {
+                    for (var j in scope.client) {
+                        if (scope.client[j].id == this.formData.client[i]) {
+                            var temp = {};
+                            temp.id = this.formData.client[i];
+                            temp.displayName= scope.clients[j].displayName;
+                            temp.mobileNo=    scope.clients[j].mobileNo;
+                            scope.clients.push(temp);
+                            scope.client.splice(j, 1);
+                        }
+                    }
+                }
+            };
+
             scope.select=function(){
                 scope.selected=false;
                 scope.mobileNo=scope.formData.id;
