@@ -25,9 +25,9 @@
                     for (var j in scope.clients) {
                         if (scope.clients[j].id == this.formData.id[i]) {
                             var temp = {};
-                            scope.mobNo=scope.clients[j].displayName+"-"+scope.clients[j].mobileNo;
                             temp.id = this.formData.id[i];
-                            temp.name = scope.mobNo;
+                            temp.mobileNo=scope.clients[j].mobileNo;
+                            temp.displayName = scope.clients[j].displayName;
                             scope.client.push(temp);
                             scope.clients.splice(j, 1);
                         }
@@ -43,8 +43,8 @@
                         if (scope.client[j].id == this.formData.client[i]) {
                             var temp = {};
                             temp.id = this.formData.client[i];
-                            temp.displayName= scope.clients[j].displayName;
-                            temp.mobileNo=    scope.clients[j].mobileNo;
+                            temp.displayName = scope.client[j].displayName;
+                            temp.mobileNo=    scope.client[j].mobileNo;
                             scope.clients.push(temp);
                             scope.client.splice(j, 1);
                         }
@@ -61,24 +61,30 @@
 
             scope.selectAll = function(){
                 scope.selected=true;
-                var tempString = "";
-                scope.mobileNo="";
                 for (var l in scope.clients) {
                     var temp = {};
-                    scope.mobileNo= scope.clients[l].displayName+ "-"+scope.clients[l].mobileNo;
-                    temp.id=scope.clients[l].id;
-                    temp.name=scope.mobileNo;
+                    temp.id = scope.clients[l].id;
+                    temp.displayName = scope.clients[l].displayName;
+                    temp.mobileNo=    scope.clients[l].mobileNo;
                     scope.client.push(temp);
                 }
                 //scope.client= scope.mobileNo;
-                scope.clients="";
+                scope.clients=[];
             }
 
             scope.clear=function(){
+                for (var l in scope.client) {
+                    var temp = {};
+                    temp.id = scope.client[l].id;
+                    temp.displayName = scope.client[l].displayName;
+                    temp.mobileNo=    scope.client[l].mobileNo;
+                    scope.clients.push(temp);
+                }
+                scope.client=[];
                 scope.selected=false;
                 scope.formData.mobileNo=" ";
                 scope.formData.id="";
-                scope.formData.client="";
+                //scope.clients=scope.formData.client;
             }
             scope.cancle=function(){
                 //scope.selected=false;
@@ -103,7 +109,7 @@
                              scope.clients = data.pageItems;
                          });
 
-
+                         scope.client=[];
                  }
 
             }

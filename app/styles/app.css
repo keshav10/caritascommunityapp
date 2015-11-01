@@ -1149,7 +1149,7 @@ input#search:-ms-input-placeholder {
     height: 100px !important;
 }
 .multiselectsms{
-    height: 200px !important;
+    height: 210px !important;
 }
 .margintopminustenpx{
     margin-top: -10px;
@@ -1346,4 +1346,7 @@ h3.bolder {
     height:30px;
     overflow: auto;
     font-size: 12px;
+}
+.smsleftclass{
+  marging-left: -20%;
 }
