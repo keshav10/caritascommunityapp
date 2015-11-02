@@ -37,9 +37,7 @@
                 </div>
                 <div class="form-group">
                     <div>
-
                         <label class="control-label col-sm-1"> {{'label.input.clients'|translate}}</label>
-
                         <div class="col-sm-3">
                             <select id="id" ng-model="formData.id" name="client" class="form-control multiselectsms" multiple required>
                                 <option ng-repeat="client in clients" value="{{client.id}}" ng-selected=selected>
@@ -48,25 +46,17 @@
                             </select>
                         </div>
                         <div class="col-sm-1">
-
-                            <label class="control-label" ><button id="select"  class="btn btn-primary" ng-click="addClient()">></button>
-                                <i class="icon-question-sign" tooltip="{{'label.tooltip.select' | translate}}" ></i>
-
+                            <label class="control-label" ><button id="select"  class="btn btn-primary" tooltip="{{'label.tooltip.select' | translate}}" ng-click="addClient()">></button>
                                 <ul></ul>
-                                <button id="remove" type="button" class="btn btn-primary" ng-click="removeClient()"><
+                                <button id="remove" type="button" class="btn btn-primary" tooltip="{{'label.tooltip.unselect' | translate}}" ng-click="removeClient()"><
                                 </button>
-                               <i class="icon-question-sign" tooltip="{{'label.tooltip.unselect' | translate}}" ></i>
-
-
                                 <ul></ul>
-                                <button type="button" class="btn btn-primary" ng-click="selectAll()"><i
+                                <button type="button" class="btn btn-primary" tooltip="{{'label.toottip.selectAll' | translate}}" ng-click="selectAll()"><i
                                         class="icon-double-angle-right"></i></button>
-                                <i class="icon-question-sign" tooltip="{{'label.toottip.selectAll' | translate}}" ></i>
 
                                 <ul></ul>
-                                <button type="button" class="btn btn-primary" ng-click="clear()"><i
+                                <button type="button" class="btn btn-primary" tooltip="{{'label.toottip.RempveAll' | translate}}" ng-click="clear()"><i
                                         class="icon-double-angle-left"></i></button>
-                                <i class="icon-question-sign" tooltip="{{'label.toottip.RempveAll' | translate}}" ></i>
 
                                 <ul></ul>
                             </label>
@@ -81,9 +71,7 @@
                         <div class="col-sm-4">
                             <textarea id="msg" name="MessageText" ng-model="formData.messageText" rows="9"
                                       cols="" class="form-control" >
-
                             </textarea>
-
                         </div>
                     </div>
                 </div>
@@ -99,10 +87,7 @@
                     <button id="save" type="submit"  class="btn btn-primary" >{{ 'label.button.send' | translate}}</button>
                     <button id="cancel" type="reset" class="btn btn-default" >{{ 'label.button.cancel' | translate}}</button>
                 </div>
-
-
             </div>
-
         </fieldset>
     </form>
 </div>

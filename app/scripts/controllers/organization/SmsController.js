@@ -35,6 +35,7 @@
                     }
                 }
 
+                this.formData.id = this.formData.id -1;
             };
 
             scope.removeClient = function () {
@@ -50,6 +51,7 @@
                         }
                     }
                 }
+                this.formData.client = this.formData.client - 1;
             };
 
             scope.select=function(){

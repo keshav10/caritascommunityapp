@@ -3605,7 +3605,7 @@
     "label.view.smsmanagement" : "Send Sms",
     "label.anchor.sms":"Sms Management",
     "label.anchor.sendoption":"send option sms",
-    "label.input.selectedClients":"selected Clients",
+    "label.input.selectedClients":"Selected Clients",
     "label.input.messageText":"Text Message",
     "label.button.send":"Send",
     "label.button.selectAll":"selectAll",
