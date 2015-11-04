@@ -4,13 +4,13 @@
             scope.offices = [];
             scope.clients = [];
             scope.submt = false;
-            scope.officeId1=1
-            scope.hjk = false;
-            scope.formData={};
-            scope.mobileNo={};
-            scope
-            scope.selected=false;
-            scope.client=[];
+            scope.officeId1 = 1
+            scope.formData = {};
+            scope.mobileNo = {};
+            scope.selected = false;
+            scope.client = [];
+            scope.mobileNoForSending='';
+            scope.data=[];
 
 
             resourceFactory.officeResource.getAllOffices(function (data) {
@@ -26,7 +26,7 @@
                         if (scope.clients[j].id == this.formData.id[i]) {
                             var temp = {};
                             temp.id = this.formData.id[i];
-                            temp.mobileNo=scope.clients[j].mobileNo;
+                            temp.mobileNo = scope.clients[j].mobileNo;
                             temp.displayName = scope.clients[j].displayName;
                             scope.client.push(temp);
                             scope.clients.splice(j, 1);
@@ -35,7 +35,7 @@
                     }
                 }
 
-                this.formData.id = this.formData.id -1;
+                this.formData.id = this.formData.id - 1;
             };
 
             scope.removeClient = function () {
@@ -45,7 +45,7 @@
                             var temp = {};
                             temp.id = this.formData.client[i];
                             temp.displayName = scope.client[j].displayName;
-                            temp.mobileNo=    scope.client[j].mobileNo;
+                            temp.mobileNo = scope.client[j].mobileNo;
                             scope.clients.push(temp);
                             scope.client.splice(j, 1);
                         }
@@ -54,67 +54,95 @@
                 this.formData.client = this.formData.client - 1;
             };
 
-            scope.select=function(){
-                scope.selected=false;
-                scope.mobileNo=scope.formData.id;
-                scope.formData.mobileNo=scope.mobileNo;
+            scope.select = function () {
+                scope.selected = false;
+                scope.mobileNo = scope.formData.id;
+                scope.formData.mobileNo = scope.mobileNo;
 
             }
 
-            scope.selectAll = function(){
-                scope.selected=true;
+            scope.selectAll = function () {
+                scope.selected = false;
+                //reduce the size of clients by 1
+                this.formData.clients=this.formData.clients-1;
                 for (var l in scope.clients) {
                     var temp = {};
                     temp.id = scope.clients[l].id;
                     temp.displayName = scope.clients[l].displayName;
-                    temp.mobileNo=    scope.clients[l].mobileNo;
+                    temp.mobileNo = scope.clients[l].mobileNo;
                     scope.client.push(temp);
                 }
                 //scope.client= scope.mobileNo;
-                scope.clients=[];
+                scope.clients = [];
             }
 
-            scope.clear=function(){
+            scope.clear = function () {
                 for (var l in scope.client) {
                     var temp = {};
                     temp.id = scope.client[l].id;
                     temp.displayName = scope.client[l].displayName;
-                    temp.mobileNo=    scope.client[l].mobileNo;
+                    temp.mobileNo = scope.client[l].mobileNo;
                     scope.clients.push(temp);
                 }
-                scope.client=[];
-                scope.selected=false;
-                scope.formData.mobileNo=" ";
-                scope.formData.id="";
+                scope.client = [];
+                scope.selected = false;
+                scope.formData.mobileNo = " ";
+                scope.formData.id = "";
+                //reduce the size of selected client Array
+                this.formData.client=this.formData.client-1;
+
                 //scope.clients=scope.formData.client;
             }
-            scope.cancle=function(){
+            scope.cancle = function () {
                 //scope.selected=false;
-                scope.formData.messageText=" ";
+                scope.formData.messageText = " ";
             }
-            var param={};
-            param.officeId=scope.officeId1;
+            var param = {};
+            param.officeId = scope.officeId1;
             var items = resourceFactory.clientResource.getAllClients(param, function (data) {
                 scope.totalClients = data.totalFilteredRecords;
                 scope.clients = data.pageItems;
             });
 
 
-                     scope.fetchClientByOfficeId = function (officeId) {
-                         scope.officeId1 = officeId;
-                         var params={};
-                         params.officeId=officeId;
-                         scope.formData.mobileNo="";
-                         scope.hjk = true;
-                         var items = resourceFactory.clientResource.getAllClients(params, function (data) {
-                             scope.totalClients = data.totalFilteredRecords;
-                             scope.clients = data.pageItems;
-                         });
+            scope.fetchClientByOfficeId = function (officeId) {
+                scope.officeId1 = officeId;
+                var params = {};
+                params.officeId = officeId;
+                scope.formData.mobileNo = "";
 
-                         scope.client=[];
-                 }
+                var items = resourceFactory.clientResource.getAllClients(params, function (data) {
+                    scope.totalClients = data.totalFilteredRecords;
+                    scope.clients = data.pageItems;
+                });
+
+                scope.client = [];
+            }
+
+
+            scope.sendMessage = function () {
+                for(var i in scope.client){
+                    if(scope.client[i].mobileNo!=null && scope.client[i].mobileNo!="") {
+                        scope.mobileNoForSending = scope.mobileNoForSending + scope.client[i].mobileNo + ",";
+                    }
+                }
+                scope.mobileNoForSending=scope.mobileNoForSending.substring(0,scope.mobileNoForSending.length-1);
+                var messagejson = {};
+                messagejson.target = scope.mobileNoForSending;
+                messagejson.type = "sms";
+                messagejson.entity_id = "1";
+                messagejson.message = scope.formData.messageText;
+                 resourceFactory.notificationResource.post(messagejson, function (data) {
+                     var response=data.valueOf();
+                     alert(response);
+                });
+                scope.mobileNoForSending='';
+
 
             }
+        }
+
+
 
 
     });

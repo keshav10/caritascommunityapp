@@ -77,14 +77,16 @@
                 </div>
                 <label class="control-label col-sm-1">{{  }}</label>
                 <div class="col-sm-8" ng-show="false" >
-                    <select id="selectedmobileNo" ng-model="selectedMobileNo" name="selectedMobileNo"  class="form-control multiselectsms" multiple required>
-                        <option ng-repeat="selectedclient in client" value="{{selectedclient.id}}" ng-selected=selected>
+                    <select id="selectedmobileNo" ng-model="formData.selectedMobileNo" name="selectedMobileNo"  class="form-control multiselectsms" multiple required>
+                        <option ng-repeat="selectedclient in client" value="{{selectedclient.mobileNo}}" ng-selected=selected>
                             {{selectedclient.mobileNo}}
                         </option>
                     </select>
                 </div>
+                <div>
+                </div>
                 <div class="col-md-offset-9" >
-                    <button id="save" type="submit"  class="btn btn-primary" >{{ 'label.button.send' | translate}}</button>
+                    <button id="save" type="submit"  class="btn btn-primary" ng-click="sendMessage()">{{ 'label.button.send' | translate}}</button>
                     <button id="cancel" type="reset" class="btn btn-default" >{{ 'label.button.cancel' | translate}}</button>
                 </div>
             </div>

@@ -504,7 +504,10 @@
                         getAll: {method: 'GET', params: {}, isArray: true},
                         get: {method: 'GET' , params: {paymentTypeId: '@paymentTypeId'}},
                         update: {method: 'PUT', params: {paymentTypeId: '@paymentTypeId'}}
-                    })
+                    }),
+                    notificationResource:defineResource(apiVer+"/notification",{},{
+                    post: {method: 'POST', params: {}, isArray: false}
+                })
 
                 };
             }];
