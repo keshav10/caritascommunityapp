@@ -1434,6 +1434,7 @@
     "label.tooltip.arearstolerance":"With 'Arrears tolerance' you can specify a tolerance amount and if the loan is behind (in arrears), but within the tolerance, it won't be classified as 'in arrears' and part of the portfolio at risk.",
     "label.tooltip.daysinyear":"Number of days in year.",
     "label.tooltip.daysinmonth":"Number of days in month.",
+    "label.tooltip.Additional Numbers":"Additional Mobile Number should be seprated by  comma ,",
 
 
     "#tool tip for creating standing instruction":"..",
@@ -2567,8 +2568,8 @@
     "label.tooltip.global.meetings-mandatory-for-jlg-loans":"This term is waiting for a professional definition.",
     "label.tooltip.select":"Select",
     "label.tooltip.unselect":"Remove",
-    "label.toottip.selectAll":"SelectAll",
-    "label.toottip.RempveAll":"RemoveAll",
+    "label.toottip.selectAll":"Select All",
+    "label.toottip.RempveAll":"Remove All",
 
     "#----------------": "------------",
 
@@ -3610,7 +3611,8 @@
     "label.button.send":"Send",
     "label.button.selectAll":"selectAll",
     "labell.button.clear":"clear",
-    "label.input.selected":"Selected MobileNo for Send"
+    "label.input.selected":"Selected MobileNo for Send",
+    "label.input.Additional Number":"Additional Number"
 
 
 

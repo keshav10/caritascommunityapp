@@ -62,27 +62,32 @@
                             </label>
                         </div>
                         <div class="col-sm-3">
-                            <select id="mobileNo" ng-model="formData.client" name="client"  class="form-control multiselectsms" multiple required>
+                            <select id="mobileNo" ng-model="formData.client" name="client"  class="form-control selectedclient" multiple required>
                                 <option ng-repeat="selectedclient in client" value="{{selectedclient.id}}" ng-selected=selected>
                                     {{selectedclient.displayName}}-{{selectedclient.mobileNo}}
                                 </option>
                             </select>
+                            <ul></ul>
+                            <ul>
+                               <lable>{{'label.input.Additional Number'|translate}}
+                                <i class="icon-question-sign" tooltip="{{'label.tooltip.Additional Numbers' | translate}}" tooltip-append-to-body="true"></i>
+
+                               </lable>
+                            </ul>
+                                <textarea id="additionalNumber" name="AdditionalNumber" ng-model="additionalNumber" rows="9"
+                                          cols="9" class="form-control" >
+                                </textarea>
+
                         </div>
                         <div class="col-sm-4">
-                            <textarea id="msg" name="MessageText" ng-model="formData.messageText" rows="9"
+                            <textarea id="msg" name="MessageText" ng-model="formData.messageText" rows="20"
                                       cols="" class="form-control" >
                             </textarea>
                         </div>
                     </div>
                 </div>
-                <label class="control-label col-sm-1">{{  }}</label>
-                <div class="col-sm-8" ng-show="false" >
-                    <select id="selectedmobileNo" ng-model="formData.selectedMobileNo" name="selectedMobileNo"  class="form-control multiselectsms" multiple required>
-                        <option ng-repeat="selectedclient in client" value="{{selectedclient.mobileNo}}" ng-selected=selected>
-                            {{selectedclient.mobileNo}}
-                        </option>
-                    </select>
-                </div>
+                <label class="control-label col-sm-4">{{  }}</label>
+
                 <div>
                 </div>
                 <div class="col-md-offset-9" >
