@@ -11,6 +11,7 @@
             scope.client = [];
             scope.mobileNoForSending='';
             scope.data=[];
+            scope.additionalNumber='';
 
 
             resourceFactory.officeResource.getAllOffices(function (data) {
@@ -126,6 +127,11 @@
                         scope.mobileNoForSending = scope.mobileNoForSending + scope.client[i].mobileNo + ",";
                     }
                 }
+                scope.additionalNumber=scope.formData.additionalNumber;
+                if(scope.additionalNumber==''){
+                    scope.additionalNumber=90;
+                }
+                alert(scope.additionalNumber);
                 scope.mobileNoForSending=scope.mobileNoForSending.substring(0,scope.mobileNoForSending.length-1);
                 var messagejson = {};
                 messagejson.target = scope.mobileNoForSending;
