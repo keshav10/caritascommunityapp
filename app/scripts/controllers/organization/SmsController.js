@@ -12,6 +12,7 @@
             scope.mobileNoForSending='';
             scope.data=[];
             scope.additionalNumber='';
+            scope.MobileNumbers='';
 
 
             resourceFactory.officeResource.getAllOffices(function (data) {
@@ -127,14 +128,17 @@
                         scope.mobileNoForSending = scope.mobileNoForSending + scope.client[i].mobileNo + ",";
                     }
                 }
-                scope.additionalNumber=scope.formData.additionalNumber;
-                if(scope.additionalNumber==''){
-                    scope.additionalNumber=90;
+                if(angular.isUndefined(scope.formData.additionalNumber)||scope.formData.additionalNumber=="")
+                {
+                    scope.MobileNumbers=scope.mobileNoForSending.substring(0,scope.mobileNoForSending.length-1);
                 }
-                alert(scope.additionalNumber);
-                scope.mobileNoForSending=scope.mobileNoForSending.substring(0,scope.mobileNoForSending.length-1);
+                else{
+                    scope.MobileNumbers=scope.mobileNoForSending+scope.formData.additionalNumber;
+                }
+
+                //alert(scope.MobileNumbers);
                 var messagejson = {};
-                messagejson.target = scope.mobileNoForSending;
+                messagejson.target = scope.MobileNumbers;
                 messagejson.type = "sms";
                 messagejson.entity_id = "1";
                 messagejson.message = scope.formData.messageText;
