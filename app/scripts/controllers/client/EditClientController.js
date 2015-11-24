@@ -26,7 +26,8 @@
                     externalId: data.externalId,
                     mobileNo: data.mobileNo,
                     savingsProductId: data.savingsProductId,
-                    genderId: data.gender.id
+                    genderId: data.gender.id,
+                    nationalId: data.nationalId
                 };
 
                 if(data.gender){

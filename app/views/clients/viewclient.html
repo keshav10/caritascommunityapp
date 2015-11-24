@@ -420,6 +420,10 @@
 										</span>
 					                </td>
 					            </tr>
+								<tr data-ng-show="client.nationalId">
+									<th class="table-bold">National Id</th>
+									<td> <span class="padded-td">{{client.nationalId}}</span></td>
+								</tr>
 					            <tr data-ng-show="client.mobileNo">
 					                <th class="table-bold">{{ 'label.input.mobilenumber' | translate }}</th>
 					                <td><span class="padded-td">{{client.mobileNo}}</span>

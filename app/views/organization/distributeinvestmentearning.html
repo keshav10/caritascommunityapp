@@ -1,0 +1,53 @@
+<div class="col-md-12">
+    <ul class="breadcrumb">
+        <li><a href="#/organization">{{'label.anchor.organization' | translate}}</a></li>
+        <li class="active">Manage Investment Earning </li>
+    </ul>
+    <form name="distrinuteinvestmentearning" novalidate="" class="form-horizontal well" ng-controller="DistributeInvestmentEarningController"
+          rc-submit="submit()">
+        <api-validate></api-validate>
+        <fieldset>
+            <legend>Investment Earning </legend>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="productId">Product's Name</label>
+
+                <div class="col-sm-3">
+
+                    <select id="productId" ng-model="formData.productId"  class="form-control multiselectmin" multiple required>
+                        <option ng-repeat=" oneProduct in product" value="{{oneProduct.id}}">
+                            {{oneProduct.name}}
+                        </option>
+                    </select>
+
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="investmentId">Investment Account No.</label>
+
+                <div class="col-sm-3">
+                    <input type="text" id="investmentId" class="form-control" ng-model="formData.investmentId">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Investment Maturity Date</label>
+
+                <div class="col-sm-3">
+                    <input id="distributionDate" sort type="text" datepicker-pop="dd MMMM yyyy" ng-model="formData.date"
+                           class="form-control" is-open="opened" min="minDate" max="restrictDate"/>
+                </div>
+            </div>
+
+            <div class="col-md-offset-3">
+                <a id="cancel" href="#/organization">
+                    <button type="reset" class="btn btn-default">{{'label.button.cancel'| translate}}</button>
+                </a>
+                <button id="save" type="submit" ng-click="submit()" class="btn btn-primary" has-permission='RUNBATCHJOB_INVESTMENT'>{{'label.button.save'| translate}}</button>
+            </div>
+        </fieldset>
+    </form>
+</div>
+

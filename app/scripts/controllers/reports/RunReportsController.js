@@ -175,7 +175,7 @@
                             break;
                         case "date":
                             var tmpDate = scope.formData[paramDetails.inputName];
-                            if (tmpDate == undefined || !(tmpDate > "")) {
+                           if (tmpDate == undefined || !(tmpDate > "")) {
                                 var fieldId = '#' + paramDetails.inputName;
                                 $(fieldId).addClass("validationerror");
                                 var errorObj = new Object();
@@ -184,8 +184,9 @@
                                 errorObj.args = {params: []};
                                 errorObj.args.params.push({value: paramDetails.label});
                                 scope.errorDetails.push(errorObj);
-                            }
-                            if (tmpDate && invalidDate(tmpDate) == true) {
+                                scope.formData[paramDetails.inputName] = 'NULL';
+                           }
+                             if (tmpDate && invalidDate(tmpDate) == true) {
                                 var fieldId = '#' + paramDetails.inputName;
                                 $(fieldId).addClass("validationerror");
                                 var errorObj = new Object();
@@ -199,7 +200,7 @@
                             if (paramDetails.variable == "startDate") tmpStartDate = tmpDate;
                             if (paramDetails.variable == "endDate") tmpEndDate = tmpDate;
                             break;
-                        case "text":
+                         case "text":
                             var selectedVal = scope.formData[paramDetails.inputName];
                             if (selectedVal == undefined || selectedVal == 0) {
                                 var fieldId = '#' + paramDetails.inputName;
@@ -210,6 +211,7 @@
                                 errorObj.args = {params: []};
                                 errorObj.args.params.push({value: paramDetails.label});
                                 scope.errorDetails.push(errorObj);
+                           scope.formData[paramDetails.inputName] = 'NULL';
                             }
                             break;
                         default:
@@ -290,6 +292,8 @@
                 return false;
             };
             scope.runReport = function () {
+
+
                 //clear the previous errors
                 scope.errorDetails = [];
                 removeErrors();
@@ -302,7 +306,32 @@
                 }
 
                 //Custom validation for report parameters
-                parameterValidationErrors();
+      //
+               if(scope.reportName == 'Investment Status Report' || scope.reportName == 'Investment Distribution Report'){
+                    if(this.formData.R_investmentAccountNo == null){
+                        this.formData.R_investmentAccountNo = 'NULL';
+                    }
+                    if(this.formData.R_investedStartDate == null){
+                        this.formData.R_investedStartDate = 'NULL';
+                    }
+                    if(this.formData.R_investedEndDate == null){
+                        this.formData.R_investedEndDate = 'NULL';
+                    }
+                    if(this.formData.R_maturityStartDate == null){
+                        this.formData.R_maturityStartDate = 'NULL';
+                    }
+                    if(this.formData.R_maturityEndDate == null){
+                        this.formData.R_maturityEndDate = 'NULL';
+                    }
+                    if(this.formData.R_loanProductId == null){
+                        this.formData.R_loanProductId = 'NULL';
+                    }
+                }else {
+                   parameterValidationErrors();
+               }
+
+
+
 
                 if (scope.errorDetails.length == 0) {
                     scope.isCollapsed = true;
