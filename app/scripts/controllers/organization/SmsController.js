@@ -125,7 +125,7 @@
             scope.sendMessage = function () {
                 for(var i in scope.client){
                     if(scope.client[i].mobileNo!=null && scope.client[i].mobileNo!="") {
-                        scope.mobileNoForSending = scope.mobileNoForSending + scope.client[i].mobileNo + ",";
+                        scope.mobileNoForSending = scope.mobileNoForSending + scope.client[i].mobileNo +"-"+scope.client[i].displayName+"-"+scope.client[i].id+",";
                     }
                 }
                 if(angular.isUndefined(scope.formData.additionalNumber)||scope.formData.additionalNumber=="")
@@ -135,8 +135,6 @@
                 else{
                     scope.MobileNumbers=scope.mobileNoForSending+scope.formData.additionalNumber;
                 }
-
-                //alert(scope.MobileNumbers);
                 var messagejson = {};
                 messagejson.target = scope.MobileNumbers;
                 messagejson.type = "sms";
@@ -144,7 +142,6 @@
                 messagejson.message = scope.formData.messageText;
                  resourceFactory.notificationResource.post(messagejson, function (data) {
                      var response=data.valueOf();
-                     alert(response);
                 });
                 scope.mobileNoForSending='';
 
