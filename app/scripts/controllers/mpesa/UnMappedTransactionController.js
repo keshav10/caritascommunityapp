@@ -1,13 +1,28 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        ClientController: function (scope, resourceFactory, location) {
-            scope.clients = [];
-            scope.searchText = "";
-            scope.searchResults = [];
+        UnMappedTransactionController: function (scope, resourceFactory, location,routeParams,dateFilter) {
+           // if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null){
+                scope.clients = [];
+                scope.searchText = "";
+                scope.searchResults = [];
+                scope.mpesaPayment=true;
+                scope.mpesaAmount=routeParams.amount;
+                scope.mpetxnsacode=routeParams.mpetxnsacode;
+                scope.TxnDate=dateFilter(routeParams.txnDate, 'dd MMMM yyyy');
+                scope.txnId=routeParams.txnId;
+                scope.clientName=routeParams.clientName;
+                scope.mobileNo=routeParams.mobileNo;
+                var n=scope.mobileNo;
+               scope.mobileNo= n.substring(3, n.length);
+           // }
+
             scope.routeTo = function (id) {
-                location.path('/viewclient/' + id);
+                location.path('/clientpayments/' + id + '/' + scope.mpesaAmount + '/' + scope.mpetxnsacode + '/' + scope.TxnDate + '/' + scope.txnId+ '/' +'UNMP');
             };
 
+            scope.return=function(){
+                location.path('/mpesa/'+'UNMP');
+            }
             scope.groupsPerPage = 15;
             scope.getResultsPage = function (pageNumber) {
                 var items = resourceFactory.clientResource.getAllClients({
@@ -27,6 +42,8 @@
                 });
             }
             scope.initPage();
+
+
 
             scope.search = function () {
                 scope.clients = [];
@@ -49,8 +66,8 @@
                                 client.accountNo = result.entityAccountNo;
                                 client.id = result.entityId;
                                 client.officeName = result.parentName;
-                                client.externalId = result.externalId;
-                               // alert(result.externalId);
+                                client.externalId = result.entityExternalId;
+                                client.nationalId = result.entityNationalId;
                                 scope.clients.push(client);
                             }else if (result.entityType  == 'CLIENTIDENTIFIER'){
                                 client.displayName = result.parentName;
@@ -62,12 +79,12 @@
                 }
             }
 
+
         }
     });
 
-
-
-    mifosX.ng.application.controller('ClientController', ['$scope', 'ResourceFactory', '$location', mifosX.controllers.ClientController]).run(function ($log) {
-        $log.info("ClientController initialized");
-    });
-}(mifosX.controllers || {}));
+            mifosX.ng.application.controller('UnMappedTransactionController', ['$scope', 'ResourceFactory', '$location','$routeParams','dateFilter', mifosX.controllers.UnMappedTransactionController]).run(function ($log) {
+                $log.info("UnMappedTransactionController initialized");
+            });
+        }(mifosX.controllers || {}));
+     
