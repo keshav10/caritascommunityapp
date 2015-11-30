@@ -17,7 +17,7 @@
 
 
             scope.submit = function () {
-
+                   alert( API_VERSION);
                 $upload.upload({
                     url: $rootScope.hostUrl + API_VERSION + '/uploadxls/',
                     data: scope.formData,

@@ -421,7 +421,6 @@
 
 
             scope.keyPress = function(){
-
                 scope.formData.totalAmount = 0;
                 scope.oldTotalAmount=true;
                 for (var l in scope.loanAccounts) {
