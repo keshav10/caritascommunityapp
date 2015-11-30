@@ -52,6 +52,7 @@
             <input ng-show="formData.productId" id="externalId" ng-model="formData.externalId" class="form-control"/>
         </td>
     </tr>
+
 </table>
 <hr data-ng-show="formData.productId"/>
 <label ng-show="data"><strong>{{ 'label.heading.terms' | translate }}</strong></label>
@@ -195,6 +196,17 @@
             <td > {{'label.heading.minbalanceforinterestcalculation' | translate}}</td>
             <td>{{data.minBalanceForInterestCalculation | number}}</td>
         </tr>
+
+
+        <tr>
+             <td colspan="2" class="paddedbottom10">
+                          <input id="releaseguarantor" type="checkbox" ng-model="formData.releaseguarantor"> &nbsp;<span
+                                    class="control-label"> Release Guarantor Based On Deposite Made</span>
+                        </td>
+        </tr>
+
+
+
         <tr>
             <td class="width14"></td>
             <td class="width36 paddedbottom10"></td>
@@ -216,6 +228,11 @@
                             {{'label.'+labelchargeerror | translate}}
                         </small>
                       </span>
+              <div ng-show="showMsg==true" align="center">
+                  <p class="error">Saving Deposit Late Fee Charge will be apply to this Account </p>
+              </div>
+
+
     <table class="table" width="100%" ng-show="charges.length>0">
         <tr class="graybg">
             <th>{{'label.heading.name' | translate}}</th>

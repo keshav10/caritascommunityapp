@@ -76,6 +76,10 @@
             .when('/clients', {
                 templateUrl: 'views/clients/clients.html'
             })
+            .when('/mpesa', {
+                templateUrl: 'views/mpesa/mpesareconciliation.html'
+            })
+
             .when('/createclient', {
                 templateUrl: 'views/clients/createclient.html'
             })
@@ -85,9 +89,21 @@
             .when('/viewclient/:id', {
                 templateUrl: 'views/clients/viewclient.html'
             })
-			.when('/clientpayments/:id', {
+
+            .when('/clientpayments/:id', {
                 templateUrl: 'views/clients/clientpayments.html'
             })
+            .when('/clientpayments/:id/:amount/:mpetxnsacode/:txnDate/:txnId', {
+                templateUrl: 'views/clients/clientpayments.html'
+            })
+            .when('/clientpayments/:id/:amount/:mpetxnsacode/:txnDate/:txnId/:type', {
+                templateUrl: 'views/clients/clientpayments.html'
+            })
+
+            .when('/mpesa/:status1', {
+                templateUrl: 'views/mpesa/mpesareconciliation.html'
+            })
+
             .when('/clientscreenreport/:clientId', {
                 templateUrl: 'views/clients/clientscreenreport.html'
             })
@@ -430,6 +446,21 @@
             .when('/editholiday/:id', {
                 templateUrl: 'views/organization/editholiday.html'
             })
+            .when('/workingdays', {
+                templateUrl: 'views/organization/workingdays.html'
+            })
+            .when('/passwordpreferences', {
+                templateUrl: 'views/organization/passwordpreferences.html'
+            })
+            .when('/viewpaymenttype/', {
+                templateUrl: 'views/organization/viewpaymenttype.html'
+            })
+            .when('/createPaymentType/', {
+                templateUrl: 'views/organization/createpaymenttype.html'
+            })
+            .when('/editPaymentType/:id', {
+                templateUrl: 'views/organization/editpaymenttype.html'
+            })
             .when('/reports/:type', {
                 templateUrl: 'views/reports/view_reports.html'
             })
@@ -456,6 +487,13 @@
             })
             .when('/viewsavingaccount/:id', {
                 templateUrl: 'views/savings/view_saving_account_details.html'
+            })
+            .when('/add_saving_investment/:id', {
+                templateUrl: 'views/savings/add_saving_investment.html'
+            })
+
+            .when('/addloaninvestment/:id',{
+                templateUrl: 'views/loans/addloaninvestment.html'
             })
             .when('/savings/:savingId/viewcharge/:id', {
                 templateUrl: 'views/savings/viewsavingscharge.html'
@@ -574,6 +612,9 @@
             .when('/centers', {
                 templateUrl: 'views/centers/centers.html'
             })
+            .when('/uploadxls', {
+                templateUrl: 'views/organization/uploadxls.html'
+            })
             .when('/viewcenter/:id', {
                 templateUrl: 'views/centers/viewcenter.html'
             })
@@ -661,6 +702,9 @@
             .when('/expertsearch', {
                 templateUrl: 'views/expertsearch.html'
             })
+            .when('/UnMappedTransaction/:amount/:mpetxnsacode/:txnDate/:txnId/:clientName/:mobileNo', {
+                templateUrl: 'views/mpesa/UnMappedTransaction.html'
+            })
             .when('/profile', {
                 templateUrl: 'views/profile.html'
             })
@@ -706,6 +750,9 @@
             .when('/tellers/:tellerId/cashiers', {
                 templateUrl: 'views/organization/cashmgmt/cashiersForTeller.html'
             })
+            .when('/tellers/:tellerId/cashiers/:cashierId', {
+                templateUrl: 'views/organization/cashmgmt/viewCashiersForTeller.html'
+            })
             .when('/tellers/:tellerId/cashiers/:cashierId/txns', {
                 templateUrl: 'views/organization/cashmgmt/cashierTransactions.html'
             })
@@ -721,7 +768,16 @@
             .when('/editteller/:id', {
                 templateUrl: 'views/organization/cashmgmt/editTeller.html'
             })
-            ;
+
+            .when('/tellers/:tellerId/editcashier/:id', {
+                templateUrl: 'views/organization/cashmgmt/editcashier.html'
+            })
+
+            .when('/uploadxls/', {
+                templateUrl: 'views/organization/uploadxls.html'
+
+            });
+
         $locationProvider.html5Mode(false);
     };
     mifosX.ng.application.config(defineRoutes).run(function ($log) {

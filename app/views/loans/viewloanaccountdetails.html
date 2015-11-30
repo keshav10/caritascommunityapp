@@ -8,8 +8,8 @@
         </ul>
     </div>
     <div>
-        <div class="form-horizontal" ng-show="report">
-        	<div class="form-group">
+        <div class="form-horizontal" ng-show="report" ng-if="repaymentscheduleReport==false">
+        	<div class="form-group" ng-show="viewLoanReport">
                  <label class="control-label col-sm-2">{{'label.input.fromdate' | translate}}<span
                          class="required">*</span></label>
 
@@ -18,8 +18,6 @@
                             datepicker-pop="{{df}}" ng-model="date.fromDate" is-open="opened" min="minDate"
                             max="restrictDate"/>
                  </div>
-             </div>
-             <div class="form-group">
                  <label class="control-label col-sm-2">{{'label.input.todate' | translate}}<span
                          class="required">*</span></label>
 
@@ -29,25 +27,37 @@
                             max="restrictDate"/>
                  </div>
              </div>
-             <div class="col-md-offset-2">
+             <div class="col-md-11 center" ng-show="viewLoanReport"  >
+                 <button ng-click="viewLoanDetails()" class="btn btn-default ng-binding">{{'label.button.back' | translate}} </button>
                  <button ng-click="viewprintdetails()" class="btn btn-primary ng-binding">{{'label.button.viewprint' | translate}} </button>
-                 <button ng-click="viewLoanDetails()" class="btn btn-primary ng-binding">{{'label.button.loandetails' | translate}} </button>
              </div>
-             <div class="form-group" data-ng-show="savingaccountdetails.allowOverdraft">
-                 <label class="control-label col-sm-2">
-        			<td style="font-weight: normal" class="table-bold-acc">{{'label.heading.overdraftlimit' | translate}}</td>
-        		</label>
-        		<label class="control-label col-sm-2">
-        			<span class="padded-td">{{savingaccountdetails.overdraftLimit}}</span>
-        		</label>
-             </div>
+
         </div>
+
+        <div class="form-horizontal" ng-show="repaymentscheduleReport">
+            <div class="col-md-11 center" ng-show="repaymentscheduleReport">
+                <button ng-click="viewLoanDetails()" class="btn btn-default ng-binding">{{'label.button.back' | translate}} </button>
+                <!--
+                <button ng-click="viewrepaymentScheduledetails()" class="btn btn-primary ng-binding">{{'label.button.viewprint' | translate}} </button>
+                -->
+            </div>
+        </div>
+
+
+
+
         <div ng-hide="hidePentahoReport" ng-show="report" class="col-md-12 alert-block span tab-content">
             <button ng-show="printbtn" ng-click="printReport()" class="btn btn-primary">{{'label.button.print' |
                 translate}}
             </button>
-            <div id="printcontent">
-                <iframe id="rptLoadingFrame" ng-src="{{baseURL}}" frameborder="0" width="100%" height="800px"></iframe>
+            <div id="printcontent" ng-if="repaymentscheduleReport==false" >
+                <iframe id="rptLoadingFrame" ng-show="viewReport" ng-src="{{viewReportDetails}}" frameborder="0" width="100%" height="800px"></iframe>
+            </div>
+            <div id="printcontent1" ng-if="repaymentscheduleReport==true" >
+                <iframe id="rptLoadingFrame1" ng-show="viewReport" ng-src="{{viewReportDetail}}" frameborder="0" width="100%" height="800px"></iframe>
+            </div>
+            <div class="col-md-13 center" ng-show="viewTransactionReport">
+                <button ng-click="viewLoanDetails()" class="btn btn-default ng-binding">{{'label.button.back' | translate}} </button>
             </div>
         </div>
         <div ng-hide="report">
@@ -262,6 +272,10 @@
                                 <td>{{ 'label.input.frequency.for.recalculte.outstanding.principal' | translate }}</td>
                                 <td><span class="padded-td">{{ loandetails.interestRecalculationData.calendarData.humanReadable}}</span></td>
                             </tr>
+                            <tr data-ng-show="loandetails.isInterestRecalculationEnabled && loandetails.interestRecalculationData.interestRecalculationCompoundingType.id !=0">
+                                <td>{{ 'label.input.frequency.for.compounding' | translate }}</td>
+                                <td><span class="padded-td">{{ loandetails.interestRecalculationData.compoundingCalendarData.humanReadable}}</span></td>
+                            </tr>
                             </tbody>
                         </table>
                     </tab>
@@ -383,6 +397,7 @@
                     </tab>
 
                     <tab heading="{{'label.heading.repaymentschedule' | translate}}">
+                        <button class="btn btn-primary pull-right" ng-show="checkStatus()" ng-click="viewrepaymentScheduledetails()">{{'label.button.viewprint' | translate}}</button>
 
                         <table class="table table-striped .width100">
                             <colgroup span="4"></colgroup>
@@ -506,7 +521,8 @@
 
 
                     <tab heading="{{'label.heading.transactions' | translate}}" ng-show="loandetails.transactions" select="convertDateArrayToObject('date')">
-                        <button class="btn btn-primary pull-right" ng-click="export()">{{'label.button.export' | translate}}</button>
+                        <button class="btn btn-primary pull-right" ng-show="checkStatus()" ng-click="export()">{{'label.button.export' | translate}}</button>
+                        <button class="btn btn-primary pull-right" ng-show="checkStatus()" ng-click="viewJournalEntries()" style="margin-right: 8px;">{{'label.button.viewjournalentries' | translate}}</button>
                         <div class="pull-right">
                             <input type="checkbox" data-ng-model="hideAccrualTransactions" ng-true-value="false" ng-false-value="" ng-checked="isHideAccrualsCheckboxChecked" ng-change="updateCheckBoxStatus()">&nbsp;&nbsp;
                             <label class="control-label">{{ 'label.input.hide.accrual.transactions' | translate }}</label>&nbsp;&nbsp;
@@ -523,7 +539,8 @@
                                     <th class="pointer" ng-click="changeTransactionSort('amount')">{{'label.heading.amount' | translate}}</th>
                                     <th class="pointer" colspan="4" scope="colgroup">{{'label.heading.breakdown' | translate}}</th>
                                     <th class="pointer" scope="colgroup">{{'label.heading.loan.balance' | translate}}</th>
-                                    <th>{{'label.heading.viewreceipts' | translate}}</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                                 <tr>
                                     <th scope="col">&nbsp;</th>
@@ -571,8 +588,12 @@
                                         {{transaction.outstandingLoanBalance | number}}
                                     </td>
 
-                                    <td> <a ng-if="transaction.manuallyReversed!=true" ng-click="viewloantransactionreceipts(transaction.id)">
+                                    <td> <a tooltip="{{'label.heading.viewreceipts' | translate }}" ng-if="transaction.manuallyReversed!=true" ng-click="viewloantransactionreceipts(transaction.id)">
                                         <i class="icon-file-text icon-large"></i>
+                                    </a>
+                                    </td>
+									 <td> <a tooltip="{{'label.anchor.viewjournalentries' | translate}}" ng-click="viewloantransactionjournalentries(transaction.id)">
+                                        <i class="icon-circle-arrow-right icon-large coll"></i>
                                     </a>
                                     </td>
                                 </tr>
@@ -583,7 +604,7 @@
                                 translate}}
                             </i></button>
                             <div id="printreceiptcontent">
-                                <iframe id="rptLoadingreceiptFrame" ng-src="{{baseURL}}" frameborder="0" width="100%" height="800px"></iframe>
+                                <iframe id="rptLoadingreceiptFrame" ng-show="viewReport" ng-src="{{viewReportDetails}}" frameborder="0" width="100%" height="800px"></iframe>
                             </div>
                         </div>
                     </tab>
@@ -617,26 +638,34 @@
                                 <td>
                                     <b>{{'label.heading.tranchedetails' | translate}}</b>
                                 </td>
+                                <td align="right">
+                                <a type="button" ng-show="showAddDeleteTrancheButtons('adddisbursedetails')" class="btn btn-primary" align="right"
+                                   href="#/loandisbursedetail/{{loandetails.id}}/adddisbursedetails">
+                                    <i class="icon-plus"></i>{{ 'label.button.add' | translate }}
+                                </a>
+                                    <a type="button" ng-show="showAddDeleteTrancheButtons('deletedisbursedetails')" class="btn btn-danger" align="right"
+                                       href="#/loandisbursedetail/{{loandetails.id}}/deletedisbursedetails">
+                                        <i class="icon-trash"></i>{{ 'label.button.delete' | translate }}
+                                    </a>
+                                </td>
                             </tr>
                         </table>
                         <table class="width100">
                             <tr class="graybg" ng-show="loandetails.disbursementDetails.length>0">
                                 <th align="left">{{'label.input.expecteddisbursementon' | translate}}</th>
                                 <th align="left">{{'label.input.disbursedon' | translate}}</th>
-                                <th align="left">{{'label.heading.approvedamount' | translate}}</th>
                                 <th align="left">{{'label.input.principal' | translate}}</th>
                                 <th align="left">&nbsp;</th>
                             </tr>
                             <tr ng-repeat="disbursementDetail in loandetails.disbursementDetails">
                                 <td>{{disbursementDetail.expectedDisbursementDate | DateFormat}}</td>
                                 <td>{{disbursementDetail.actualDisbursementDate | DateFormat}}</td>
-                                <td>{{disbursementDetail.approvedPrincipal | number}}</td>
                                 <td>{{disbursementDetail.principal | number}}</td>
                                 <td>
                                     <div ng-show="disbursementDetail.actualDisbursementDate != null"><i class="icon-check icon-white"></i>
                                     </div>
                                     <a title="{{'label.edit' | translate}}"
-                                       data-ng-show="disbursementDetail.actualDisbursementDate == null && status =='Active' "
+                                       data-ng-show="showEdit(disbursementDetail)"
                                        href="#/loandisbursedetail/{{loandetails.id}}/editdisbursedate/{{disbursementDetail.id}}"><i
                                             class="icon-pencil icon-white"></i></a>
                                 </td>
@@ -791,6 +820,155 @@
                             </div>
                         </div>
                     </tab>
+
+                    <tab heading="Investment"  has-permission="CREATE_LOANINVESTMENT">
+                        <api-validate></api-validate>
+
+                        <div ng-show="showAddInvestment">
+                            <div ng-hide = "editId" has-permission="CREATE_LOANINVESTMENT">
+                                <button class="btn btn-primary pull-right" ng-click="routeToAddInvestment()"><i class="icon-plus icon-white"></i> {{'label.button.addinvestment' | translate}}</button>
+                            </div>
+                            <br>
+                            <div ng-show = "editId">
+                              <div class="col-sm-3">
+                                  <select chosen="groups" id="ids" ng-model="formData.ids"  class="form-control"
+                                        ng-change="selectSaving(formData.ids)"
+                                        ng-options="group.id as group.name for group in groups" value="{{group.id}}">
+                                      <option value="">--Select Group --</option>
+                                   </select>
+                               </div>
+
+
+                              <div class="col-sm-3">
+                                <select chosen="loans" ng-model="formData.Ids"  class="form-control"
+                                        ng-options="ln.Id as ln.productName for ln in loans" value="{{ln.Id}}">
+                                    <option value="">--Select Saving --</option>
+                                </select>
+                               </div>
+
+
+                              <label class="control-label col-sm-2"> Investment Amount </label>
+                              <div class="col-sm-2">
+                                <input type="text" id="investedAmounts" name="investedAmount" ng-model="formData.investedAmounts"  class="form-control" number-format required late-Validate/>
+                               </div>
+
+                                <div class="col-md-offset-5 center">
+                                    <button class="btn btn-primary" ng-click="gotoBack()"> {{'label.button.cancel' | translate}}</button>
+                                    <button id="update" type="submit" ng-click="submit()" class="btn btn-primary"  ng-hide="blockUI"> Update</button>
+                                    <button class="btn btn-info" ng-show="blockUI"><strong>{{'label.button.processing' | translate}}</strong></button>
+                                </div>
+                            </div>
+
+                            <table ng-hide = "editId" class="table" has-permission="CREATE_LOANINVESTMENT">
+                                <thead>
+                                <tr class="graybg">
+                                    <th> {{'label.heading.groupname' | translate}} </th>
+                                    <th> {{'label.heading.savingproductname' | translate}}</th>
+                                    <th> {{'label.heading.savingaccountno' | translate}}</th>
+                                    <th> {{'label.heading.savingamount' | translate}}</th>
+                                    <th>  Invested Amount</th>
+                                    <th> {{'label.heading.deleteinvestment' | translate}} </th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="pointer-main" ng-repeat="loan in loanInvestment |orderBy:'name':reverse">
+                                    <td class="pointer" data-ng-click="routeToSaving(loan.saving_id)">{{loan.name}}</td>
+                                    <td class="pointer" data-ng-click="routeToSaving(loan.saving_id)"> {{loan.productname}}</td>
+                                    <td class="pointer" data-ng-click="routeToSaving(loan.saving_id)">{{loan.accountno}}</td>
+                                    <td class="pointer" data-ng-click="routeToSaving(loan.saving_id)">{{loan.savingamount | number}}</td>
+                                    <td class="pointer" data-ng-click="routeToSaving(loan.saving_id)">{{loan.investedAmount | number}}</td>
+                                    <td><a class="btn btn-danger" data-ng-click="routeToDelete(loan.saving_id)"><i class="icon-trash "></i></a>
+                                        <a class="btn btn-primary ng-binding " data-ng-click="ToEdit(loan.saving_id,loan.group_id,loan.investedAmount)">
+                                            <i class="icon-edit icon-white"></i>
+                                        </a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            </br>
+                        </div>
+
+                        <div ng-show="showAddInvestment == false">
+
+                            <form name="createinvestmentform" novalidate="" class="form-horizontal well" rc-submit="submit()">
+                                <api-validate></api-validate>
+                                <fieldset>
+                                    <div class="form-group">
+                                        <div class="col-sm-3">
+                                            <select chosen="groups" id="id" ng-model="formData.id"  class="form-control"
+                                                     ng-change="selectSaving(formData.id)"
+                                                     ng-options="group.id as group.name for group in groups" value="{{group.id}}">
+                                                <option value="">--Select Group --</option>
+                                            </select>
+                                        </div>
+
+
+                                        <div class="col-sm-3">
+                                            <select chosen="loans" ng-model="formData.Id"  class="form-control"
+                                                     ng-options="ln.Id as ln.productName for ln in loans" value="{{ln.Id}}">
+                                                <option value="">--Select Saving --</option>
+                                           </select>
+                                       </div>
+
+
+                                    <label class="control-label col-sm-2"> Investment Amount </label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="investedAmount" name="investedAmount" ng-model="formData.investedAmount"  class="form-control" number-format required late-Validate/>
+                                        <div ng-show="ifNoFunds">
+                                            <p class = "error"> No Funds Available  </p>
+                                        </div>
+                                        <div ng-show = "accountexists">
+                                            <label class ="error">Already Invested</label>
+                                        </div>
+
+                                        <div ng-show="lessloanamount" class = "error">
+                                            Investing More than LoanAmount
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <a class="btn bg-primary" ng-click='addInvestment(formData.Id)'><i class="icon-plus"></i></a>
+                                    </div>
+
+                                   </div>
+
+                                <div class="form-group">
+                                    <table class="table " style="table-layout: fixed;">
+                                        <thead>
+                                   <tr class="graybg">
+                                            <th> {{'label.heading.groupname' | translate}} </th>
+                                            <th> {{'label.heading.savingproductname' | translate}}</th>
+                                            <th> {{'label.heading.savingaccountno' | translate}}  </th>
+                                            <th> {{'label.heading.savingamount' | translate}}</th>
+                                            <th> Invested Amount </th>
+                                        </tr>
+                                    </thead>
+                                        <tbody>
+                                   <tr ng-repeat="investment in loanInvestment">
+                                            <td>{{investment.name}}</td>
+                                            <td> {{investment.productname}}</td>
+                                            <td>{{investment.accountno}}</td>
+                                            <td> {{investment.savingamount | number}}</td>
+                                            <td> {{investment.investedAmount | number}}</td>
+                                        </tr>
+                                   </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-offset-5">
+                                    <button class="btn btn-primary" ng-click="gotoBack()"> {{'label.button.cancel' | translate}}</button>
+                                    <button id="save" type="submit" ng-click="submitData()" class="btn btn-primary"  ng-hide="blockUI"> Save </button>
+                                    <button class="btn btn-info" ng-show="blockUI"><strong>{{'label.button.processing' | translate}}</strong></button>
+                                </div>
+                            </fieldset>
+                        </form>
+
+                    </div>
+
+                </tab>
+
+
                     <tab heading="{{loandatatable.registeredTableName}}" ng-repeat="loandatatable in loandatatables" has-permission='READ_{{loandatatable.registeredTableName}}'
                          select="dataTableChange(loandatatable)">
                         <div>

@@ -36,7 +36,8 @@
                     overdraftLimit: data.overdraftLimit,
                     minBalanceForInterestCalculation: data.minBalanceForInterestCalculation,
                     enforceMinRequiredBalance: data.enforceMinRequiredBalance,
-                    minRequiredBalance:data.minRequiredBalance
+                    minRequiredBalance:data.minRequiredBalance,
+                    releaseguarantor: data.releaseguarantor == true? 'true' : 'false'
 
                 }
 
@@ -205,7 +206,7 @@
                 this.formData.feeToIncomeAccountMappings = scope.feeToIncomeAccountMappings;
                 this.formData.penaltyToIncomeAccountMappings = scope.penaltyToIncomeAccountMappings;
                 this.formData.charges = scope.chargesSelected;
-                this.formData.locale = "en";
+                this.formData.locale = scope.optlang.code;
 
                 resourceFactory.savingProductResource.update({savingProductId: routeParams.id}, this.formData, function (data) {
                     location.path('/viewsavingproduct/' + data.resourceId);
