@@ -116,13 +116,20 @@
 
                 <div class="col-sm-3">
                     <input id="amoun" type="text" name="amount" ng-model="formData.amount" required late-Validate/>
-          <span ng-show="savingccountactionform.amoun.$invalid">
-            <small class="error">
-                {{ 'label.requiredfield' | translate}}
-            </small>
-          </span>
+                    <span ng-show="savingccountactionform.amoun.$invalid">
+                     <small class="error">
+                       {{ 'label.requiredfield' | translate}}
+                     </small>
+                   </span>
                 </div>
             </div>
+            <div class="form-group" ng-show="showFieldsForUpdate">
+                <label class="control-label col-sm-2">Minimum Balance</label>
+                <div class="col-sm-3">
+                    <input id="minRequiredBalance" type="text" name="minRequiredBalance" ng-model="formData.minRequiredBalance" number-format>
+                </div>
+            </div>
+
             <div class="form-group" ng-show="showNoteField">
                 <label class="control-label col-sm-2" for="note">{{ 'label.input.note' | translate}}</label>
 
