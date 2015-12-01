@@ -34,7 +34,31 @@
             scope.pageUrlSplit=scope.pageUrl.split("/");
             scope.isDisabled = true;
             scope.showinstallmentCharge=false;
+            scope.mpesaAmount;
+            scope.mpetxnsacode;
+            scope.TxnDate;
+            scope.mpesaPayment=false;
+            scope.showError=false;
+            scope.txnId;
+            scope.isDisabled = true;
+            scope.showError=false;
+            scope.LoanAccountNo=0;
+            /*
+            storing the previous value of loan and savings Account
+            * */
+            scope.oldLoanAmount=[];
+            scope.oldSavingsAmount=[];
+            scope.oldsum=0;
+            scope.totalAmount="";
+            scope.p=false;
 
+            if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null){
+                scope.mpesaPayment=true;
+                scope.mpesaAmount=routeParams.amount;
+                scope.mpetxnsacode=routeParams.mpetxnsacode;
+                scope.TxnDate=dateFilter(routeParams.txnDate, 'dd MMMM yyyy');
+                  scope.txnId=routeParams.txnId;
+            }
             scope.routeToLoan = function (id) {
                 location.path('/viewloanaccount/' + id);
             };
@@ -98,11 +122,8 @@
                     ]
                 };
                 scope.buttonsArray.singlebuttons = scope.buttons;
-                resourceFactory.runReportsResource.get({
-                    reportSource: 'ClientSummary',
-                    genericResultSet: 'false',
-                    R_clientId: routeParams.id
-                }, function (data) {
+
+                resourceFactory.runReportsResource.get({reportSource: 'ClientSummary', genericResultSet: 'false', R_clientId: routeParams.id}, function (data) {
                     scope.client.ClientSummary = data[0];
                 });
             });
@@ -195,10 +216,7 @@
             };
             var ClientUnassignCtrl = function ($scope, $modalInstance) {
                 $scope.unassign = function () {
-                    resourceFactory.clientResource.save({
-                        clientId: routeParams.id,
-                        command: 'unassignstaff'
-                    }, scope.staffData, function (data) {
+                    resourceFactory.clientResource.save({clientId: routeParams.id, command: 'unassignstaff'}, scope.staffData, function (data) {
                         $modalInstance.close('unassign');
                         route.reload();
                     });
@@ -208,89 +226,129 @@
                 };
             };
 
-
-            resourceFactory.clientAccountChargeResource.get({
-                clientId: routeParams.id,
-                command: 'loanrepaymentamount'
-            }, function (data) {
-
-                scope.clientAccounts = data;
-                if (data.paymentTypeOptions != null) {
-                    scope.paymentTypes = data.paymentTypeOptions;
-                    scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
-                }
-                if (data.savingsCharges) {
-                    scope.savingsCharges = data.savingsCharges;
-                }
-                if (data.loanCharges) {
-                    scope.loanCharges = data.loanCharges;
-                }
-                if (data.loanAccounts) {
-                    scope.loanAccounts = data.loanAccounts || [];
-                    for (var i in scope.loanAccounts) {
-                        scope.charges=0;
-                        scope.chargeDescription=" ";
-                        scope.loanAccounts[i].relativeUrl = "loans/" + scope.loanAccounts[i].id + "/repayment?command=repayment";
-                        scope.loanAccounts[i].repaymentAmount = scope.loanAccounts[i].loanrepaymentamount;
-                        scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[i].loanrepaymentamount;
-                        for (var j in scope.loanCharges) {
-                            if (scope.loanAccounts[i].id == scope.loanCharges[j].id) {
-                                scope.charges = scope.charges + scope.loanCharges[j].chargeDue;
-                                scope.chargeDescription = scope.chargeDescription + "\n" + scope.loanCharges[j].chargeName + "=" +
-                                scope.loanCharges[j].chargeDue + "\n";
+    scope.init=function()
+            {
+                scope.addSavingsCharges = false;
+                scope.addLoanCharges = false;
+                scope.showSavingCharges = false;
+                scope.showLoanCharge = false;
+                scope.oldTotalAmount=false;
+                scope.p=true;
+                scope.totalAmount= scope.formData.totalAmount;
+                //scope.formData.totalAmount = scope.formData.totalAmount;
+                resourceFactory.clientAccountChargeResource.get({
+                    clientId: routeParams.id,
+                    command: 'loanrepaymentamount'
+                }, function (data) {
+                    scope.clientAccounts = data;
+                    if (data.paymentTypeOptions != null) {
+                        scope.paymentTypes = data.paymentTypeOptions;
+                        scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
+                    }
+                    if (data.savingsCharges) {
+                        scope.savingsCharges = data.savingsCharges;
+                    }
+                    if (data.loanCharges) {
+                        scope.loanCharges = data.loanCharges;
+                    }
+                    if (data.loanAccounts) {
+                        scope.loanAccounts = data.loanAccounts || [];
+                        for (var i in scope.loanAccounts) {
+                            scope.charges = 0;
+                            scope.chargeDescription = " ";
+                            scope.loanAccounts[i].relativeUrl = "loans/" + scope.loanAccounts[i].id + "/repayment?command=repayment";
+                            scope.loanAccounts[i].repaymentAmount = scope.loanAccounts[i].loanrepaymentamount;
+                            for (var j in scope.loanCharges) {
+                                if (scope.loanAccounts[i].id == scope.loanCharges[j].id) {
+                                    scope.charges = scope.charges + scope.loanCharges[j].chargeDue;
+                                    scope.chargeDescription = scope.chargeDescription + "\n" + scope.loanCharges[j].chargeName + "=" +
+                                    scope.loanCharges[j].chargeDue + "\n";
+                                }
                             }
+                            scope.loanAccounts[i].charges1 = scope.charges;
+                            scope.loanAccounts[i].chargeDescription1 = scope.chargeDescription;
+                            //store the previous value into the loanAccounts
+                            scope.loanAccounts[i].value = scope.oldLoanAmount[i];
+                            scope.oldLoanAmount[i] =0;
+                            //scope.formData.totalAmount = scope.formData.totalAmount + scope.oldLoanAmount[i];
                         }
                         scope.loanAccounts[i].charges1 = scope.charges;
                         scope.loanAccounts[i].chargeDescription1 = scope.chargeDescription;
                     }
 
-                }
-                if (data.savingsAccounts) {
-                    scope.savingsAccounts = data.savingsAccounts || [];
-                    for (var i in data.savingsAccounts) {
-                        scope.savingAccountCharges = 0;
-                        scope.savingChargesDescription = " ";
-                        scope.savingsAccounts[i].relativeUrl = "savingsaccounts/" + scope.savingsAccounts[i].id + "/transactions?command=deposit";
-                        scope.savingsAccounts[i].depositAmount = "";
-                        for (var j in scope.savingsCharges) {
-                            if (scope.savingsAccounts[i].id == scope.savingsCharges[j].id) {
-                                scope.savingAccountCharges = scope.savingAccountCharges + scope.savingsCharges[j].chargeDue;
-                                scope.savingChargesDescription = scope.savingChargesDescription + "\n" + scope.savingsCharges[j].chargeName + "=" +
-                                scope.savingsCharges[j].chargeDue + "\n";
+                    if (data.savingsAccounts) {
+                        scope.savingsAccounts = data.savingsAccounts || [];
+                        for (var i in data.savingsAccounts) {
+                            scope.savingAccountCharges = 0;
+                            scope.savingChargesDescription = " ";
+                            scope.savingsAccounts[i].relativeUrl = "savingsaccounts/" + scope.savingsAccounts[i].id + "/transactions?command=deposit";
+                            scope.savingsAccounts[i].depositAmount = 0;
+                            for (var j in scope.savingsCharges) {
+                                if (scope.savingsAccounts[i].id == scope.savingsCharges[j].id) {
+                                    scope.savingAccountCharges = scope.savingAccountCharges + scope.savingsCharges[j].chargeDue;
+                                    scope.savingChargesDescription = scope.savingChargesDescription + "\n" + scope.savingsCharges[j].chargeName + "=" +
+                                    scope.savingsCharges[j].chargeDue + "\n";
+                                }
+
                             }
+                            scope.savingsAccounts[i].charges2 = scope.savingAccountCharges;
+                            scope.savingsAccounts[i].chargeDescription2 = scope.savingChargesDescription;
+                            // for displaying the old  savings values on the  screen
+                            scope.savingsAccounts[i].value = scope.oldSavingsAmount[i];
+                            scope.oldSavingsAmount[i] =0;
+                            // scope.formData.totalAmount = scope.formData.totalAmount + scope.oldSavingsAmount[i];
                         }
                         scope.savingsAccounts[i].charges2 = scope.savingAccountCharges;
                         scope.savingsAccounts[i].chargeDescription2 = scope.savingChargesDescription;
 
                     }
-                }
-                if (data.savingsAccounts) {
-                    for (var i in data.savingsAccounts) {
-                        if (data.savingsAccounts[i].status.value == "Active") {
-                            scope.updateDefaultSavings = true;
-                            break;
+                    if (data.savingsAccounts) {
+                        for (var i in data.savingsAccounts) {
+                            if (data.savingsAccounts[i].status.value == "Active") {
+                                scope.updateDefaultSavings = true;
+                                break;
+                            }
+                        }
+                    }
+            });
+            };
+
+//       on changing the date:-
+
+            //definr new function
+            scope.calculate=function() {
+                scope.formData.totalAmount = 0;
+                for (var l in scope.loanAccounts) {
+                    if (scope.loanAccounts[l].active) {
+                        if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
+
+                            scope.formData.totalAmount = scope.formData.totalAmount + scope.oldLoanAmount[l];
                         }
                     }
                 }
-            });
-//       on changing the date:-
 
-
+            }
             scope.$watch('formData.submittedOnDate',function(){
                 scope.onDateChange();
             });
             scope.onDateChange = function () {
-                // if(scope.processDate) {
-                var params = {};
+                scope.oldTotalAmount=false;
+                scope.addSavingsCharges=false;
+                scope.showLoanCharge = false;
+                scope.showinstallmentCharge =false;
+                scope.addLoanCharges = false;
+                scope.showSavingCharges = false;
+                //scope.totalAmount = scope.formData.totalAmount;
+                     var params = {};
                // params.dateFormat = scope.df;
                 params.submittedOnDate = dateFilter(this.formData.submittedOnDate, scope.df);
                 //alert(params.transactionDate);
                 params.clientId = routeParams.id;
                 params.command = 'loanrepaymentamount';
-               // alert(params.transactionDate);
 
                 resourceFactory.clientAccountChargeResource.get(params, function (data) {
                     scope.clientAccounts = data;
+                    scope.formData.totalAmount =0;
                     if (data.paymentTypeOptions != null) {
                         scope.paymentTypes = data.paymentTypeOptions;
                         scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
@@ -308,7 +366,7 @@
                             scope.chargeDescription = " ";
                             scope.loanAccounts[i].relativeUrl = "loans/" + scope.loanAccounts[i].id + "/repayment?command=repayment";
                             scope.loanAccounts[i].repaymentAmount = scope.loanAccounts[i].loanrepaymentamount;
-                            scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[i].loanrepaymentamount;
+                            //scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[i].loanrepaymentamount;
                             for (var j in scope.loanCharges) {
                                 if (scope.loanAccounts[i].id == scope.loanCharges[j].id) {
                                     scope.charges = scope.charges + scope.loanCharges[j].chargeDue;
@@ -318,6 +376,10 @@
                             }
                             scope.loanAccounts[i].charges1 = scope.charges;
                             scope.loanAccounts[i].chargeDescription1 = scope.chargeDescription;
+                            //store the previous value into the loanAccounts
+                             scope.loanAccounts[i].value=scope.oldLoanAmount[i];
+                            scope.loanAccounts[i].repaymentAmount =scope.oldLoanAmount[i];
+                            scope.formData.totalAmount = scope.formData.totalAmount + scope.oldLoanAmount[i];
 
                         }
                     }
@@ -338,6 +400,11 @@
                             }
                             scope.savingsAccounts[i].charges2 = scope.savingAccountCharges;
                             scope.savingsAccounts[i].chargeDescription2 = scope.savingChargesDescription;
+                            // for displaying the old  savings values on the  screen
+                            scope.savingsAccounts[i].value=scope.oldSavingsAmount[i];
+                            scope.savingsAccounts[i].depositAmount = scope.oldSavingsAmount[i];
+                            scope.formData.totalAmount = scope.formData.totalAmount + scope.oldSavingsAmount[i];
+
                         }
                     }
                     if (data.savingsAccounts) {
@@ -353,26 +420,60 @@
             };
 
 
-
-
             scope.keyPress = function(){
+
                 scope.formData.totalAmount = 0;
+                scope.oldTotalAmount=true;
                 for (var l in scope.loanAccounts) {
                     if (scope.loanAccounts[l].active) {
-                        if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
+                        if(angular.isUndefined(scope.loanAccounts[l].repaymentAmount)){
+                            scope.loanAccounts[l].repaymentAmount = 0;
+                            scope.oldLoanAmount[l] = scope.loanAccounts[l].repaymentAmount;
+                            scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[l].repaymentAmount;
+                        } else if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
+                             scope.oldLoanAmount[l] = scope.loanAccounts[l].repaymentAmount;
                             scope.formData.totalAmount = scope.formData.totalAmount + scope.loanAccounts[l].repaymentAmount;
                         }
+                        else if(scope.oldLoanAmount[l]!=null&& scope.oldLoanAmount[l]!=""){
+                            scope.formData.totalAmount = scope.formData.totalAmount + scope.oldLoanAmount[l];
+
+                        }
+
                     }
+                    else{
+                        scope.loanAccounts[l].repaymentAmount=0;
+                        scope.oldLoanAmount[l]=0;
+                       }
                 }
+
                 for (var l in scope.savingsAccounts) {
                     if (scope.savingsAccounts[l].active) {
-                        if (scope.savingsAccounts[l].depositAmount != null && scope.savingsAccounts[l].depositAmount != "") {
+                        if(angular.isUndefined(scope.savingsAccounts[l].depositAmount)){
+                            scope.savingsAccounts[l].depositAmount= 0;
+                            scope.oldSavingsAmount[l] = scope.savingsAccounts[l].depositAmount;
+                            scope.formData.totalAmount = scope.formData.totalAmount +scope.savingsAccounts[l].depositAmount;
+                        }
+                        else if (scope.savingsAccounts[l].depositAmount != null && scope.savingsAccounts[l].depositAmount != "") {
+                            scope.oldSavingsAmount[l] = scope.savingsAccounts[l].depositAmount;
                             scope.formData.totalAmount = scope.formData.totalAmount + scope.savingsAccounts[l].depositAmount;
 
                         }
+
+                         else  if   (scope.oldSavingsAmount[l] != null && scope.oldSavingsAmount[l] != "") {
+                                scope.formData.totalAmount = scope.formData.totalAmount + scope.oldSavingsAmount[l];
+                            }
+                        }
+
+                    else {
+                        scope.oldSavingsAmount[l]=0;
+                        scope.savingsAccounts[l].value=0;
+                        scope.savingsAccounts[l].depositAmount = 0;
+
                     }
                 }
+               //scope.formData.totalAmount=scope.formData.totalAmount;
                };
+
             //for adding the Loan Charges:-
             scope.showAddLoanCharges = function (id) {
                 scope.showSavingCharges = false;
@@ -382,12 +483,21 @@
                 scope.showinstallmentCharge =false;
                 scope.charges = [];
                 scope.isCollapsed = true;
+                scope.oldTotalAmount=false;
                 scope.loanId = id;
+                scope.oldTotalAmount=false;
+                scope.formData.chargeId="";
+                scope.LoanData.dueDate="";
+                scope.formData.dueDate=" ";
+                scope.totalAmount = scope.formData.totalAmount;
                 resourceFactory.loanChargeTemplateResource.get({loanId: scope.loanId}, function (data) {
                     scope.charges = data.chargeOptions;
+
+                    //scope.isCollapsed = false;
                 });
 
                 scope.selectCharge = function () {
+
                     resourceFactory.chargeResource.get({
                         chargeId: scope.formData.chargeId,
 
@@ -410,13 +520,12 @@
                         this.formData.dueDate = dateFilter(this.formData.dueDate, scope.df);
                         scope.LoanData.dueDate = dateFilter(this.formData.dueDate,scope.df);
                     }
-                    ;
                     resourceFactory.loanResource.save({
                         resourceType: 'charges',
                         loanId: scope.loanId
                     }, scope.LoanData, function (data) {
-                        route.reload();
-                        scope.addLoanCharges = false;
+
+                        scope.onDateChange();
 
                     });
                 };
@@ -443,6 +552,7 @@
                 scope.showinstallmentCharge =false;
             };
                   scope.waiveSavingCharges = function (id,chargeId){
+                      scope.oldTotalAmount=false;
                   scope.waiveSavingChargeData.accountId=id;
                   scope.waiveSavingChargeData.resourceType='charges';
                   scope.waiveSavingChargeData.chargeId= chargeId;
@@ -450,8 +560,12 @@
                   scope.waiveData={};
                   scope.waiveData.dateFormat=scope.df;
                   scope.waiveData.locale=scope.optlang.code;
+                  //scope.totalAmount = scope.formData.totalAmount;
                   resourceFactory.savingsResource.save(scope.waiveSavingChargeData,scope.waiveData , function (data) {
-                      route.reload();
+                     // route.reload();
+                      //added
+                     // scope.init();
+                      scope.onDateChange();
                    });
                   };
             scope.savingChargesCancel = function(){
@@ -473,6 +587,8 @@
 
             }
             scope.waiveloanCharges = function (id,chargeId){
+                scope.oldTotalAmount=false;
+                //scope.totalAmount = scope.formData.totalAmount;
                 resourceFactory.LoanAccountResource.get({loanId: id, resourceType: 'charges', chargeId: chargeId}, function (data) {
                     if (data.chargeTimeType.value !== "Specified due date" && data.installmentChargeData) {
                         scope.showinstallmentCharge=true;
@@ -488,7 +604,9 @@
                         scope.LoanwaiveData.dateFormat=scope.df;
                         scope.LoanwaiveData.locale=scope.optlang.code;
                         resourceFactory.LoanAccountResource.save({loanId: id, resourceType: 'charges', chargeId: chargeId, 'command': 'waive'}, scope.LoanwaiveData, function (data) {
-                            route.reload();
+                           // route.reload();
+                            //scope.init();
+                            scope.onDateChange();
                         });
                     }
                 });
@@ -502,7 +620,7 @@
                         scope.LoanwaiveData.dateFormat=scope.df;
                         scope.LoanwaiveData.locale=scope.optlang.code;
                         resourceFactory.LoanAccountResource.save({loanId: id, resourceType: 'charges', chargeId: chargeId, 'command': 'waive'}, scope.LoanwaiveData, function (data) {
-                            route.reload();
+                            scope.onDateChange();
                         });
             };
                 scope.loanInstallmentChargesCancel = function(){
@@ -519,20 +637,25 @@
             //for addding savings Charges:-
 
             scope.showAddSavingsCharges = function (id) {
+                scope.oldTotalAmount=false;
                 scope.showSavingCharges = false;
                 scope.addLoanCharges = false;
                 scope.showLoanCharge = false;
                 scope.addSavingsCharges = true;
+                scope.isCollapsed = true;
                 scope.showinstallmentCharge =false;
                 scope.offices = [];
                 scope.cancelRoute = id;
+                scope.totalAmount = scope.formData.totalAmount;
                 scope.date = {};
+                scope.formData.chargeId="";
 
                 resourceFactory.savingsChargeResource.get({
                     accountId: routeParams.id,
                     resourceType: 'template'
                 }, function (data) {
                     scope.chargeOptions = data.chargeOptions;
+                    //scope.isCollapsed = false;
                 });
 
                 scope.chargeSelected = function (id) {
@@ -541,6 +664,7 @@
                         scope.chargeCalculationType = data.chargeCalculationType.id;
                         scope.chargeTimeType = data.chargeTimeType.id;
                         scope.chargeDetails = data;
+                        scope.isCollapsed = false;
                         scope.formData.amount = data.amount;
                         scope.withDrawCharge = data.chargeTimeType.value === "Withdrawal Fee" ? true : false;
                         scope.formData.feeInterval = data.feeInterval;
@@ -581,13 +705,15 @@
                     scope.savingData.monthDayFormat= "dd MMMM";
                     //scope.savingData.officeId=1;
                     resourceFactory.savingsChargeResource.save({accountId: id}, scope.savingData, function (data) {
-                        route.reload();
+                       // route.reload();
+                        scope.onDateChange();
+                        //scope.init();
                     });
 
                 }
 
             }
-
+            scope.init();
 
 //complete the add savings Charges:-
 
@@ -596,16 +722,27 @@
                 var requests = [];
                 var d = scope.formData.submittedOnDate;
                 var today = formatDate(d);
+               if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                   var today=scope.TxnDate;
+                }
                 var submitProcess = false;
                 var requestId = 1;
                 var req = 0;
                 //Header Requests
                 var headers = [{name: "Content-type", value: "application/json"}];
-                for (var l in scope.loanAccounts) {
+                for(var l in scope.loanAccounts) {
                     if (scope.loanAccounts[l].active) {
+                        /*if old value of Loan Accoount is present
+                        * */
+                        if(scope.oldLoanAmount[l]!=null&& scope.oldLoanAmount[l]!=""){
+                            if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {}
+                                 else {
+                                scope.loanAccounts[l].repaymentAmount = scope.oldLoanAmount[l];
+                            }
+                        }
                         if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
                             var actualDisbursementDate = new Date(scope.loanAccounts[l].timeline.actualDisbursementDate);
-                            if (d >= actualDisbursementDate) {
+                            if(d >= actualDisbursementDate){
                                 submitProcess = true;
                                 var request = {};
                                 request.requestId = requestId;
@@ -616,10 +753,16 @@
                                 bodyJson += "\"transactionAmount\":\"" + scope.loanAccounts[l].repaymentAmount + "\"";
                                 bodyJson += ",\"transactionDate\":\"" + today + "\"";
 
+
                                 if (scope.formData.paymentTypeId != undefined) {
                                     bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                 }
-                                if (scope.formData.receiptNumber != undefined) {
+
+                                if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
+
+                                }
+                                else{
                                     bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                 }
                                 if (scope.formData.accountNumber != undefined) {
@@ -644,6 +787,7 @@
                                 requests[req++] = request;
                                 requestId++
 
+
                             } else{
                                 submitProcess = false;
                                 alert("Loan Account : " + scope.loanAccounts[l].id + "\nTransaction date cannot be before account activation date.");
@@ -653,11 +797,20 @@
                         }
                     }
                 }
-                for (var s in scope.savingsAccounts) {
+                for(var s in scope.savingsAccounts) {
                     if (scope.savingsAccounts[s].active) {
+                        if(scope.oldSavingsAmount[s]!=null&& scope.oldSavingsAmount[s]!=""){
+                            if(scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != ""){
+
+                            }
+                            else {
+                                   scope.savingsAccounts[s].depositAmount = scope.oldSavingsAmount[s];
+                            }
+                        }
                         if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != "") {
                             var activatedOnDate = new Date(scope.savingsAccounts[s].timeline.activatedOnDate);
-                            if (d >= activatedOnDate) {
+                            if(d >= activatedOnDate){
+
                                 submitProcess = true;
                                 var request = {};
                                 request.requestId = requestId;
@@ -671,7 +824,12 @@
                                 if (scope.formData.paymentTypeId != undefined) {
                                     bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                 }
-                                if (scope.formData.receiptNumber != undefined) {
+
+                                if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
+
+                                }
+                                else{
                                     bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                 }
                                 if (scope.formData.accountNumber != undefined) {
@@ -703,10 +861,7 @@
                             }
                         }
                     }
-
-
-
-                }
+              }
 
                 for (var s in scope.savingsAccounts) {
                     if (scope.savingsAccounts[s].active) {
@@ -735,6 +890,31 @@
                                 var bodyJson = "{";
                                 bodyJson += "\"amount\":\"" + scope.chargeAmount + "\"";
                                 bodyJson += ",\"dueDate\":\"" + today + "\"";
+                                if (scope.formData.paymentTypeId != undefined) {
+                                    bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
+                                }
+
+
+                                if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
+
+                                }
+                                else{
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
+                                }
+                                if (scope.formData.accountNumber != undefined) {
+                                    bodyJson += ",\"accountNumber\":\"" + scope.formData.accountNumber + "\"";
+                                }
+                                if (scope.formData.checkNumber != undefined) {
+                                    bodyJson += ",\"checkNumber\":\"" + scope.formData.checkNumber + "\"";
+                                }
+                                if (scope.formData.routingCode != undefined) {
+                                    bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
+                                }
+                                if (scope.formData.bankNumber != undefined) {
+                                    var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
+                                    bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
+                                }
                                 bodyJson += ",\"locale\":\"en\"";
                                 bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
                                 bodyJson += "}";
@@ -742,7 +922,6 @@
 
                                 requests[req++] = request;
                                 requestId++
-                               alert(scope.formData.paymentTypeId);
 
                             } else {
                                 submitProcess = false;
@@ -751,10 +930,14 @@
                             }
                         }
                         }
-                    }
+                    }}}
+                if(scope.mpesaAmount!=null) {
+                    scope.formData.receiptNumber=scope.mpetxnsacode;
+                    if (scope.mpesaAmount != scope.formData.totalAmount) {
+                        submitProcess = false;
+                        scope.showError=true;
                     }
                 }
-
                 if (scope.formData.receiptNumber == null) {
                     alert("please enter recipt number");
                     return;
@@ -772,25 +955,45 @@
                         data: requests
                     }).success(function(data,status){
                         if(data.length==0){
-                            alert("Loan Transaction cannot be before the last transaction date");
+                            scope.showError=true;
+                           // alert("Loan Transaction cannot be before the last transaction date");
                             return;
                         }else{
                             for (var i = 0; i < data.length; i++) {
                                 if (data[i].statusCode === 200)
+                                    if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
+                                        http({
+                                            method: 'GET',
+                                            url: 'http://localhost:9292/mpesa/postpayment?id=' + scope.txnId
+                                        }).success(function (data) {
+                                        });
+                                    }
                                     location.path('/viewclient/' + routeParams.id);
                             }}
                     }).error(function(error){
                     });
+
+
                 }
                 else{
-                    alert("Please enter amount");
-                }
-            };
+                    if(scope.mpesaAmount!=null){}
+                    else {
+                        alert("Please enter amount");
+                    }
+                     submitProcess = false;
+                       alert("Saving Account : "+scope.savingsAccounts[s].id+"\nTransaction date cannot be before account activation date.");
+                        return;
+                            }
+                        }
 
-            scope.submitPaymentsAndPrint = function(){
+
+            scope.submitPaymentsAndPrint = function() {
                 var requests = [];
                 var d = scope.formData.submittedOnDate;
                 var today = formatDate(d);
+                if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
+                    var today = scope.TxnDate;
+                }
                 var submitProcess = false;
                 var requestId = 1;
                 var req = 0;
@@ -798,6 +1001,13 @@
                 var headers = [{name: "Content-type", value: "application/json"}];
                 for (var l in scope.loanAccounts) {
                     if (scope.loanAccounts[l].active) {
+                        //if the loan Account is already present
+                        if(scope.oldLoanAmount[l]!=null&& scope.oldLoanAmount[l]!=""){
+                            if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {}
+                            else {
+                                scope.loanAccounts[l].repaymentAmount = scope.oldLoanAmount[l];
+                            }
+                        }
                         if (scope.loanAccounts[l].repaymentAmount != null && scope.loanAccounts[l].repaymentAmount != "") {
                             var actualDisbursementDate = new Date(scope.loanAccounts[l].timeline.actualDisbursementDate);
                             if (d >= actualDisbursementDate) {
@@ -810,11 +1020,14 @@
                                 var bodyJson = "{";
                                 bodyJson += "\"transactionAmount\":\"" + scope.loanAccounts[l].repaymentAmount + "\"";
                                 bodyJson += ",\"transactionDate\":\"" + today + "\"";
-
                                 if (scope.formData.paymentTypeId != undefined) {
                                     bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                 }
-                                if (scope.formData.receiptNumber != undefined) {
+                                if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
+
+                                }
+                                else {
                                     bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                 }
                                 if (scope.formData.accountNumber != undefined) {
@@ -827,28 +1040,37 @@
                                     bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
                                 }
 
-                                if(scope.formData.bankNumber != undefined) {
+                                if (scope.formData.bankNumber != undefined) {
                                     var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
                                     bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
+
+                                    bodyJson += ",\"locale\":\"en\"";
+                                    bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
+                                    bodyJson += "}";
+                                    request.body = bodyJson;
+
+                                    requests[req++] = request;
+                                    requestId++
+                                } else {
+                                    submitProcess = false;
+                                    alert("Loan Account : " + scope.loanAccounts[l].id + "\nTransaction date cannot be before account activation date.");
+
+                                    return;
                                 }
-
-                                bodyJson += ",\"locale\":\"en\"";
-                                bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
-                                bodyJson += "}";
-                                request.body = bodyJson;
-
-                                requests[req++] = request;
-                                requestId++
-                            } else {
-                                submitProcess = false;
-                                alert("Loan Account : " + scope.loanAccounts[l].id + "\nTransaction date cannot be before account activation date.");
-                                return;
                             }
                         }
                     }
                 }
                 for (var s in scope.savingsAccounts) {
                     if (scope.savingsAccounts[s].active) {
+                        if(scope.oldSavingsAmount[s]!=null&& scope.oldSavingsAmount[s]!=""){
+                            if(scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != ""){
+
+                            }
+                            else {
+                                scope.savingsAccounts[s].depositAmount = scope.oldSavingsAmount[s];
+                            }
+                        }
                         if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != "") {
                             var activatedOnDate = new Date(scope.savingsAccounts[s].timeline.activatedOnDate);
                             if (d >= activatedOnDate) {
@@ -861,11 +1083,14 @@
                                 var bodyJson = "{";
                                 bodyJson += "\"transactionAmount\":\"" + scope.savingsAccounts[s].depositAmount + "\"";
                                 bodyJson += ",\"transactionDate\":\"" + today + "\"";
-
                                 if (scope.formData.paymentTypeId != undefined) {
                                     bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                 }
-                                if (scope.formData.receiptNumber != undefined) {
+                                if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
+                                    bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
+
+                                }
+                                else {
                                     bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                 }
                                 if (scope.formData.accountNumber != undefined) {
@@ -878,12 +1103,10 @@
                                     bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
                                 }
 
-                                if(scope.formData.bankNumber != undefined) {
+                                if (scope.formData.bankNumber != undefined) {
                                     var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
                                     bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
-
                                 }
-
                                 bodyJson += ",\"locale\":\"en\"";
                                 bodyJson += ",\"dateFormat\":\"dd MMMM yyyy\"";
                                 bodyJson += "}";
@@ -891,22 +1114,23 @@
 
                                 requests[req++] = request;
                                 requestId++
+
                             } else {
                                 submitProcess = false;
                                 alert("Saving Account : " + scope.savingsAccounts[s].id + "\nTransaction date cannot be before account activation date.");
+
                                 return;
                             }
                         }
                     }
                 }
-
                 for (var s in scope.savingsAccounts) {
                     if (scope.savingsAccounts[s].active) {
                         for (var J in  scope.savingsCharges) {
-                            if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != ""&& scope.savingsAccounts[s].depositAmount >0) {
+                            if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != "" && scope.savingsAccounts[s].depositAmount > 0) {
                                 if (scope.savingsAccounts[s].accountNo == scope.savingsCharges[J].accountNo) {
                                     if (scope.savingsAccounts[s].depositAmount < scope.savingsCharges[J].chargeDue) {
-                                        scope.chargeAmount =  scope.savingsAccounts[s].depositAmount;
+                                        scope.chargeAmount = scope.savingsAccounts[s].depositAmount;
                                         scope.savingsAccounts[s].depositAmount = scope.savingsAccounts[s].depositAmount - scope.savingsCharges[J].chargeDue;
 
                                     }
@@ -930,7 +1154,11 @@
                                         if (scope.formData.paymentTypeId != undefined) {
                                             bodyJson += ",\"paymentTypeId\":\"" + scope.formData.paymentTypeId + "\"";
                                         }
-                                        if (scope.formData.receiptNumber != undefined) {
+                                        if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
+                                            bodyJson += ",\"receiptNumber\":\"" + scope.mpetxnsacode + "\"";
+
+                                        }
+                                        else {
                                             bodyJson += ",\"receiptNumber\":\"" + scope.formData.receiptNumber + "\"";
                                         }
                                         if (scope.formData.accountNumber != undefined) {
@@ -943,7 +1171,7 @@
                                             bodyJson += ",\"routingCode\":\"" + scope.formData.routingCode + "\"";
                                         }
 
-                                        if(scope.formData.bankNumber != undefined) {
+                                        if (scope.formData.bankNumber != undefined) {
                                             var banknumber = dateFilter(scope.formData.bankNumber, scope.df);
                                             bodyJson += ",\"bankNumber\":\"" + banknumber + "\"";
 
@@ -966,8 +1194,14 @@
                         }
                     }
                 }
-
-                if(submitProcess){
+                if (scope.mpesaAmount != null) {
+                    scope.formData.receiptNumber = scope.mpetxnsacode;
+                    if (scope.mpesaAmount != scope.formData.totalAmount) {
+                        submitProcess = false;
+                        scope.showError = true;
+                    }
+                }
+                if (submitProcess) {
                     http({
                         method: 'POST',
                         url: $rootScope.hostUrl + API_VERSION + '/batches/?enclosingTransaction=true',
@@ -975,28 +1209,41 @@
                         data: requests
                     }).success(function(data){
                         if(data.length==0){
-                            alert("Loan Transaction cannot be before the last transaction date");
+                            scope.showError=true;
+                           // alert("Loan Transaction cannot be before the last transaction date");
                             return;
-                        }else{
+                        } else {
                             for (var i = 0; i < data.length; i++) {
-                                if (data[i].statusCode === 200){
+                                if (data[i].statusCode === 200) {
+                                    if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
+                                        http({
+                                            method: 'GET',
+                                            url: 'http://localhost:9292/mpesa/postpayment?id=' + scope.txnId
+                                        }).success(function (data) {
+                                        });
+                                    }
                                     scope.isDisabled = false;
                                     var tDate = dateFilter(scope.formData.submittedOnDate, 'yyyy-MM-dd');
                                     var reciptNo = scope.formData.receiptNumber;
+                                    if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
+                                        tDate = dateFilter(routeParams.txnDate, 'yyyy-MM-dd');
+                                        reciptNo = scope.mpetxnsacode;
+                                    }
+
 
                                     scope.printbtn = true;
                                     scope.hidePentahoReport = true;
                                     scope.formData.outputType = 'PDF';
                                     scope.baseURL = $rootScope.hostUrl + API_VERSION + "/runreports/" + encodeURIComponent("Payment Receipts");
-                                    scope.baseURL += "?output-type=" + encodeURIComponent(scope.formData.outputType) + "&tenantIdentifier=" + $rootScope.tenantIdentifier+"&locale="+scope.optlang.code;
+                                    scope.baseURL += "?output-type=" + encodeURIComponent(scope.formData.outputType) + "&tenantIdentifier=" + $rootScope.tenantIdentifier + "&locale=" + scope.optlang.code;
 
                                     var reportParams = "";
                                     var paramName = "R_clientId";
-                                    reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(routeParams.id)+ "&";
+                                    reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(routeParams.id) + "&";
                                     paramName = "R_tDate";
-                                    reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(tDate)+ "&";
+                                    reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(tDate) + "&";
                                     paramName = "R_reciptNo";
-                                    if(reciptNo == undefined || reciptNo == "" || paramName == "-"){
+                                    if (reciptNo == undefined || reciptNo == "" || paramName == "-") {
                                         reciptNo = "-";
                                     }
                                     reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(reciptNo);
@@ -1007,17 +1254,23 @@
                                     scope.baseURL = $sce.trustAsResourceUrl(scope.baseURL);
 
                                 }
-                            }}
-                    }).error(function(data){
+                            }
+                        }
+                    }).error(function (data) {
                     });
-                }else{
-                    alert("Please enter amount");
+                } else {
+
+                    if (scope.mpesaAmount != null) {
+                    }
+                    else {
+                        alert("Please enter amount");
+                    }
                 }
-            };
-            scope.printReport = function () {
-                window.print();
-                window.close();
-            };
+            }
+                scope.printReport = function () {
+                    window.print();
+                    window.close();
+                };
 
             var m_names = new Array("January", "February", "March",
                 "April", "May", "June", "July", "August", "September",
@@ -1027,7 +1280,8 @@
                 var month = d.getMonth();
                 var day = d.getDate();
                 day = day + "";
-                if (day.length == 1) {
+
+                if (day.length == 1){
                     day = "0" + day;
                 }
                 return day + ' ' + m_names[month] + ' ' + d.getFullYear();
@@ -1072,10 +1326,8 @@
                 scope.clientNotes = data;
             });
             scope.getClientIdentityDocuments = function () {
-                resourceFactory.clientResource.getAllClientDocuments({
-                    clientId: routeParams.id,
-                    anotherresource: 'identifiers'
-                }, function (data) {
+         resourceFactory.clientResource.getAllClientDocuments({clientId: routeParams.id, anotherresource: 'identifiers'}, function (data) {
+
                     scope.identitydocuments = data;
                     for (var i = 0; i < scope.identitydocuments.length; i++) {
                         resourceFactory.clientIdentifierResource.get({clientIdentityId: scope.identitydocuments[i].id}, function (data) {
@@ -1100,10 +1352,9 @@
             });
 
             scope.dataTableChange = function (clientdatatable) {
-                resourceFactory.DataTablesResource.getTableDetails({
-                    datatablename: clientdatatable.registeredTableName,
-                    entityId: routeParams.id, genericResultSet: 'true'
-                }, function (data) {
+           resourceFactory.DataTablesResource.getTableDetails({datatablename: clientdatatable.registeredTableName,
+                    entityId: routeParams.id, genericResultSet: 'true'}, function (data) {
+
                     scope.datatabledetails = data;
                     scope.datatabledetails.isData = data.data.length > 0 ? true : false;
                     scope.datatabledetails.isMultirow = data.columnHeaders[0].columnName == "id" ? true : false;
@@ -1135,8 +1386,17 @@
             };
 
             scope.cancel = function () {
-                location.path('/viewclient/' + scope.client.id);
-            };
+                if(routeParams.txnId!=null){
+                    if(routeParams.type=='UNMP'){
+                        location.path('/mpesa/'+'UNMP');
+                    }
+                    else {
+                        location.path('/mpesa');
+                    }
+                }
+                else {
+                    location.path('/viewclient/' + scope.client.id);
+                }};
 
             scope.viewstandinginstruction = function () {
                 location.path('/liststandinginstructions/' + scope.client.officeId + '/' + scope.client.id);
@@ -1145,11 +1405,7 @@
                 location.path('/createstandinginstruction/' + scope.client.officeId + '/' + scope.client.id + '/fromsavings');
             };
             scope.deleteAll = function (apptableName, entityId) {
-                resourceFactory.DataTablesResource.delete({
-                    datatablename: apptableName,
-                    entityId: entityId,
-                    genericResultSet: 'true'
-                }, {}, function (data) {
+                resourceFactory.DataTablesResource.delete({datatablename: apptableName, entityId: entityId, genericResultSet: 'true'}, {}, function (data) {
                     route.reload();
                 });
             };
@@ -1167,10 +1423,7 @@
             };
 
             scope.deleteDocument = function (documentId, index) {
-                resourceFactory.clientDocumentsResource.delete({
-                    clientId: routeParams.id,
-                    documentId: documentId
-                }, '', function (data) {
+                resourceFactory.clientDocumentsResource.delete({clientId: routeParams.id, documentId: documentId}, '', function (data) {
                     scope.clientdocuments.splice(index, 1);
                 });
             };
@@ -1184,10 +1437,7 @@
             };
 
             scope.downloadDocument = function (documentId) {
-                resourceFactory.clientDocumentsResource.get({
-                    clientId: routeParams.id,
-                    documentId: documentId
-                }, '', function (data) {
+                resourceFactory.clientDocumentsResource.get({clientId: routeParams.id, documentId: documentId}, '', function (data) {
                     scope.clientdocuments.splice(index, 1);
                 });
             };
@@ -1216,17 +1466,9 @@
             };
 
             scope.saveNote = function () {
-                resourceFactory.clientResource.save({
-                    clientId: routeParams.id,
-                    anotherresource: 'notes'
-                }, this.formData, function (data) {
+    resourceFactory.clientResource.save({clientId: routeParams.id, anotherresource: 'notes'}, this.formData, function (data) {
                     var today = new Date();
-                    temp = {
-                        id: data.resourceId,
-                        note: scope.formData.note,
-                        createdByUsername: "test",
-                        createdOn: today
-                    };
+                    temp = { id: data.resourceId, note: scope.formData.note, createdByUsername: "test", createdOn: today };
                     scope.clientNotes.push(temp);
                     scope.formData.note = "";
                     scope.predicate = '-id';
@@ -1333,92 +1575,90 @@
                         "measures": [(inventureScore - 300)],
                         "markers": [(inventureScore - 300)]
                     };
-                }
-
-                // this will be used to display the score on the viewclient.html
-                scope.inventureScore = inventureScore;
-            };
-
-            scope.showSignature = function () {
-                $modal.open({
-                    templateUrl: 'clientSignature.html',
-                    controller: ViewLargerClientSignature,
-                    size: "lg"
-                });
-            };
-
-            scope.showWithoutSignature = function () {
-                $modal.open({
-                    templateUrl: 'clientWithoutSignature.html',
-                    controller: ViewClientWithoutSignature,
-                    size: "lg"
-                });
-            };
-
-            scope.showPicture = function () {
-                $modal.open({
-                    templateUrl: 'photo-dialog.html',
-                    controller: ViewLargerPicCtrl,
-                    size: "lg"
-                });
-            };
-
-            var ViewClientWithoutSignature = function ($scope, $modalInstance) {
-                $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
+                    // this will be used to display the score on the viewclient.html
+                    scope.inventureScore = inventureScore;
                 };
             };
-            var ViewLargerClientSignature = function ($scope, $modalInstance) {
-                var loadSignature = function () {
-                    http({
-                        method: 'GET',
-                        url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents'
-                    }).then(function (docsData) {
-                        var docId = -1;
-                        for (var i = 0; i < docsData.data.length; ++i) {
-                            if (docsData.data[i].name == 'clientSignature') {
-                                docId = docsData.data[i].id;
-                                scope.signature_url = $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents/' + docId + '/attachment?tenantIdentifier=' + $rootScope.tenantIdentifier;
-                            }
-                        }
-                        if (scope.signature_url != null) {
-                            http({
-                                method: 'GET',
-                                url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents/' + docId + '/attachment?tenantIdentifier=' + $rootScope.tenantIdentifier
-                            }).then(function (docsData) {
-                                $scope.largeImage = scope.signature_url;
-                            });
-                        }
+                scope.showSignature = function () {
+                    $modal.open({
+                        templateUrl: 'clientSignature.html',
+                        controller: ViewLargerClientSignature,
+                        size: "lg"
                     });
                 };
-                loadSignature();
-                $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
-                };
-            };
 
-            var ViewLargerPicCtrl = function ($scope, $modalInstance) {
-                var loadImage = function () {
-                    if (scope.client.imagePresent) {
+                scope.showWithoutSignature = function () {
+                    $modal.open({
+                        templateUrl: 'clientWithoutSignature.html',
+                        controller: ViewClientWithoutSignature,
+                        size: "lg"
+                    });
+                };
+
+                scope.showPicture = function () {
+                    $modal.open({
+                        templateUrl: 'photo-dialog.html',
+                        controller: ViewLargerPicCtrl,
+                        size: "lg"
+                    });
+                };
+                var ViewClientWithoutSignature = function ($scope, $modalInstance) {
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
+                };
+                var ViewLargerClientSignature = function ($scope, $modalInstance) {
+                    var loadSignature = function () {
                         http({
                             method: 'GET',
-                            url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/images?maxWidth=860'
-                        }).then(function (imageData) {
-                            $scope.largeImage = imageData.data;
+                            url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents'
+                        }).then(function (docsData) {
+                            var docId = -1;
+                            for (var i = 0; i < docsData.data.length; ++i) {
+                                if (docsData.data[i].name == 'clientSignature') {
+                                    docId = docsData.data[i].id;
+                                    scope.signature_url = $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents/' + docId + '/attachment?tenantIdentifier=' + $rootScope.tenantIdentifier;
+                                }
+                            }
+                            if (scope.signature_url != null) {
+                                http({
+                                    method: 'GET',
+                                    url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/documents/' + docId + '/attachment?tenantIdentifier=' + $rootScope.tenantIdentifier
+                                }).then(function (docsData) {
+                                    $scope.largeImage = scope.signature_url;
+                                });
+                            }
                         });
-                    }
+                    };
+                    loadSignature();
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
                 };
-                loadImage();
-                $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
+
+                var ViewLargerPicCtrl = function ($scope, $modalInstance) {
+                    var loadImage = function () {
+                        if (scope.client.imagePresent) {
+                            http({
+                                method: 'GET',
+                                url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/images?maxWidth=860'
+                            }).then(function (imageData) {
+                                $scope.largeImage = imageData.data;
+                            });
+                        }
+                    };
+                    loadImage();
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
                 };
-            };
 
-        }
+            }
+                        });
 
-    });
 
     mifosX.ng.application.controller('ClientPaymentsController', ['$scope', '$routeParams', '$route', '$location', 'ResourceFactory', '$http', '$modal', 'API_VERSION', '$rootScope', '$upload', 'dateFilter', '$sce','$location', mifosX.controllers.ClientPaymentsController]).run(function ($log) {
         $log.info("ClientPaymentsController initialized");
+
     });
 }(mifosX.controllers || {}));

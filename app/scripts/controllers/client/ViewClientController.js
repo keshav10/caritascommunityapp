@@ -22,7 +22,8 @@
                     location.path('/viewrecurringdepositaccount/' + id);
                 }
             };
-            scope.routeToClientPayments = function (clientid) {
+
+			 scope.routeToClientPayments = function (clientid) {
                 console.log('Redirecting to payments for: ' + clientid);
                 location.path('/clientpayments/' + clientid);
             };
@@ -125,6 +126,7 @@
                 });
             });
             scope.deleteClient = function () {
+                alert("1");
                 $modal.open({
                     templateUrl: 'deleteClient.html',
                     controller: ClientDeleteCtrl
@@ -228,7 +230,7 @@
                 $scope.delete = function () {
                     http({
                         method: 'DELETE',
-                        url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/images',
+                        url: $rootScope.hostUrl + API_VERSION + '/clients/' + routeParams.id + '/images'
                     }).then(function (imageData) {
                         if (!scope.$$phase) {
                             scope.$apply();
@@ -259,7 +261,7 @@
                                 name: 'clientSignature',
                                 description: 'client signature'
                             },
-                            file: scope.file,
+                            file: scope.file
                         }).then(function (imageData) {
                                 // to fix IE not refreshing the model
                                 if (!scope.$$phase) {
@@ -282,6 +284,7 @@
                 });
             };
             var ClientDeleteCtrl = function ($scope, $modalInstance) {
+
                 $scope.delete = function () {
                     resourceFactory.clientResource.delete({clientId: routeParams.id}, {}, function (data) {
                         $modalInstance.close('delete');

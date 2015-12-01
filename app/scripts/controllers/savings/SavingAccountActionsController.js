@@ -57,6 +57,9 @@
                 case "deposit":
                     resourceFactory.savingsTrxnsTemplateResource.get({savingsId: scope.accountId}, function (data) {
                         scope.paymentTypes = data.paymentTypeOptions;
+                        if (data.paymentTypeOptions.length > 0) {
+                            scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
+                        }
                     });
                     scope.title = 'label.heading.depositmoneytosavingaccount';
                     scope.labelName = 'label.input.transactiondate';
@@ -71,6 +74,9 @@
                 case "withdrawal":
                     resourceFactory.savingsTrxnsTemplateResource.get({savingsId: scope.accountId}, function (data) {
                         scope.paymentTypes = data.paymentTypeOptions;
+                        if (data.paymentTypeOptions.length > 0) {
+                            scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
+                        }
                     });
                     scope.title = 'label.heading.withdrawmoneyfromsavingaccount';
                     scope.labelName = 'label.input.transactiondate';
@@ -278,7 +284,6 @@
                     } else if(this.formData.inactivationOnDate){
                         this.formData.inactivationOnDate = dateFilter(this.formData.inactivationOnDate, scope.df);
                     }
-                    alert(routeParams.chargeId);
                     resourceFactory.savingsResource.save(params, this.formData, function (data) {
                         location.path('/viewsavingaccount/' + data.savingsId);
                     });
