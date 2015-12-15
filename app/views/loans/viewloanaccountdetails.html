@@ -854,7 +854,7 @@
 
                                 <div class="col-md-offset-5 center">
                                     <button class="btn btn-primary" ng-click="gotoBack()"> {{'label.button.cancel' | translate}}</button>
-                                    <button id="update" type="submit" ng-click="submit()" class="btn btn-primary"  ng-hide="blockUI"> Update</button>
+                                    <button id="update" type="submit" ng-click="UpdateData()" class="btn btn-primary"  ng-hide="blockUI"> Update</button>
                                     <button class="btn btn-info" ng-show="blockUI"><strong>{{'label.button.processing' | translate}}</strong></button>
                                 </div>
                             </div>
@@ -867,6 +867,8 @@
                                     <th> {{'label.heading.savingaccountno' | translate}}</th>
                                     <th> {{'label.heading.savingamount' | translate}}</th>
                                     <th>  Invested Amount</th>
+                                    <th>  Investment Started Date </th>
+                                    <th>  Investment Closed Date </th>
                                     <th> {{'label.heading.deleteinvestment' | translate}} </th>
 
                                 </tr>
@@ -878,18 +880,42 @@
                                     <td class="pointer" data-ng-click="routeToSaving(loan.saving_id)">{{loan.accountno}}</td>
                                     <td class="pointer" data-ng-click="routeToSaving(loan.saving_id)">{{loan.savingamount | number}}</td>
                                     <td class="pointer" data-ng-click="routeToSaving(loan.saving_id)">{{loan.investedAmount | number}}</td>
-                                    <td><a class="btn btn-danger" data-ng-click="routeToDelete(loan.saving_id)"><i class="icon-trash "></i></a>
-                                        <a class="btn btn-primary ng-binding " data-ng-click="ToEdit(loan.saving_id,loan.group_id,loan.investedAmount)">
+                                    <td class="pointer" data-ng-click="routeToLoan(loan.saving_id)"> {{loan.startDate | DateFormat}}</td>
+                                    <td class="pointer" data-ng-click="routeToLoan(loan.saving_id)"> {{loan.closeDate | DateFormat}}</td>
+                                    <td><a class="btn-md btn-danger" tooltip="Delete Investment" data-ng-click="routeToDelete(loan.saving_id,loan.investedAmount,loan.startDate)"><i class="icon-trash "></i></a>
+                                        <a class="btn  ng-binding" tooltip="Update Investment" data-ng-click="ToEdit(loan.saving_id,loan.group_id,loan.investedAmount, loan.startDate)">
                                             <i class="icon-edit icon-white"></i>
-                                        </a></td>
+                                        </a>
+                                        <a class="btn-md ng-binding" tooltip="Close Investment" data-ng-click="toClose(loan.saving_id, loan.investedAmount, loan.startDate)">
+                                        <i class="icon-large icon-remove-sign"></i> </a>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
 
                             </br>
+
+                            <script type="text/ng-template" id="closeLoanInvestment.html">
+                                <div class="modal-header silver">
+                                    <h3> Investment Closer Date </h3>
+                                </div>
+                                <div>
+                                    <label class="col-sm-3"> Enter Close Date</label>
+
+                                    <div class="col-sm-4">
+                                        <input id="closeDate" type="text" name="closeDate" datepicker-pop="dd MMMM yyyy"
+                                               ng-model="closeInvestmentData.closeDate" is-open="opened1" max="restrictDate"  class="form-control"/>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-primary" ng-click="closeInvestment()">Submit</button>
+                                <button class="btn btn-warning" ng-click="cancel()">{{'label.button.cancel' | translate}}</button>
+
+                            </script>
+
                         </div>
 
-                        <div ng-show="showAddInvestment == false">
+                        <div ng-show="showAddInvestment==false">
 
                             <form name="createinvestmentform" novalidate="" class="form-horizontal well" rc-submit="submit()">
                                 <api-validate></api-validate>
@@ -911,10 +937,9 @@
                                            </select>
                                        </div>
 
-
-                                    <label class="control-label col-sm-2"> Investment Amount </label>
                                     <div class="col-sm-2">
-                                        <input type="text" id="investedAmount" name="investedAmount" ng-model="formData.investedAmount"  class="form-control" number-format required late-Validate/>
+                                        <input type="text" id="investedAmount" name="investedAmount" placeholder="Investment Amount"
+                                               ng-model="formData.investedAmount"  class="form-control" number-format required late-Validate/>
                                         <div ng-show="ifNoFunds">
                                             <p class = "error"> No Funds Available  </p>
                                         </div>
@@ -927,7 +952,17 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-1">
+
+                                        <label class="control-label col-sm-1">Start Date</label>
+
+                                        <div class="col-sm-2">
+                                            <input type="text" name="startDate" datepicker-pop="dd MMMM yyyy"
+                                                   ng-model="formData.startDate" is-open="opened1" max="restrictDate"  class="form-control"/>
+                                        </div>
+
+
+
+                                        <div class="col-md-1">
                                         <a class="btn bg-primary" ng-click='addInvestment(formData.Id)'><i class="icon-plus"></i></a>
                                     </div>
 
@@ -958,7 +993,7 @@
 
                                 <div class="col-md-offset-5">
                                     <button class="btn btn-primary" ng-click="gotoBack()"> {{'label.button.cancel' | translate}}</button>
-                                    <button id="save" type="submit" ng-click="submitData()" class="btn btn-primary"  ng-hide="blockUI"> Save </button>
+                                    <button id="save" ng-click="submitData()" class="btn btn-primary"  ng-hide="blockUI"> Save </button>
                                     <button class="btn btn-info" ng-show="blockUI"><strong>{{'label.button.processing' | translate}}</strong></button>
                                 </div>
                             </fieldset>

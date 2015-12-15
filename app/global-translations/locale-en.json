@@ -94,7 +94,7 @@
     "label.heading.savingproductname": "Saving Product Name",
     "label.heading.savingaccountno": "Saving Account No",
     "label.heading.savingamount": "Saving Amount",
-    "label.heading.deleteinvestment": "Delete Investment",
+    "label.heading.deleteinvestment": "Investment Delete",
     "label.heading.clientname": "Client Name",
     "label.heading.loanproductname": "Loan Product Name",
     "label.heading.loanaccountno": "Loan Account No",
@@ -193,6 +193,7 @@
     "label.button.unassignstaff": "Unassign Staff",
     "label.button.assignstaff": "Assign Staff",
     "label.button.close": "Close",
+    "label.button.updatesavingaccount": "Update Account",
     "label.button.staffassignmenthistory": "Staff Assignment History ",
     "label.button.activate": "Activate",
     "label.button.newloan": "New Loan",
@@ -1652,6 +1653,7 @@
     "label.heading.depositmoneytosavingaccount": "Deposit Money to Saving Account",
     "label.heading.withdrawmoneyfromsavingaccount": "Withdraw Money from Saving Account",
     "label.heading.savingaccountapplyannualFee": "Apply Annual Fee",
+    "label.heading.updatesavingaccount": "Update Account",
     "label.heading.closesavingaccount": "Close Saving Account",
     "label.heading.editsavingaccounttransaction": "Edit Saving Account Transaction",
     "label.heading.savingaccounttransactionDate": "Saving Account Transaction Date",
@@ -1704,6 +1706,7 @@
     "label.heading.enforceMinRequiredBalance":"Enforce minimum balance",
     "label.heading.minRequiredBalance":"Minimum balance",
     "label.heading.interest.recalulation.settings":"Interest Recalculation Settings",
+
 
 
     "#Anchors": "..",

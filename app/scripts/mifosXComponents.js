@@ -239,6 +239,7 @@ define(['Q', 'underscore', 'mifosX'], function (Q) {
             'organization/cashmgmt/CashierTransactionsController',
             'organization/cashmgmt/CashierFundsAllocationSettlementController',
             'accounting/DefineOpeningBalancesController',
+            'organization/DistributeInvestmentEarningController',
             'organization/UploadxlsController',
             'mpesa/UnMappedTransactionController',
             'mpesa/mpesareconciliationController',

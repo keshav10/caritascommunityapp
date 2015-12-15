@@ -284,6 +284,9 @@
             .when('/employees', {
                 templateUrl: 'views/organization/employees.html'
             })
+            .when('/distributeInvestment',{
+                templateUrl: 'views/organization/distributeinvestmentearning.html'
+            })
             .when('/viewemployee/:id', {
                 templateUrl: 'views/organization/viewemployee.html'
             })
@@ -296,6 +299,7 @@
             .when('/managefunds/', {
                 templateUrl: 'views/organization/managefunds.html'
             })
+
             .when('/nav/offices', {
                 templateUrl: 'views/navigation/offices.html'
             })
