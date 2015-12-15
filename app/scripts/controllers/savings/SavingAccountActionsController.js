@@ -12,6 +12,8 @@
             scope.transactionAmountField = false;
             scope.showPaymentDetails = false;
             scope.paymentTypes = [];
+            scope.showFieldsForUpdate = false;
+            scope.miniRequiredBalance = null;
 
             switch (scope.action) {
                 case "approve":
@@ -55,6 +57,9 @@
                 case "deposit":
                     resourceFactory.savingsTrxnsTemplateResource.get({savingsId: scope.accountId}, function (data) {
                         scope.paymentTypes = data.paymentTypeOptions;
+                        if (data.paymentTypeOptions.length > 0) {
+                            scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
+                        }
                     });
                     scope.title = 'label.heading.depositmoneytosavingaccount';
                     scope.labelName = 'label.input.transactiondate';
@@ -69,6 +74,9 @@
                 case "withdrawal":
                     resourceFactory.savingsTrxnsTemplateResource.get({savingsId: scope.accountId}, function (data) {
                         scope.paymentTypes = data.paymentTypeOptions;
+                        if (data.paymentTypeOptions.length > 0) {
+                            scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
+                        }
                     });
                     scope.title = 'label.heading.withdrawmoneyfromsavingaccount';
                     scope.labelName = 'label.input.transactiondate';
@@ -113,6 +121,26 @@
                     scope.withdrawBalance = true;
                     scope.taskPermissionName = 'CLOSE_SAVINGSACCOUNT';
                     break;
+
+                case "update":
+                    scope.title = 'label.heading.updatesavingaccount';
+                    scope.labelName = 'label.heading.minRequiredBalance';
+                    scope.modelName = 'dueDate';
+                    scope.showDateField = false;
+                    scope.showAnnualAmountField = false;
+                    scope.showAmountField = false;
+                    scope.showNoteField = false;
+                    scope.showFieldsForUpdate = true;
+                    scope.taskPermissionName = 'UPDATE_SAVINGSACCOUNT';
+
+                    resourceFactory.savingsResource.get({accountId: routeParams.id, associations: 'all'}, function (data){
+                        scope.accountData = data;
+                        scope.formData.minRequiredBalance = scope.accountData.minRequiredBalance;
+                        scope.miniRequiredBalance = scope.accountData.minRequiredBalance;
+                    })
+
+                    break;
+
                 case "modifytransaction":
                     resourceFactory.savingsTrxnsResource.get({savingsId: scope.accountId, transactionId: routeParams.transactionId, template: 'true'},
                         function (data) {
@@ -235,7 +263,16 @@
                         function (data) {
                             location.path('/viewsavingaccount/' + data.savingsId);
                         });
-                } else if (scope.action == "deletesavingcharge") {
+                }else if(scope.action == "update"){
+                        this.formData.locale = scope.optlang.code;
+                      //  scope.formData.minRequiredBalance = 1000;
+                       // scope.formData.savingId = routeParams.id;
+                        resourceFactory.savingsResource.update({'accountId': routeParams.id},this.formData, function (data){
+                            location.path('/viewsavingaccount/' + routeParams.id);
+                        })
+
+                }
+                else if (scope.action == "deletesavingcharge") {
                     resourceFactory.savingsResource.delete({accountId: routeParams.id, resourceType: 'charges', chargeId: routeParams.chargeId}, this.formData,
                         function (data) {
                             location.path('/viewsavingaccount/' + data.savingsId);
@@ -277,6 +314,7 @@
                         if (this.formData.closedOnDate) {
                             this.formData.closedOnDate = dateFilter(this.formData.closedOnDate, scope.df);
                         }
+
                     }
 
                     resourceFactory.savingsResource.save(params, this.formData, function (data) {

@@ -43,7 +43,6 @@
                             });
 
                         scope.addInvestment = function(Id){
-
                                 resourceFactory.LoanAccountResource.getLoanAccountDetails({loanId: scope.formData.Id , associations: 'all',exclude: 'guarantors'}, function (data) {
                                         scope.loanData = data;
                                            if(scope.savingInvestment.length==0) {

@@ -18,7 +18,7 @@
 	                <div ng-show="forceOffice == null">
 	                    <select chosen="offices" id="officeId" ng-model="formData.officeId"  class="form-control"
 	                            ng-options="office.id as office.name for office in offices" value="{{office.id}}"
-	                            ng-change="changeOffice(formData.officeId)"></select>
+	                           ng-change="changeOffice(formData.officeId)"></select>
 	                </div>
 	                <div ng-show="forceOffice != null">
 	                    <p class="form-control-static">{{forceOffice.name}}</p>
@@ -121,6 +121,14 @@
 	                <input type="text" id="externalId" name="externalId" ng-model="formData.externalId"  class="form-control"/>
 	            </div>
 	        </div>
+
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="nationalId">National Id</label>
+				<div class="col-sm-3">
+					<input type="text" id="nationalId" name="nationalId" ng-model="formData.nationalId" class="form-control"/>
+				</div>
+			</div>
+
 	        <div class="form-group">
 	            <label class="control-label col-sm-2">{{'label.input.active' | translate}}</label>
 
