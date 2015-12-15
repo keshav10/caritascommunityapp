@@ -13,6 +13,7 @@
             scope.data=[];
             scope.additionalNumber='';
             scope.MobileNumbers='';
+            scope.complete1=false;
 
 
             resourceFactory.officeResource.getAllOffices(function (data) {
@@ -142,8 +143,11 @@
                 messagejson.message = scope.formData.messageText;
                  resourceFactory.notificationResource.post(messagejson, function (data) {
                      var response=data.valueOf();
+                     scope.complete1=true;
+                     //location.path('/sms');
                 });
                 scope.mobileNoForSending='';
+
 
 
             }

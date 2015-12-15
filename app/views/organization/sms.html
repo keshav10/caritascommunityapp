@@ -1,10 +1,15 @@
 <div class="col-md-12">
     <ul class="breadcrumb">
         <li><a href="#/organization">{{'label.anchor.organization' | translate}}</a></li>
-        <li class="active">{{'label.anchor.sendoption' | translate}}</li>
+        <li class="active"><a href="#/sms">{{'label.anchor.sendoption' | translate}}</a></li>
     </ul>
     <api-validate></api-validate>
+
     <form name="sendSmsForm" novalidate="" class="form-horizontal well" ng-controller="SmsController">
+        <div ng-show="complete1==true">
+            <h3>Sms Send Sucessfully</h3>
+        </div>
+        <div ng-show="complete1==false">
         <fieldset class="smsleftclass">
             <legend>{{'label.view.smsmanagement' | translate}}</legend>
            <!--
@@ -31,7 +36,8 @@
                                 value="{{office.id}}" ng-change="fetchClientByOfficeId(formData.officeId)"></select>
                     </div>
                     <label  class="control-label col-sm-3">{{'label.input.selectedClients'|translate}} </label>
-                    <label  class="control-label col-sm-3">{{'label.input.messageText'|translate}}</label>
+                    <label  class="control-label col-sm-3">{{'label.input.messageText'|translate}}<span
+                            class="required">*</span></label>
 
 
                 </div>
@@ -80,9 +86,13 @@
 
                         </div>
                         <div class="col-sm-4">
-                            <textarea id="msg" name="MessageText" ng-model="formData.messageText" rows="20"
-                                      cols="" class="form-control" >
+                            <textarea id="MessageText" name="MessageText" ng-model="formData.messageText" rows="20"
+                                      cols="" class="form-control" required
+                                      late-Validate/>
                             </textarea>
+                        </div>
+                        <div class="col-sm-2">
+                            <form-validate valattributeform="sendSmsForm" valattribute="MessageText"/>
                         </div>
                     </div>
                 </div>
@@ -94,7 +104,10 @@
                     <button id="save" type="submit"  class="btn btn-primary" ng-click="sendMessage()">{{ 'label.button.send' | translate}}</button>
                     <button id="cancel" type="reset" class="btn btn-default" >{{ 'label.button.cancel' | translate}}</button>
                 </div>
+
             </div>
         </fieldset>
+            </div>
+
     </form>
 </div>
