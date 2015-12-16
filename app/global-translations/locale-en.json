@@ -230,7 +230,7 @@
 
     "label.button.clientpayments": "Client Payments",
     "label.button.addinvestment": "Add Investment",
-
+    "label.button.send": "Send",
 
     "#Misc Labels": "..",
     "label.uniquelyidentifiedwithid": "Uniquely identified with Id",
@@ -1435,6 +1435,7 @@
     "label.tooltip.arearstolerance":"With 'Arrears tolerance' you can specify a tolerance amount and if the loan is behind (in arrears), but within the tolerance, it won't be classified as 'in arrears' and part of the portfolio at risk.",
     "label.tooltip.daysinyear":"Number of days in year.",
     "label.tooltip.daysinmonth":"Number of days in month.",
+    "label.tooltip.Additional Numbers":"Additional Mobile Number should be seprated by  comma ,",
 
 
     "#tool tip for creating standing instruction":"..",
@@ -2568,7 +2569,10 @@
     "label.tooltip.global.office-specific-products-enabled":"Determine if office specific products are enabled.",
     "label.tooltip.global.restrict-products-to-user-office":"This term is waiting for a professional definition.",
     "label.tooltip.global.meetings-mandatory-for-jlg-loans":"This term is waiting for a professional definition.",
-
+    "label.tooltip.select":"Select",
+    "label.tooltip.unselect":"Remove",
+    "label.toottip.selectAll":"Select All",
+    "label.toottip.RempveAll":"Remove All",
 
     "#----------------": "------------",
 
@@ -3536,6 +3540,7 @@
     "label.input.teller.cashiertxn.txnNote": "Notes/Comments",
     "label.button.addpaymentdetail": "Add Payment Detail",
     "label.anchor.individualcollectionsheet": "Individual Collection Sheet",
+    "label.input.Text":"Text",
 
     "------------------": "------------",
 
@@ -3598,7 +3603,21 @@
     "label.mpesa.Pay":"Pay",
     "label.mpesa.view":"Mpesa",
     "label.mpesa.From Date":"From Date",
-    "label.mpesa.to Date":"To Date"
+    "label.mpesa.to Date":"To Date",
+
+    "#----------------":"----------------",
+    "label.view.smsmanagement" : "Send Sms",
+    "label.anchor.sms":"Sms Management",
+    "label.anchor.sendoption":"send option sms",
+    "label.input.selectedClients":"Selected Clients",
+    "label.input.messageText":"Text Message",
+    "label.button.send":"Send",
+    "label.button.selectAll":"selectAll",
+    "labell.button.clear":"clear",
+    "label.input.selected":"Selected MobileNo for Send",
+    "label.input.Additional Number":"Additional Number"
+
+
 
 
 
