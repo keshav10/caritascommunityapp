@@ -4,6 +4,9 @@
         <li class="active">{{action}}</li>
     </ul>
     <form name="savingccountactionform" novalidate="" class="form-horizontal well" ng-submit="submit()">
+        <div ng-show="showError==true">
+            <p  style="color:red"> Receipt Number can not be blank  </p>
+        </div>
         <api-validate></api-validate>
         <fieldset>
             <legend>{{ title | translate}}</legend>
@@ -60,7 +63,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-2">{{ 'label.input.showpaymentdetails' | translate}}</label>
+                    <label class="control-label col-sm-2">{{ 'label.input.showpaymentdetails' | translate}}<span class="required">*</span></label>
 
                     <div class="col-sm-3">
                         <a class="btn btn-primary" ng-click="showPaymentDetails=!showPaymentDetails">
@@ -95,10 +98,13 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="receiptNumber">{{ 'label.input.receiptnumber' |
-                            translate}}</label>
+                            translate}}<span class="required">*</span></label>
 
                         <div class="col-sm-3">
-                            <input id="receiptNumber" type="text" ng-model="formData.receiptNumber" class="form-control"/>
+                            <input id="receiptNumber"  name="receiptNumber" ,type="text" ng-model="formData.receiptNumber" class="form-control"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <form-validate valattributeform="savingccountactionform" valattribute="receiptNumber"/>
                         </div>
                     </div>
                     <div class="form-group">

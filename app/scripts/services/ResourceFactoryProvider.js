@@ -463,6 +463,9 @@
                     officeToGLAccountMappingTemplateResource: defineResource(apiVer + "/financialactivityaccounts/template", {}, {
                         get: {method: 'GET', params: {}}
                     }),
+                    datatableResource:  defineResource(apiVer+ "/datatables/:datatable/:apptableId",{order: '@order'},{
+                        getsmsEnableOffice:{method: 'GET',params:{},isArray: true}
+                    }),
                     tellerResource: defineResource(apiVer + "/tellers/:tellerId", {tellerId: "@tellerId"}, {
                         getAllTellers: {method: 'GET', params: {}, isArray: true},
                         get: {method: 'GET', params: {tellerId: '@tellerId'}},

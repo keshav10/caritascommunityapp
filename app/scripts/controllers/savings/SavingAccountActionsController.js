@@ -14,6 +14,7 @@
             scope.paymentTypes = [];
             scope.showFieldsForUpdate = false;
             scope.miniRequiredBalance = null;
+            scope.showError=false;
 
             switch (scope.action) {
                 case "approve":
@@ -239,9 +240,8 @@
                     } else if (scope.action == "deposit") {
                         if (this.formData.transactionDate) {
                             this.formData.transactionDate = dateFilter(this.formData.transactionDate, scope.df);
-                        }
-                    }
-                    if (scope.action == "modifytransaction") {
+                        }}
+                        if (scope.action == "modifytransaction") {
                         params.command = 'modify';
                         if (this.formData.transactionDate) {
                             this.formData.transactionDate = dateFilter(this.formData.transactionDate, scope.df);
@@ -249,9 +249,21 @@
                         params.transactionId = routeParams.transactionId;
                     }
                     params.savingsId = scope.accountId;
-                    resourceFactory.savingsTrxnsResource.save(params, this.formData, function (data) {
-                        location.path('/viewsavingaccount/' + data.savingsId);
-                    });
+                    if(scope.action == "deposit") {
+                        if (angular.isUndefined(this.formData.receiptNumber)) {
+                            scope.showPaymentDetails = true;
+                            scope.showError = true;
+                        }
+                        else {
+                        resourceFactory.savingsTrxnsResource.save(params, this.formData, function (data) {
+                            location.path('/viewsavingaccount/' + data.savingsId);
+                        });
+                    }}
+                  if(scope.action!="deposit"){
+                      resourceFactory.savingsTrxnsResource.save(params, this.formData, function (data) {
+                          location.path('/viewsavingaccount/' + data.savingsId);
+                      });
+                   }
                 } else if (scope.action == "editsavingcharge") {
                     if (this.formData.feeOnMonthDayFullDate) {
                         this.formData.feeOnMonthDay = dateFilter(this.formData.feeOnMonthDayFullDate, scope.df);
