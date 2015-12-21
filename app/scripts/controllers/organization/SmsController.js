@@ -1,10 +1,10 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        SmsController: function (scope, resourceFactory, location) {
+        SmsController: function (scope, resourceFactory, location,$rootScope) {
             scope.offices = [];
             scope.clients = [];
             scope.submt = false;
-            scope.officeId1 = 1
+            //scope.officeId1 = 1
             scope.formData = {};
             scope.mobileNo = {};
             scope.selected = false;
@@ -14,6 +14,10 @@
             scope.additionalNumber='';
             scope.MobileNumbers='';
             scope.complete1=false;
+            scope.p = {};
+            scope.a = {};
+            scope.officeId1=$rootScope.ofId;
+            scope.send=true;
 
 
             resourceFactory.officeResource.getAllOffices(function (data) {
@@ -136,16 +140,35 @@
                 else{
                     scope.MobileNumbers=scope.mobileNoForSending+scope.formData.additionalNumber;
                 }
-                var messagejson = {};
-                messagejson.target = scope.MobileNumbers;
-                messagejson.type = "sms";
-                messagejson.entity_id = "1";
-                messagejson.message = scope.formData.messageText;
-                 resourceFactory.notificationResource.post(messagejson, function (data) {
-                     var response=data.valueOf();
-                     scope.complete1=true;
-                     //location.path('/sms');
+                var params = {};
+                params.datatable="officedetails";
+                params.apptableId=scope.formData.officeId
+                params.order=null
+                scope.t="";
+
+                resourceFactory.datatableResource.getsmsEnableOffice(params,function (data) {
+                    if (data[0] != null) {
+                        scope.p = data[0];
+                    }
+                    var isSendSms = scope.p.sms_enabled;
+                    if(isSendSms=='true' ){
+                        var messagejson = {};
+                        messagejson.target = scope.MobileNumbers;
+                        messagejson.type = "sms";
+                        messagejson.entity_id = scope.formData.officeId
+                        messagejson.message = scope.formData.messageText;
+                        resourceFactory.notificationResource.post(messagejson, function (data) {
+                          //  var response=data.valueOf();
+                            scope.complete1=true;
+
+                        });
+
+
+                    }else  {
+                        scope.send=false;
+                    }
                 });
+
                 scope.mobileNoForSending='';
 
 
@@ -157,7 +180,7 @@
 
 
     });
-    mifosX.ng.application.controller('SmsController', ['$scope', 'ResourceFactory', '$location', mifosX.controllers.SmsController]).run(function ($log) {
+    mifosX.ng.application.controller('SmsController', ['$scope', 'ResourceFactory', '$location','$rootScope' ,mifosX.controllers.SmsController]).run(function ($log) {
         $log.info("SmsController initialized");
     });
 }(mifosX.controllers || {}));

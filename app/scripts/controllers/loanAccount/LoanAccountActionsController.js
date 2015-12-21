@@ -17,6 +17,7 @@
             scope.disbursementDetails = [];
             scope.showTrancheAmountTotal = 0;
             scope.processDate = false;
+            scope.showError= false;
 
             switch (scope.action) {
                 case "approve":
@@ -424,9 +425,21 @@
                         params.transactionId = routeParams.transactionId;
                     }
                     params.loanId = scope.accountId;
+                    if(scope.action == "repayment"){
+                    if(angular.isUndefined(this.formData.receiptNumber)){
+                       scope.showPaymentDetails=true;
+                       scope.showError=true;
+                    }
+                    else{
                     resourceFactory.loanTrxnsResource.save(params, this.formData, function (data) {
                         location.path('/viewloanaccount/' + data.loanId);
                     });
+                    }}
+                    if(scope.action!="repayment"){
+                        resourceFactory.loanTrxnsResource.save(params, this.formData, function (data) {
+                            location.path('/viewloanaccount/' + data.loanId);
+                        });
+                    }
                 } else if (scope.action == "deleteloancharge") {
                     resourceFactory.LoanAccountResource.delete({loanId: routeParams.id, resourceType: 'charges', chargeId: routeParams.chargeId}, this.formData, function (data) {
                         location.path('/viewloanaccount/' + data.loanId);
