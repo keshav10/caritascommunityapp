@@ -141,7 +141,7 @@
                     scope.MobileNumbers=scope.mobileNoForSending+scope.formData.additionalNumber;
                 }
                 var params = {};
-                params.datatable="officedetails";
+                params.datatable="OfficeDetails";
                 params.apptableId=scope.formData.officeId
                 params.order=null
                 scope.t="";
