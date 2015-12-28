@@ -729,7 +729,7 @@
                     $scope.closeInvestmentData.loanId = routeParams.id;
                     var reqDate = dateFilter($scope.closeInvestmentData.closeDate, 'dd MMMM yyyy');
                     $scope.closeInvestmentData.closeDate = reqDate;
-                    var sDate = dateFilter(scope.startDate, 'yyyy-MM-dd')
+                    var sDate = dateFilter(scope.startDate, 'dd MMMM yyyy')
                     $scope.closeInvestmentData.startDate = sDate;
                     resourceFactory.loanInvestmentResourceClose.save({loanId: routeParams.id}, this.closeInvestmentData, function(data){
                        $route.reload();
@@ -802,6 +802,7 @@
                   scope.ifNoFunds = false;
                   scope.lessloanamount = false;
                   scope.accountexists = false;
+                  scope.enterInvestmentAmount = false;
 
                       resourceFactory.savingsResource.get({
                           accountId: scope.formData.Id,
@@ -866,7 +867,13 @@
                                       }
                                   }
                                   else {
-                                      scope.lessloanamount = true;
+
+                                      if(scope.formData.investedAmount == null || scope.formData.investedAmount == 0 ){
+                                          scope.enterInvestmentAmount = true;
+                                      }
+                                      else{
+                                          scope.lessloanamount = true;
+                                      }
 
                                   }
                               }
