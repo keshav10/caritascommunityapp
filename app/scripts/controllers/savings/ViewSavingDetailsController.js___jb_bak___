@@ -508,7 +508,7 @@
                          $modalInstance.close();
                          $route.reload();
                  })
-
+                    $modalInstance.close();
                 }
             }
 
@@ -733,6 +733,4 @@
 
 
     mifosX.ng.application.controller('ViewSavingDetailsController', ['$scope', '$routeParams', 'ResourceFactory', '$location','$modal', '$route', 'dateFilter', '$sce', '$rootScope', 'API_VERSION', mifosX.controllers.ViewSavingDetailsController]).run(function ($log) {
-        $log.info("ViewSavingDetailsController initialized");
-    });
-}(mifosX.controllers || {}));
+        $log.info("ViewSavingDetailsController initialized")
