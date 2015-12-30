@@ -634,7 +634,7 @@
                                   name: scope.loanData.clientName, productname: scope.loanData.loanProductName,
                                   accountno: scope.loanData.accountNo, loanammount: scope.loanData.principal, loan_id: scope.loanData.id,
                                   investedAmount: scope.formData.investedAmount,
-                                  startDate : scope.formData.startDate
+                                  startDate :  dateFilter(scope.formData.startDate, 'yyyy-MM-dd')
                               });
                           }
                           else {
@@ -657,7 +657,7 @@
                                       name: scope.loanData.clientName, productname: scope.loanData.loanProductName,
                                       accountno: scope.loanData.accountNo, loanammount: scope.loanData.principal, loan_id: scope.loanData.id,
                                       investedAmount: scope.formData.investedAmount,
-                                      startDate: scope.formData.startDate
+                                      startDate:dateFilter(scope.formData.startDate, 'yyyy-MM-dd')
 
                                   });
                               }
@@ -714,7 +714,9 @@
                     scope.loanId.push(scope.savingInvestment[i].loan_id);
                     scope.investedAmounts.push(scope.savingInvestment[i].investedAmount);
                     scope.temp = scope.temp + scope.savingInvestment[i].investedAmount;
-                    scope.startDate.push(dateFilter(scope.savingInvestment[i].startDate, 'dd MMMM yyyy'));
+                    scope.sDate = new Date(this.savingInvestment[i].startDate);
+                    var investmentStartDate = dateFilter(scope.sDate,scope.df);
+                    scope.startDate.push(investmentStartDate);
                 }
 
                 scope.minimumBalance = scope.temp;
