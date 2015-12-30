@@ -913,7 +913,7 @@
                         scope.sDate = new Date(this.loanInvestment[i].startDate);
                         var investmentStartDate = dateFilter(scope.sDate,scope.df);
                         scope.startDate.push(investmentStartDate);
-                        
+
                     }
 
                    /* for(var i=0; i<scope.savingId; i++){
