@@ -909,7 +909,11 @@
                     for (var i = 0; i < scope.loanInvestment.length; i++) {
                         scope.savingId.push(scope.loanInvestment[i].saving_id);
                         scope.investedAmounts.push(scope.loanInvestment[i].investedAmount);
-                        scope.startDate.push(dateFilter(scope.loanInvestment[i].startDate,  'dd MMMM yyyy'));
+
+                        scope.sDate = new Date(this.loanInvestment[i].startDate);
+                        var investmentStartDate = dateFilter(scope.sDate,scope.df);
+                        scope.startDate.push(investmentStartDate);
+
                     }
 
                    /* for(var i=0; i<scope.savingId; i++){
