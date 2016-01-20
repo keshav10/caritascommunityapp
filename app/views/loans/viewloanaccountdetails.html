@@ -143,7 +143,9 @@
                         </tr>
                         <tr ng-show="showDisbursedAmountBasedOnStatus()">
                             <th class="table-bold-loan">{{'label.heading.disburseamount' | translate}}</th>
-                            <td><span class="padded-td">{{loandetails.principal | number}}</span></td>
+                            <td  has-permission="CREATE_LOANINVESTMENT" ng-show="notFullAmountInvested==true" style="background-color:red" ><span class="padded-td">{{loandetails.principal | number}}</span></td>
+                            <td  has-permission="CREATE_LOANINVESTMENT" ng-show="fullAmountInvested==true" style="background-color:lawngreen" ><span class="padded-td">{{loandetails.principal | number}}</span></td>
+                            <td  ng-show="fullAmountInvested==false && notFullAmountInvested==false" ><span class="padded-td">{{loandetails.principal | number}}</span></td>
                         </tr>
                         <tr>
                             <th class="table-bold-loan">{{'label.heading.arrearsby' | translate}}</th>
