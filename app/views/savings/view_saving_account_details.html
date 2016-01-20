@@ -152,7 +152,9 @@
                         </tr>
                         <tr>
                             <td>{{'label.heading.balance' | translate}}</td>
-                            <td>{{savingaccountdetails.summary.accountBalance | number}}</td>
+                            <td has-permission="CREATE_SAVINGINVESTMENT" ng-show="notFullAmountInvested==true" style="background-color:red">{{savingaccountdetails.summary.accountBalance | number}}</td>
+                            <td has-permission="CREATE_SAVINGINVESTMENT" ng-show="fullAmountInvested==true" style="background-color:lawngreen">{{savingaccountdetails.summary.accountBalance | number}}</td>
+                            <td ng-show="fullAmountInvested==false && notFullAmountInvested==false ">{{savingaccountdetails.summary.accountBalance | number}}</td>
                         </tr>
                     </table>
                 </div>
@@ -518,7 +520,7 @@
                                                                 <td> {{investment.productname}}</td>
                                                                 <td>{{investment.accountno}}</td>
                                                                 <td> {{investment.loanammount | number}}</td>
-                                                                <td>  {{investment.investedAmount | number}} </td>
+                                                                <td> {{investment.investedAmount | number}}</td>
                                                         </tr>
                                                        </tbody>
                                                      </table>

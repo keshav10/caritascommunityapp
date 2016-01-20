@@ -15,12 +15,14 @@
             scope.editId = null;
             scope.editgroupId = null;
             scope.repaymentscheduleReport=false;
-
             scope.showAddInvestment = true;
 
             scope.routeToAddInvestment = function () {
                 scope.showAddInvestment = false;
             };
+
+            scope.notFullAmountInvested = false;
+            scope.fullAmountInvested = false;
 
             scope.ToEdit = function(id,groupId,amount,startdate){
 
@@ -791,12 +793,42 @@
                };
                scope.loanData = [];
                scope.loanInvestment = [];
+               scope.loanDetailsForInvestment = [];
                resourceFactory.loanInvestmentResource.get({loanId: routeParams.id}, function (data) {
                    scope.loanInvestment = data;
+
+                   resourceFactory.LoanAccountResource.getLoanAccountDetails({loanId: routeParams.id, associations: 'all',exclude: 'guarantors'}, function (data) {
+                       scope.loanDetailsForInvestment = data;
+
+                       if(scope.loanInvestment != null){
+                           //following code for color coding for investment tracker
+
+                           var sum = 0;
+                           scope.isAmountInvested = false;
+
+                           for (var i in scope.loanInvestment) {
+                               if (scope.loanInvestment[i].investedAmount) {
+                                   sum = sum + parseInt(scope.loanInvestment[i].investedAmount);
+                                   scope.isAmountInvested = true;
+                               }
+                           }
+
+                           if(sum > 0) {
+                               if ((sum < scope.loanDetailsForInvestment.principal) && (scope.isAmountInvested == true)) {
+                                   scope.notFullAmountInvested = true;
+                               }
+                               else if ((sum == scope.loanDetailsForInvestment.principal) && (scope.isAmountInvested == true)) {
+                                   scope.fullAmountInvested = true;
+                               }
+                           }
+                       }
+
+                   });
+
+
                });
 
-
-            // following function will add the investment and once it add the minimum required balace of invester is getting increase
+            // following function will add the investment and once it add the minimum required balance of invester is getting increase
 
               scope.addInvestment = function (Id) {
                   scope.ifNoFunds = false;
@@ -951,6 +983,7 @@
                         startDate: this.startDate
                     }, function (data) {
                         scope.showAddInvestment = true;
+                        route.reload();
                     });
             };
 
