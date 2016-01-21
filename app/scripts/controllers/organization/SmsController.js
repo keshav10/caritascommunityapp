@@ -35,6 +35,7 @@
                             temp.id = this.formData.id[i];
                             temp.mobileNo = scope.clients[j].mobileNo;
                             temp.displayName = scope.clients[j].displayName;
+                            temp.externalId = scope.clients[j].externalId;
                             scope.client.push(temp);
                             scope.clients.splice(j, 1);
                         }
@@ -53,6 +54,7 @@
                             temp.id = this.formData.client[i];
                             temp.displayName = scope.client[j].displayName;
                             temp.mobileNo = scope.client[j].mobileNo;
+                            temp.externalId = scope.clients[j].externalId;
                             scope.clients.push(temp);
                             scope.client.splice(j, 1);
                         }
@@ -77,6 +79,7 @@
                     temp.id = scope.clients[l].id;
                     temp.displayName = scope.clients[l].displayName;
                     temp.mobileNo = scope.clients[l].mobileNo;
+                    temp.externalId = scope.clients[j].externalId;
                     scope.client.push(temp);
                 }
                 //scope.client= scope.mobileNo;
@@ -89,6 +92,7 @@
                     temp.id = scope.client[l].id;
                     temp.displayName = scope.client[l].displayName;
                     temp.mobileNo = scope.client[l].mobileNo;
+                    temp.externalId = scope.clients[j].externalId;
                     scope.clients.push(temp);
                 }
                 scope.client = [];
@@ -105,10 +109,12 @@
                 scope.formData.messageText = " ";
             }
             var param = {};
+            scope.filterText = "";
             param.officeId = scope.officeId1;
             var items = resourceFactory.clientResource.getAllClients(param, function (data) {
                 scope.totalClients = data.totalFilteredRecords;
                 scope.clients = data.pageItems;
+
             });
 
 
@@ -121,9 +127,42 @@
                 var items = resourceFactory.clientResource.getAllClients(params, function (data) {
                     scope.totalClients = data.totalFilteredRecords;
                     scope.clients = data.pageItems;
+
                 });
 
-                scope.client = [];
+                //scope.client = [];
+            }
+
+            scope.search = function () {
+                scope.clients = [];
+                scope.searchResults = [];
+                scope.filterText = "";
+
+                resourceFactory.globalSearch.search({query: scope.searchText}, function (data) {
+                    var arrayLength = data.length;
+                    for (var i = 0; i < arrayLength; i++) {
+                        var result = data[i];
+                        var client = {};
+                        client.status = {};
+                        client.subStatus = {};
+                        client.status.value = result.entityStatus.value;
+                        client.status.code  = result.entityStatus.code;
+                        if(result.entityType  == 'CLIENT'){
+                            client.displayName = result.entityName;
+                            client.accountNo = result.entityAccountNo;
+                            client.id = result.entityId;
+                            client.officeName = result.parentName;
+                            client.externalId = result.entityExternalId;
+                            // alert(result.externalId);
+                            scope.clients.push(client);
+                        }else if (result.entityType  == 'CLIENTIDENTIFIER'){
+                            client.displayName = result.parentName;
+                            client.id = result.parentId;
+                            scope.clients.push(client);
+                        }
+                    }
+                });
+
             }
 
 
@@ -142,8 +181,8 @@
                 }
                 var params = {};
                 params.datatable="OfficeDetails";
-                params.apptableId=scope.formData.officeId
-                params.order=null
+                params.apptableId=scope.formData.officeId;
+                params.order=null;
                 scope.t="";
 
                 resourceFactory.datatableResource.getsmsEnableOffice(params,function (data) {
@@ -155,7 +194,7 @@
                         var messagejson = {};
                         messagejson.target = scope.MobileNumbers;
                         messagejson.type = "sms";
-                        messagejson.entity_id = scope.formData.officeId
+                        messagejson.entity_id = scope.formData.officeId;
                         messagejson.message = scope.formData.messageText;
                         resourceFactory.notificationResource.post(messagejson, function (data) {
                           //  var response=data.valueOf();
