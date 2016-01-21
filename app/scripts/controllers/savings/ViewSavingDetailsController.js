@@ -14,6 +14,10 @@
             scope.loanInvestment = [];
             scope.editId = 0;
             scope.editclientId = 0;
+            scope.notFullAmountInvested = false;
+            scope.fullAmountInvested = false;
+
+
             scope.routeToLoan = function (loan_id) {
                 location.path('/viewloanaccount/' + loan_id);
             };
@@ -43,10 +47,7 @@
 
 
             };
-            resourceFactory.savingsInvestmentResource.get({savingId: routeParams.id},function (data) {
-                scope.loans = data;
 
-            });
             resourceFactory.savingsResource.get({accountId: routeParams.id, associations: 'all'}, function (data){
                 scope.saving = data;
             });
@@ -477,6 +478,11 @@
             scope.investedAmount = null;
             scope.startDate = null;
 
+            //this get method for getting loan details
+            resourceFactory.savingsInvestmentResource.get({savingId: routeParams.id},function (data) {
+                scope.loans = data;
+            });
+
 
             scope.toClose = function(loan_id, invested_Amount, start_Date){
                 $modal.open({
@@ -581,13 +587,45 @@
 
          scope.loanData =[];
          scope.savingInvestment = [];
-         resourceFactory.savingsInvestmentResource.get({savingId: routeParams.id},function (data) {
-             scope.savingInvestment = data;
-         });
+         scope.savingDetailsForInvestment = [];
+
+
+            resourceFactory.savingsInvestmentResource.get({savingId: routeParams.id},function (data) {
+                scope.savingInvestment = data;
+
+                resourceFactory.savingsResource.get({accountId: routeParams.id, associations: 'all'}, function (data) {
+                    scope.savingDetailsForInvestment = data;
+
+                    if(scope.savingInvestment != null){
+                        // Following code for coloring coding for invesetment tracker
+                        var sum = 0 ;
+                        scope.isAmountInvested = false;
+                        for (var i in scope.savingInvestment) {
+                            if(scope.savingInvestment[i].investedAmount) {
+                                sum = sum + parseInt(scope.savingInvestment[i].investedAmount);
+                                scope.isAmountInvested = true;
+                            }
+                        }
+
+                        if(sum>0) {
+                            if ((sum < scope.savingDetailsForInvestment.summary.accountBalance) && (scope.isAmountInvested == true)) {
+                                scope.notFullAmountInvested = true;
+
+                            }
+                            else if ((sum == scope.savingDetailsForInvestment.summary.accountBalance) && (scope.isAmountInvested == true)) {
+                                scope.fullAmountInvested = true;
+                            }
+                        }
+                      }
+
+                    });
+
+
+            })
 
 
 
-         scope.addInvestment = function(Id){
+            scope.addInvestment = function(Id){
              scope.ifNoFunds = false;
              scope.lessloanamount = false;
              scope.accountexists = false;
