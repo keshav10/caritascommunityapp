@@ -16,6 +16,7 @@
                     // watch the rootScope variable "successfulResponses"
                     scope.$watch(function() {
                         return $rootScope.successfulResponses;
+
                     }, function(successfulResponses) {
                         scope.responses = successfulResponses;
 
@@ -23,7 +24,7 @@
 
                             scope.uniqueId = [];
                                               
-                            //fills up the uniqueId array with unique identifiers      
+                            //fills up the uniqueId array with unique identifiers
                             for (var i = 0; i < scope.responses.length; i++) {
                                 for(var j = 0; j < scope.br.length; j++) {
                                     if(scope.responses[i].requestId == scope.br[j].requestId) {

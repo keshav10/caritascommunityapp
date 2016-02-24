@@ -868,15 +868,16 @@
                         for (var J in  scope.savingsCharges) {
                         if (scope.savingsAccounts[s].depositAmount != null && scope.savingsAccounts[s].depositAmount != ""&& scope.savingsAccounts[s].depositAmount >0) {
                             if (scope.savingsAccounts[s].accountNo == scope.savingsCharges[J].accountNo) {
-                                if (scope.savingsAccounts[s].depositAmount < scope.savingsCharges[J].chargeDue) {
-                                    scope.chargeAmount =  scope.savingsAccounts[s].depositAmount;
-                                    scope.savingsAccounts[s].depositAmount = scope.savingsAccounts[s].depositAmount - scope.savingsCharges[J].chargeDue;
 
-                                }
-                                else {
-                                    scope.chargeAmount = scope.savingsCharges[J].chargeDue;
-                                    scope.savingsAccounts[s].depositAmount = scope.savingsAccounts[s].depositAmount - scope.savingsCharges[J].chargeDue;
-
+                                if(scope.formData.receiptNumber!= null && scope.formData.bankNumber) {
+                                    if (scope.savingsAccounts[s].depositAmount < scope.savingsCharges[J].chargeDue) {
+                                        scope.chargeAmount = scope.savingsAccounts[s].depositAmount;
+                                        scope.savingsAccounts[s].depositAmount = scope.savingsAccounts[s].depositAmount - scope.savingsCharges[J].chargeDue;
+                                    }
+                                    else {
+                                        scope.chargeAmount = scope.savingsCharges[J].chargeDue;
+                                        scope.savingsAccounts[s].depositAmount = scope.savingsAccounts[s].depositAmount - scope.savingsCharges[J].chargeDue;
+                                    }
                                 }
 
                             var activatedOnDate = new Date(scope.savingsAccounts[s].timeline.activatedOnDate);
