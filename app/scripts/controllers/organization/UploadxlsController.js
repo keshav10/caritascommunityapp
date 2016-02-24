@@ -31,10 +31,11 @@
                     location.path('/uploadxls/');
                 });
 
-
+               // alert('response is :', +$rootScope.successfulResponses);
             };
 
         }
+
     });
 
     mifosX.ng.application.controller('UploadxlsController', ['$scope','$location','$http','API_VERSION','$upload','$rootScope', 'ResourceFactory' ,mifosX.controllers.UploadxlsController]).run(function ($log) {

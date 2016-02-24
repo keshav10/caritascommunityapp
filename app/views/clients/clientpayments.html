@@ -77,7 +77,7 @@
 									</td>
 									<td ng-if="loanaccount.status.active" align="right">
 										<input class="col-sm-8" id="repaymentAmount" type="text" name="repaymentAmount"
-											   ng-model="loanaccount.repaymentAmount" ng-change="keyPress()" class="form-control" number-format />
+											   ng-model="loanaccount.repaymentAmount" ng-change="keyPress()" class="form-control"  number-format required late-Validate/>
 										<input id="loanactiveCheckbox" ng-change="keyPress()" ng-model="loanaccount.active"
 											   ng-init="loanaccount.active=true" ng-checked="true" type="checkbox"/></td>
 									<td ng-if="loanaccount.status.active"> &nbsp;&nbsp;&nbsp;&nbsp;{{loanaccount.charges1|number}}
@@ -227,7 +227,8 @@
 									<td></td>
 									<td   align="right">
 										<input class="col-sm-8" id="depositAmount" type="text" name="depositAmount" ng-value="savingaccount.value|number"
-											   ng-model="savingaccount.depositAmount" ng-change="keyPress()" class="form-control" number-format />
+											   ng-model="savingaccount.depositAmount" ng-change="keyPress()" class="form-control" class="form-control"
+											   number-format required late-Validate>
 
 										<input ng-hide="false" id="savingactiveCheckbox" ng-change="keyPress()" ng-model="savingaccount.active"
 											   ng-init="savingaccount.active=true" ng-checked="true" type="checkbox" />
