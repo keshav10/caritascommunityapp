@@ -89,22 +89,7 @@
                     canDefineInstallmentAmount : scope.product.canDefineInstallmentAmount
                 };
 
-                if (scope.product.isInterestRecalculationEnabled) {
-                    scope.formData.interestRecalculationCompoundingMethod = scope.product.interestRecalculationData.interestRecalculationCompoundingType.id;
-                    scope.formData.rescheduleStrategyMethod = scope.product.interestRecalculationData.rescheduleStrategyType.id;
-                    scope.formData.recalculationRestFrequencyType = scope.product.interestRecalculationData.recalculationRestFrequencyType.id;
-                    scope.formData.recalculationRestFrequencyInterval = scope.product.interestRecalculationData.recalculationRestFrequencyInterval;
-                    scope.formData.isArrearsBasedOnOriginalSchedule = scope.product.interestRecalculationData.isArrearsBasedOnOriginalSchedule;
-                    scope.formData.preClosureInterestCalculationStrategy = scope.product.interestRecalculationData.preClosureInterestCalculationStrategy.id;
-                    if (scope.product.interestRecalculationData.recalculationRestFrequencyDate) {
-                        scope.date.recalculationRestFrequencyDate = new Date(scope.product.interestRecalculationData.recalculationRestFrequencyDate);
-                    }
-                    scope.formData.recalculationCompoundingFrequencyType = scope.product.interestRecalculationData.recalculationCompoundingFrequencyType.id;
-                    scope.formData.recalculationCompoundingFrequencyInterval = scope.product.interestRecalculationData.recalculationCompoundingFrequencyInterval;
-                    if (scope.product.interestRecalculationData.recalculationCompoundingFrequencyDate) {
-                        scope.date.recalculationCompoundingFrequencyDate = new Date(scope.product.interestRecalculationData.recalculationCompoundingFrequencyDate);
-                    }
-                }
+
                 if(scope.product.allowAttributeOverrides != null){
                     scope.amortization = scope.product.allowAttributeOverrides.amortizationType;
                     scope.arrearsTolerance = scope.product.allowAttributeOverrides.inArrearsTolerance;
@@ -116,13 +101,14 @@
                     scope.transactionProcessingStrategy = scope.product.allowAttributeOverrides.transactionProcessingStrategyId;
                 }
                 if(scope.amortization || scope.arrearsTolerance || scope.graceOnArrearsAgeing ||
-                scope.interestCalcPeriod || scope.interestMethod || scope.graceOnPrincipalAndInterest ||
-                scope.repaymentFrequency || scope.transactionProcessingStrategy == true){
+                    scope.interestCalcPeriod || scope.interestMethod || scope.graceOnPrincipalAndInterest ||
+                    scope.repaymentFrequency || scope.transactionProcessingStrategy == true){
                     scope.allowAttributeConfiguration = true;
                 }
                 else{
                     scope.allowAttributeConfiguration = false;
                 }
+
 
                 if (scope.product.holdGuaranteeFunds) {
                     scope.formData.mandatoryGuarantee = scope.product.productGuaranteeData.mandatoryGuarantee;
@@ -130,38 +116,6 @@
                     scope.formData.minimumGuaranteeFromGuarantor = scope.product.productGuaranteeData.minimumGuaranteeFromGuarantor;
                 }
 
-                _.each(scope.product.principalVariationsForBorrowerCycle, function (variation) {
-                    scope.formData.principalVariationsForBorrowerCycle.push({
-                        id: variation.id,
-                        borrowerCycleNumber: variation.borrowerCycleNumber,
-                        valueConditionType: variation.valueConditionType.id,
-                        minValue: variation.minValue,
-                        maxValue: variation.maxValue,
-                        defaultValue: variation.defaultValue
-                    })
-                });
-
-                _.each(scope.product.interestRateVariationsForBorrowerCycle, function (variation) {
-                    scope.formData.interestRateVariationsForBorrowerCycle.push({
-                        id: variation.id,
-                        borrowerCycleNumber: variation.borrowerCycleNumber,
-                        valueConditionType: variation.valueConditionType.id,
-                        minValue: variation.minValue,
-                        maxValue: variation.maxValue,
-                        defaultValue: variation.defaultValue
-                    })
-                });
-
-                _.each(scope.product.numberOfRepaymentVariationsForBorrowerCycle, function (variation) {
-                    scope.formData.numberOfRepaymentVariationsForBorrowerCycle.push({
-                        id: variation.id,
-                        borrowerCycleNumber: variation.borrowerCycleNumber,
-                        valueConditionType: variation.valueConditionType.id,
-                        minValue: variation.minValue,
-                        maxValue: variation.maxValue,
-                        defaultValue: variation.defaultValue
-                    })
-                });
 
                 scope.setFlag();
                 if (scope.formData.accountingRule == 2 || scope.formData.accountingRule == 3 || scope.formData.accountingRule == 4) {
@@ -204,6 +158,60 @@
                         })
                     });
                 }
+
+
+                if (scope.product.isInterestRecalculationEnabled) {
+                    scope.formData.interestRecalculationCompoundingMethod = scope.product.interestRecalculationData.interestRecalculationCompoundingType.id;
+                    scope.formData.rescheduleStrategyMethod = scope.product.interestRecalculationData.rescheduleStrategyType.id;
+                    scope.formData.recalculationRestFrequencyType = scope.product.interestRecalculationData.recalculationRestFrequencyType.id;
+                    scope.formData.recalculationRestFrequencyInterval = scope.product.interestRecalculationData.recalculationRestFrequencyInterval;
+                    scope.formData.isArrearsBasedOnOriginalSchedule = scope.product.interestRecalculationData.isArrearsBasedOnOriginalSchedule;
+                    scope.formData.preClosureInterestCalculationStrategy = scope.product.interestRecalculationData.preClosureInterestCalculationStrategy.id;
+                    if (scope.product.interestRecalculationData.recalculationRestFrequencyDate) {
+                        scope.date.recalculationRestFrequencyDate = new Date(scope.product.interestRecalculationData.recalculationRestFrequencyDate);
+                    }
+                    scope.formData.recalculationCompoundingFrequencyType = scope.product.interestRecalculationData.recalculationCompoundingFrequencyType.id;
+                    scope.formData.recalculationCompoundingFrequencyInterval = scope.product.interestRecalculationData.recalculationCompoundingFrequencyInterval;
+                    if (scope.product.interestRecalculationData.recalculationCompoundingFrequencyDate) {
+                        scope.date.recalculationCompoundingFrequencyDate = new Date(scope.product.interestRecalculationData.recalculationCompoundingFrequencyDate);
+                    }
+                }
+
+
+
+                _.each(scope.product.principalVariationsForBorrowerCycle, function (variation) {
+                    scope.formData.principalVariationsForBorrowerCycle.push({
+                        id: variation.id,
+                        borrowerCycleNumber: variation.borrowerCycleNumber,
+                        valueConditionType: variation.valueConditionType.id,
+                        minValue: variation.minValue,
+                        maxValue: variation.maxValue,
+                        defaultValue: variation.defaultValue
+                    })
+                });
+
+                _.each(scope.product.interestRateVariationsForBorrowerCycle, function (variation) {
+                    scope.formData.interestRateVariationsForBorrowerCycle.push({
+                        id: variation.id,
+                        borrowerCycleNumber: variation.borrowerCycleNumber,
+                        valueConditionType: variation.valueConditionType.id,
+                        minValue: variation.minValue,
+                        maxValue: variation.maxValue,
+                        defaultValue: variation.defaultValue
+                    })
+                });
+
+                _.each(scope.product.numberOfRepaymentVariationsForBorrowerCycle, function (variation) {
+                    scope.formData.numberOfRepaymentVariationsForBorrowerCycle.push({
+                        id: variation.id,
+                        borrowerCycleNumber: variation.borrowerCycleNumber,
+                        valueConditionType: variation.valueConditionType.id,
+                        minValue: variation.minValue,
+                        maxValue: variation.maxValue,
+                        defaultValue: variation.defaultValue
+                    })
+                });
+
 
             });
 

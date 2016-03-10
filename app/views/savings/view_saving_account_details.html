@@ -606,8 +606,8 @@
                         </tr>
                         <tr class="pointer-main" ng-repeat="charge in charges | filter:{isActive:showActiveCharges}">
                             <td class="pointer" data-ng-click="viewCharge(charge.id)">{{charge.name}}</td>
-                            <td class="pointer" data-ng-click="viewCharge(charge.id)" ng-show="'charge.penalty'==true">{{"penalty"}}</td>
-                            <td class="pointer" data-ng-click="viewCharge(charge.id)" ng-hide="'charge.penalty'==true">{{"fee"}}</td>
+                            <td class="pointer" data-ng-click="viewCharge(charge.id)" ng-show="(charge.penalty)==true">{{"penalty"}}</td>
+                            <td class="pointer" data-ng-click="viewCharge(charge.id)" ng-hide="(charge.penalty)==true">{{"fee"}}</td>
                             <td class="pointer" data-ng-click="viewCharge(charge.id)"></td>
                             <td class="pointer" data-ng-click="viewCharge(charge.id)">{{charge.chargeTimeType.value}}</td>
                             <td class="pointer" data-ng-click="viewCharge(charge.id)"></td>
