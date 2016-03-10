@@ -994,7 +994,7 @@
                 scope.viewReport = true;
                // scope.hidePentahoReport = true;
                 scope.formData.outputType = 'PDF';
-                scope.baseURL = $rootScope.hostUrl + API_VERSION + "/runreports/" + encodeURIComponent("Loan Repaymen schedule");
+                scope.baseURL = $rootScope.hostUrl + API_VERSION + "/runreports/" + encodeURIComponent("Loan Repayment schedule");
                 scope.baseURL += "?output-type=" + encodeURIComponent(scope.formData.outputType) + "&tenantIdentifier=" + $rootScope.tenantIdentifier+"&locale="+scope.optlang.code;
 
                 var reportParams = "";
