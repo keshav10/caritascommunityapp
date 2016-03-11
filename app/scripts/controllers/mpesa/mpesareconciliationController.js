@@ -36,14 +36,14 @@
                 scope.p=3;
                 http({
                     method: 'GET',
-                    url: 'https://localhost:9292/mpesa/Search?status=UNMP&FromDate='+''+'&ToDate='+scope.toDate+'&officeId='+scope.officeId+'&mobileNo='
+                    url: 'https://52.19.21.68:9292/mpesa/Search?status=UNMP&FromDate='+''+'&ToDate='+scope.toDate+'&officeId='+scope.officeId+'&mobileNo='
                 }).success(function (data) {
                     deferred.resolve(data);
                     scope.completetransaction=data;
                 });
             }
             else {
-                $http.get("https://localhost:9292/mpesa/getunmappedtransactions?officeId="+scope.officeId).success(function (data) {
+                $http.get("https://52.19.21.68:9292/mpesa/getunmappedtransactions?officeId="+scope.officeId).success(function (data) {
                     deferred.resolve(data);
                     scope.completetransaction = data;
                 });
@@ -123,7 +123,7 @@
 
                 http({
                     method: 'GET',
-                    url: 'https://localhost:9292/mpesa/Search?status='+ scope.text+'&FromDate='+ scope.fromDate+'&ToDate='+scope.toDate+'&mobileNo='+scope.searcText+'&officeId='+scope.officeId
+                    url: 'https://52.19.21.68:9292/mpesa/Search?status='+ scope.text+'&FromDate='+ scope.fromDate+'&ToDate='+scope.toDate+'&mobileNo='+scope.searcText+'&officeId='+scope.officeId
                 }).success(function (data) {
                     deferred.resolve(data);
                     scope.completetransaction=data;
