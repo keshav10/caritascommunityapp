@@ -20,7 +20,7 @@
 
                 $upload.upload({
                     //url: $rootScope.hostUrl + API_VERSION + '/uploadxls/',
-                    url : 'https://localhost:8443/mifosng-provider/api/v1/uploadxls/',
+                    url : 'https://52.19.21.68:8443/mifosng-provider/api/v1/uploadxls/',
                     data: scope.formData,
                     file: scope.file
                 }).then(function (data) {
