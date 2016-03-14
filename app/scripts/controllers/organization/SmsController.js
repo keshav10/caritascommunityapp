@@ -47,14 +47,16 @@
             };
 
             scope.removeClient = function () {
+
                 for (var i in this.formData.client) {
                     for (var j in scope.client) {
                         if (scope.client[j].id == this.formData.client[i]) {
+
                             var temp = {};
                             temp.id = this.formData.client[i];
                             temp.displayName = scope.client[j].displayName;
                             temp.mobileNo = scope.client[j].mobileNo;
-                            temp.externalId = scope.clients[j].externalId;
+                            temp.externalId = scope.client[j].externalId;
                             scope.clients.push(temp);
                             scope.client.splice(j, 1);
                         }
@@ -72,18 +74,20 @@
 
             scope.selectAll = function () {
                 scope.selected = false;
-                //reduce the size of clients by 1
-                this.formData.clients=this.formData.clients-1;
+                //reduce the size of clients by 1;
+                this.formData.clients =this.formData.clients-1;
                 for (var l in scope.clients) {
+
                     var temp = {};
                     temp.id = scope.clients[l].id;
                     temp.displayName = scope.clients[l].displayName;
                     temp.mobileNo = scope.clients[l].mobileNo;
-                    temp.externalId = scope.clients[j].externalId;
+                    temp.externalId = scope.clients[l].externalId;
                     scope.client.push(temp);
                 }
                 //scope.client= scope.mobileNo;
                 scope.clients = [];
+
             }
 
             scope.clear = function () {
@@ -92,7 +96,7 @@
                     temp.id = scope.client[l].id;
                     temp.displayName = scope.client[l].displayName;
                     temp.mobileNo = scope.client[l].mobileNo;
-                    temp.externalId = scope.clients[j].externalId;
+                    temp.externalId = scope.client[l].externalId;
                     scope.clients.push(temp);
                 }
                 scope.client = [];
@@ -153,6 +157,8 @@
                             client.id = result.entityId;
                             client.officeName = result.parentName;
                             client.externalId = result.entityExternalId;
+                            //mobile no. newly added
+                            client.mobileNo = result.entityMobileNo;
                             // alert(result.externalId);
                             scope.clients.push(client);
                         }else if (result.entityType  == 'CLIENTIDENTIFIER'){
