@@ -65,7 +65,7 @@
                         <div class="col-sm-3">
                             <select id="id" ng-model="formData.id" name="client" class="form-control multiselectsms" multiple required>
                                 <option ng-repeat="client in clients" value="{{client.id}}" ng-selected=selected>
-                                    {{client.externalId}} {{client.displayName}}-{{client.mobileNo}}
+                                    {{client.externalId}} {{client.displayName}} - {{client.mobileNo}}
                                 </option>
                             </select>
                         </div>
@@ -88,7 +88,7 @@
                         <div class="col-sm-3">
                             <select id="mobileNo" ng-model="formData.client" name="client"  class="form-control selectedclient" multiple required>
                                 <option ng-repeat="selectedclient in client" value="{{selectedclient.id}}" ng-selected=selected>
-                                    {{selectedclient.externalId}} {{selectedclient.displayName}}-{{selectedclient.mobileNo}}
+                                    {{selectedclient.externalId}} {{selectedclient.displayName}} - {{selectedclient.mobileNo}}
                                 </option>
                             </select>
                             <ul></ul>
