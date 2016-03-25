@@ -33,6 +33,10 @@
 	<div ng-show="showError==true">
 		  <p  style="color:red"> Total Amount must be equal to : {{mpesaAmount}} </p>
 	</div>
+	<div class="col-md-12 col-sm-12" ng-show="showErrorMsg==true">
+		<p style="..."> <font color="red"> Error in transaction, Transaction can not be completed...!  {{Error}}</font> </p>
+	</div>
+
 		<div class="col-md-12 col-sm-12">
 		<div class="row client">
 			<div class="col-sm-12 col-md-12 paddingleft0px">
