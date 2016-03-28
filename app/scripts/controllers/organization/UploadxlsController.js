@@ -3,7 +3,7 @@
 
         UploadxlsController: function (scope, location, http, API_VERSION, $upload, $rootScope, resourceFactory) {
             scope.offices = [];
-            scope.submt = false;
+            scope.submt = 0;
 
             resourceFactory.officeResource.getAllOffices(function (data) {
                 scope.offices = data;
@@ -18,19 +18,25 @@
 
             scope.submit = function () {
 
+                var i = 0;
                 $upload.upload({
                     url: $rootScope.hostUrl + API_VERSION + '/uploadxls/',
                     data: scope.formData,
                     file: scope.file
-                }).then(function (data) {
+
+                }).success(function (data) {
                     // to fix IE not refreshing the model
+                    i = 1;
                     if (!scope.$$phase) {
                         scope.$apply();
                     }
-                    scope.submt = true;
+                    scope.submt = 1;
                     location.path('/uploadxls/');
-                });
+                })
 
+                if(i==0){
+                    scope.submt = 2;
+                }
                // alert('response is :', +$rootScope.successfulResponses);
             };
 

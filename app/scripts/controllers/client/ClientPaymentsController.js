@@ -43,6 +43,7 @@
             scope.isDisabled = true;
             scope.showError=false;
             scope.LoanAccountNo=0;
+            scope.showErrorMsg = false;
             /*
             storing the previous value of loan and savings Account
             * */
@@ -960,6 +961,21 @@
                            // alert("Loan Transaction cannot be before the last transaction date");
                             return;
                         }else{
+                            if(data.length ==1 && data[0].body != null){
+
+                                if(data[0].body.indexOf('Developer') > 0 || data[0].body.indexOf('developer') > 0){
+                                    scope.Error = data[0].body;
+                                    scope.showErrorMsg=true;
+                                    return;
+                                } else  if(data[0].body.indexOf('Exception') > 0){
+                                    var index1 = data[0].body.indexOf('Exception');
+                                    scope.Error = data[0].body.substring(index1 + 11, data[0].body.length -1);
+                                    scope.showErrorMsg=true;
+                                    return;
+                                }
+
+
+                            }
                             for (var i = 0; i < data.length; i++) {
                                 if (data[i].statusCode === 200)
                                     if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
@@ -1214,6 +1230,21 @@
                            // alert("Loan Transaction cannot be before the last transaction date");
                             return;
                         } else {
+                            if(data.length ==1 && data[0].body != null){
+
+                                if(data[0].body.indexOf('Developer') > 0 || data[0].body.indexOf('developer') > 0){
+                                    scope.Error = data[0].body;
+                                    scope.showErrorMsg=true;
+                                    return;
+                                } else  if(data[0].body.indexOf('Exception') > 0){
+                                    var index1 = data[0].body.indexOf('Exception');
+                                    scope.Error = data[0].body.substring(index1 + 11, data[0].body.length -1);
+                                    scope.showErrorMsg=true;
+                                    return;
+                                }
+
+
+                            }
                             for (var i = 0; i < data.length; i++) {
                                 if (data[i].statusCode === 200) {
                                     if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
