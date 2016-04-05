@@ -36,14 +36,14 @@
                 scope.p=3;
                 http({
                     method: 'GET',
-                    url: 'http://54.72.21.49:9292/caritasmpesa/mpesa/Search?status=UNMP&FromDate='+''+'&ToDate='+scope.toDate+'&officeId='+scope.officeId+'&mobileNo='
+                    url: 'https://54.72.21.49:443/caritasmpesa/mpesa/Search?status=UNMP&FromDate='+''+'&ToDate='+scope.toDate+'&officeId='+scope.officeId+'&mobileNo='
                 }).success(function (data) {
                     deferred.resolve(data);
                     scope.completetransaction=data;
                 });
             }
             else {
-                $http.get("http://54.72.21.49:9292/caritasmpesa/mpesa/getunmappedtransactions?officeId="+scope.officeId).success(function (data) {
+                $http.get("https://54.72.21.49:443/caritasmpesa/mpesa/getunmappedtransactions?officeId="+scope.officeId).success(function (data) {
                     deferred.resolve(data);
                     scope.completetransaction = data;
                 });
@@ -123,7 +123,7 @@
 
                 http({
                     method: 'GET',
-                    url: 'http://54.72.21.49:9292/caritasmpesa/mpesa/Search?status='+ scope.text+'&FromDate='+ scope.fromDate+'&ToDate='+scope.toDate+'&mobileNo='+scope.searcText+'&officeId='+scope.officeId
+                    url: 'https://54.72.21.49:443/caritasmpesa/mpesa/Search?status='+ scope.text+'&FromDate='+ scope.fromDate+'&ToDate='+scope.toDate+'&mobileNo='+scope.searcText+'&officeId='+scope.officeId
                 }).success(function (data) {
                     deferred.resolve(data);
                     scope.completetransaction=data;
@@ -147,7 +147,7 @@
 
             var ClientDeleteCtrl = function ($scope, $modalInstance) {
 
-                $http.get("https://localhost:8443/mifosng-provider/api/v1/clients/"+scope.clientId+"/Mpesa?TransactionDate="+scope.TransactionDate+"&ReceiptNo="+scope.ReceiptNo).success(function(data) {
+                $http.get("https://54.72.21.49:443/mifosng-provider/api/v1/clients/"+scope.clientId+"/Mpesa?TransactionDate="+scope.TransactionDate+"&ReceiptNo="+scope.ReceiptNo).success(function(data) {
                     deferred.resolve(data);
                     $scope.transactionData = data;
 
