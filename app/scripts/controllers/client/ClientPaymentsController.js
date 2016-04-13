@@ -44,6 +44,7 @@
             scope.showError=false;
             scope.LoanAccountNo=0;
             scope.showErrorMsg = false;
+            scope.showErrorMsgOfMPESA = false;
             /*
             storing the previous value of loan and savings Account
             * */
@@ -937,7 +938,7 @@
                     scope.formData.receiptNumber=scope.mpetxnsacode;
                     if (scope.mpesaAmount != scope.formData.totalAmount) {
                         submitProcess = false;
-                        scope.showError=true;
+                        scope.showErrorMsgOfMPESA=true;
                     }
                 }
                 if (scope.formData.receiptNumber == null) {
@@ -981,7 +982,7 @@
                                     if(routeParams.amount!=null&& routeParams.mpetxnsacode!=null) {
                                         http({
                                             method: 'GET',
-                                            url: 'http://localhost:9292/mpesa/postpayment?id=' + scope.txnId
+                                            url: 'https://54.72.21.49:443/caritasmpesa/mpesa/postpayment?id=' + scope.txnId
                                         }).success(function (data) {
                                         });
                                     }
@@ -1008,6 +1009,7 @@
                 var requests = [];
                 var d = scope.formData.submittedOnDate;
                 var today = formatDate(d);
+
                 if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
                     var today = scope.TxnDate;
                 }
@@ -1215,7 +1217,7 @@
                     scope.formData.receiptNumber = scope.mpetxnsacode;
                     if (scope.mpesaAmount != scope.formData.totalAmount) {
                         submitProcess = false;
-                        scope.showError = true;
+                        scope.showErrorMsgOfMPESA = true;
                     }
                 }
                 if (submitProcess) {
@@ -1250,16 +1252,19 @@
                                     if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
                                         http({
                                             method: 'GET',
-                                            url: 'http://localhost:9292/mpesa/postpayment?id=' + scope.txnId
+                                            url: 'https://54.72.21.49:443/caritasmpesa/mpesa/postpayment?id=' + scope.txnId
                                         }).success(function (data) {
                                         });
                                     }
                                     scope.isDisabled = false;
                                     var tDate = dateFilter(scope.formData.submittedOnDate, 'yyyy-MM-dd');
+
                                     var reciptNo = scope.formData.receiptNumber;
                                     if (routeParams.amount != null && routeParams.mpetxnsacode != null) {
-                                        tDate = dateFilter(routeParams.txnDate, 'yyyy-MM-dd');
-                                        reciptNo = scope.mpetxnsacode;
+                                         tDate = null;
+                                         scope.txnDateFormatForFormat = new Date(routeParams.txnDate);  //newly added. converting string format to date and changing date format.
+                                         tDate = dateFilter(scope.txnDateFormatForFormat, 'yyyy-MM-dd');
+                                         reciptNo = scope.mpetxnsacode;
                                     }
 
 
@@ -1269,11 +1274,14 @@
                                     scope.baseURL = $rootScope.hostUrl + API_VERSION + "/runreports/" + encodeURIComponent("Payment Receipts");
                                     scope.baseURL += "?output-type=" + encodeURIComponent(scope.formData.outputType) + "&tenantIdentifier=" + $rootScope.tenantIdentifier + "&locale=" + scope.optlang.code;
 
+
+
                                     var reportParams = "";
                                     var paramName = "R_clientId";
                                     reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(routeParams.id) + "&";
                                     paramName = "R_tDate";
                                     reportParams += encodeURIComponent(paramName) + "=" + encodeURIComponent(tDate) + "&";
+
                                     paramName = "R_reciptNo";
                                     if (reciptNo == undefined || reciptNo == "" || paramName == "-") {
                                         reciptNo = "-";
