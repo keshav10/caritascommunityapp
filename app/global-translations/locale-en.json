@@ -3596,7 +3596,7 @@
     "label.mpesa.Transaction Date":"Transaction Date",
     "label.mpesa.Amount":"Amount",
     "label.mpesa.Transaction Code":"Transaction Code",
-    "label.mpesa.Client":"Client",
+    "label.mpesa.Client":"Client External Id ",
     "label.mpesa.Mobile No":"Mobile No",
     "label.mpesa.Transaction Details":"Transaction Details",
     "label.mpesa.Status":"Status",

@@ -81,7 +81,7 @@
             <tr ng-repeat="transactions in completetransaction" ng-if="transactions.type!='WithDraw'">
                 <td>{{transactions.transactionTime}}</td>
                 <td>{{transactions.transactionCode}}</td>
-                <td>{{transactions.clientName}}-{{transactions.clientId}}</td>
+                <td>{{transactions.clientName}} - {{transactions.clientExternalId}}</td>
                 <td>{{transactions.mobileNo}}</td>
                 <td  colspan="3" >{{transactions.testMessage}}</td>
                 <td>{{transactions.transactionAmount}}</td>
