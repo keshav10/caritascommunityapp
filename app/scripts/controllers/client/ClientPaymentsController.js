@@ -245,7 +245,21 @@
                     scope.clientAccounts = data;
                     if (data.paymentTypeOptions != null) {
                         scope.paymentTypes = data.paymentTypeOptions;
-                        scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
+
+                        if(scope.mpesaPayment == true){
+
+                            for(var i=0 ; i<=data.paymentTypeOptions.length; i++){
+                                if(data.paymentTypeOptions[i].name=='MPESA'){
+                                    scope.formData.paymentTypeId = data.paymentTypeOptions[i].id;
+                                }
+                            }
+                        }
+
+                        if(scope.mpesaPayment==false){
+                            scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
+                        }
+
+
                     }
                     if (data.savingsCharges) {
                         scope.savingsCharges = data.savingsCharges;
@@ -352,8 +366,12 @@
                     scope.clientAccounts = data;
                     scope.formData.totalAmount =0;
                     if (data.paymentTypeOptions != null) {
-                        scope.paymentTypes = data.paymentTypeOptions;
-                        scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
+                      /*  scope.paymentTypes = data.paymentTypeOptions;
+                        alert('mpesa value :' + scope.mpesaPayment);
+                        scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;*/
+                        if(scope.mpesaPayment==false){
+                            scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
+                        }
                     }
                     if (data.loanCharges) {
                         scope.loanCharges = data.loanCharges;
