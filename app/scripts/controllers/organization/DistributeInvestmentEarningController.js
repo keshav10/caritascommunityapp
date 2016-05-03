@@ -9,7 +9,7 @@
 
             });
 
-            scope.submit = function () {
+            scope.submitAndDistributeInvestmentEarning  = function () {
                 scope.productId = [];
                 scope.productId = this.formData.productId;
                 this.formData.productId;
