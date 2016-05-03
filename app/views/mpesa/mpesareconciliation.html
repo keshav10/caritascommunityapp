@@ -26,19 +26,32 @@
     <div>
         <form name="search">
             <table>
+
                 <tr>
-                    <td colspan="2">{{'label.mpesa.Mobile No'|translate}}&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input type="text" id="mobileNo" name="mobileNo" ng-model="mobileNosearch"
-                                                                                                                 ng-pattern="/^[0-9]+$/"  class="form-control"/></td>
-
-
-                    <td>&nbsp;&nbsp;{{'label.mpesa.From Date'|translate}}&nbsp;&nbsp;</td><td><input id="From Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"
-                                                                                                     ng-model="fromDateSearch" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control/"></td>
-                    <td>&nbsp;&nbsp;{{'label.mpesa.to Date'|translate}} &nbsp;&nbsp;</td><td><input id="To Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"
-                                                                                                    ng-model="toDateSearch" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control/"></td>
-                    <td>
-                        &nbsp;&nbsp;&nbsp;&nbsp;{{'label.mpesa.Status'|translate}}
+                    <td>&nbsp;&nbsp;{{'label.mpesa.From Date'|translate}}&nbsp;&nbsp;</td>
+                    <td><input id="From Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"
+                               ng-model="fromDateSearch" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control/"></td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'label.mpesa.Mobile No'|translate}}&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td colspan="2"><input type="text" id="mobileNo" name="mobileNo" ng-model="mobileNosearch"
+                                           ng-pattern="/^[0-9]+$/"  class="form-control"/></td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button id="submit" type="submit"  class="btn btn-primary" ng-click="Mpesasearch()">{{ 'label.button.save' | translate}}</button>
                     </td>
-                    <td>&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Following are the Mpesa status Details: </p>
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td>&nbsp;&nbsp;{{'label.mpesa.to Date'|translate}} &nbsp;&nbsp;</td>
+                    <td><input id="To Date" type="text" name="From Date" datepicker-pop="dd MMMM yyyy"
+                               ng-model="toDateSearch" is-open="opened" min="'2000-01-01'" max="restrictDate"  class="form-control/"></td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        {{'label.mpesa.Status'|translate}}
+                    </td>
+                    <td>
                         <select   chosen="searchStatus"  ng-init="formData.searchStatus1 = searchStatus[p]" ng-model="formData.searchStatus1"  class="form-control"
                                   ng-options="searchStatus1.id as searchStatus1.name for searchStatus1 in searchStatus track by searchStatus1.id" value="{{searchStatus1.id}}">
                             <option value=""></option>
@@ -46,16 +59,22 @@
                         </select>
 
                     </td>
-                </tr>
-                <tr>
-                    <td>
-                    <td colspan="4"></td><td><button id="cancle" type="reset" align="middle" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                </td>
 
-                    <td><button id="submit" type="submit"  class="btn btn-primary" ng-click="Mpesasearch()">{{ 'label.button.save' | translate}}</button>
+                    <td></td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button id="cancle" type="reset" align="middle" class="btn btn-default" ng-click="cancel()">{{ 'label.button.cancel' | translate}}</button>
                     </td>
+
+                    <td>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.UNMP <i class="icon-question-sign" tooltip="Unmapped Mpesa Transaction Details"></i>&nbsp;&nbsp;
+                            2.PAID <i class="icon-question-sign" tooltip="Mpesa Transaction Paid From Client Payment Screen"></i>&nbsp;&nbsp;
+                            3.CMP <i class="icon-question-sign" tooltip="Mpesa Transaction which are mapped or matched to client By client External Id or Mobile Number"></i>&nbsp;&nbsp;
+                            4.BM  <i class="icon-question-sign" tooltip=" Branch Mapped Mpesa Transaction"></i>
+                        </p>
+                    </td>
+
                 </tr>
+
             </table>
         </form>
 
@@ -81,7 +100,7 @@
             <tr ng-repeat="transactions in completetransaction" ng-if="transactions.type!='WithDraw'">
                 <td>{{transactions.transactionTime}}</td>
                 <td>{{transactions.transactionCode}}</td>
-                <td>{{transactions.clientName}} - {{transactions.clientExternalId}}</td>
+                <td>{{transactions.clientExternalId}} - {{transactions.clientName}} </td>
                 <td>{{transactions.mobileNo}}</td>
                 <td  colspan="3" >{{transactions.testMessage}}</td>
                 <td>{{transactions.transactionAmount}}</td>
