@@ -349,6 +349,9 @@
     "error.msg.loan.writeoff.cannot.be.undone.before.client.transfer.date": " The date on which a write off is made cannot be earlier than client's transfer date of ({{params[0].value}}) ",
     "error.msg.loan.close.cannot.be.undone.before.client.transfer.date": " The date on which the loan is repaid in full cannot be earlier than client's transfer date of ({{params[0].value}}) ",
     "error.msg.loan.repayment.or.waiver.account.is.not.active" : "Loan account is not active",
+    "validation.msg.loan.repaymentsStartingFromDate.cannot.be.blank" : "First repayment on date cannot be blank",
+    "validation.msg.loan.interestChargedFromDate.cannot.be.blank" : "Interest charged from date cannot be blank",
+
 
     "#---------": "------------",
     "#Common loan/saving charges": "....",

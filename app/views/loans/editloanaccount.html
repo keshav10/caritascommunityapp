@@ -170,13 +170,15 @@
                 </td>
             </tr>
             <tr>
-                <td ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.repaymentsStartingFromDate == true"><label>{{ 'label.input.firstrepaymenton' | translate }}</label></td>
+                <td ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.repaymentsStartingFromDate == true"><label>{{ 'label.input.firstrepaymenton' | translate }}&nbsp;<span
+                        class="required">*</span></label></td>
                 <td class="paddedbottom10" ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.repaymentsStartingFromDate == true">
                     <input id="repaymentsStartingFromDate" type="text" datepicker-pop="dd MMMM yyyy" class="form-control"
                            ng-model="formData.repaymentsStartingFromDate" is-open="opened3" min="minDate"
                            max="'2020-06-22'"/>
                 </td>
-                <td ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.interestChargedFromDate == true"><label class="control-label">{{ 'label.input.interestchargedfrom' | translate }}:</label></td>
+                <td ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.interestChargedFromDate == true"><label class="control-label">{{ 'label.input.interestchargedfrom' | translate }}&nbsp;<span
+                        class="required">*</span>:</label></td>
                 <td class="paddedbottom10" ng-hide="response.uiDisplayConfigurations.loanAccount.isHiddenField.interestChargedFromDate == true">
                     <input id="interestChargedFromDate" type="text" datepicker-pop="dd MMMM yyyy" class="form-control"
                            ng-model="formData.interestChargedFromDate" is-open="opened2" min="minDate"
