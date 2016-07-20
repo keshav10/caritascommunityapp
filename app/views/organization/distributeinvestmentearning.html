@@ -6,6 +6,15 @@
     <form name="distrinuteinvestmentearning" novalidate="" class="form-horizontal well" ng-controller="DistributeInvestmentEarningController"
           rc-submit="submit()">
         <api-validate></api-validate>
+
+        <div ng-show="isSuccess==true">
+           <p> <legend> Investment Earning Distributed Successfully ...! </legend> </p>
+            <div class="col-md-offset-3">
+                <button type="submit"  class="btn btn-primary" ng-click="back()" has-permission='RUNBATCHJOB_INVESTMENT'>Click To Go Back</button>
+            </div>
+        </div>
+
+        <div ng-show="isSuccess==false">
         <fieldset>
             <legend>Investment Earning </legend>
 
@@ -45,9 +54,10 @@
                 <a id="cancel" href="#/organization">
                     <button type="reset" class="btn btn-default">{{'label.button.cancel'| translate}}</button>
                 </a>
-                <button id="save" type="submit" ng-click="distributeinvestmentearning()" class="btn btn-primary" has-permission='RUNBATCHJOB_INVESTMENT'>{{'label.button.save'| translate}}</button>
+                <button id="save" type="submit" ng-click="submitAndDistributeInvestmentEarning()" class="btn btn-primary" has-permission='RUNBATCHJOB_INVESTMENT'>{{'label.button.save'| translate}}</button>
             </div>
         </fieldset>
+        </div>
     </form>
 </div>
 
