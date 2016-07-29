@@ -365,14 +365,15 @@
                 resourceFactory.clientAccountChargeResource.get(params, function (data) {
                     scope.clientAccounts = data;
                     scope.formData.totalAmount =0;
-                    if (data.paymentTypeOptions != null) {
-                      /*  scope.paymentTypes = data.paymentTypeOptions;
+                  /*  if (data.paymentTypeOptions != null) {
+                      *//*  scope.paymentTypes = data.paymentTypeOptions;
                         alert('mpesa value :' + scope.mpesaPayment);
-                        scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;*/
+                        scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;*//*
                         if(scope.mpesaPayment==false){
                             scope.formData.paymentTypeId = data.paymentTypeOptions[0].id;
                         }
-                    }
+                    }*/ //Committed code was changing the payment type on changing the transaction date. payment type should not change the
+                    //  even the transaction date change.
                     if (data.loanCharges) {
                         scope.loanCharges = data.loanCharges;
                     }
