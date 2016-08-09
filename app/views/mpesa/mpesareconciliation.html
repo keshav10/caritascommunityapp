@@ -97,7 +97,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="transactions in completetransaction" ng-if="transactions.type!='WithDraw'">
+            <tr ng-repeat="transactions in completetransaction.currentPageItems" ng-if="transactions.type!='WithDraw'">
                 <td>{{transactions.transactionTime}}</td>
                 <td>{{transactions.transactionCode}}</td>
                 <td>{{transactions.clientExternalId}} - {{transactions.clientName}} </td>
@@ -116,5 +116,12 @@
             </tr>
             </tbody>
         </table>
+        <ul class="pager">
+            <li class="previous"><a id="prev" ng-click="completetransaction.previous()" href=""
+                                    ng-disabled="!completetransaction.hasPrevious()">&larr;{{'label.button.previous' |
+                translate}}</a></li>
+            <li class="next"><a id="next" ng-click="completetransaction.next()" href="" ng-disabled="!completetransaction.hasNext()">{{'label.button.next'
+                | translate}} &rarr;</a></li>
+        </ul>
     </div>
 </div>
