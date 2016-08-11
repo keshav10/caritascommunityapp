@@ -1,6 +1,6 @@
 (function (module) {
     mifosX.controllers = _.extend(module, {
-        mpesareconciliationController: function ($q,$http,scope, resourceFactory, location,http,dateFilter,$modal,sessionManager,routeParams,$rootScope) {
+        mpesareconciliationController: function ($q,$http,scope, resourceFactory, location,http,dateFilter,$modal,sessionManager,routeParams,$rootScope, paginatorService) {
             scope.routeTo = function (id, mpesaamount, mpetxnsacode, txnDate, txnId) {
                 location.path('/clientpayments/' + id + '/' + mpesaamount + '/' + mpetxnsacode + '/' + txnDate + '/' + txnId);
             };
@@ -27,27 +27,43 @@
             scope.status1;
             scope.p=1;
             scope.toDate;
-            scope.officeId=$rootScope.ofId
+            scope.officeId=$rootScope.ofId;
+            scope.itemPerPage = 15;
 
            //alert($rootScope.ofId);
             var deferred = $q.defer();
-            if(routeParams.status1!=null){
-                scope.toDate = dateFilter( scope.restrictDate, 'yyyy-MM-dd');
-                scope.p=3;
+
+            scope.fetchFunction = function (offset, limit, callback) {
                 http({
                     method: 'GET',
-                  //  url: 'https://54.72.21.49:443/caritasmpesa/mpesa/Search?status=UNMP&FromDate='+''+'&ToDate='+scope.toDate+'&officeId='+scope.officeId+'&mobileNo='
-                    url: 'https://54.72.21.49:443/caritasmpesa/mpesa/Search?status=UNMP&FromDate='+''+'&ToDate='+scope.toDate+'&officeId='+scope.officeId+'&mobileNo='
-                }).success(function (data) {
-                    deferred.resolve(data);
-                    scope.completetransaction=data;
+                    url: 'https://localhost:9292/caritasmpesa/mpesa/Search?status=' + scope.text + '&FromDate=' + scope.fromDate + '&ToDate=' + scope.toDate + '&mobileNo=' + scope.searcText + '&officeId=' + scope.officeId + '&offset=' + offset + '&limit=' + limit
+                }).then(function (data) {
+                    scope.completetransaction.currentPageItems = data.data.pageItems;
+                    scope.completetransaction.hasNextVar = data.data.pageItems.length === scope.itemPerPage;
                 });
+            };
+
+            scope.fetchUmappedTransactionFunction = function (offset, limit, callback) {
+                http({
+                    method: 'GET',
+                    url: 'https://localhost:9292/caritasmpesa/mpesa/getunmappedtransactions?officeId='+scope.officeId+ '&offset=' + offset + '&limit=' + limit
+                }).then(function (data) {
+                    scope.completetransaction.currentPageItems = data.data.pageItems;
+                    scope.completetransaction.hasNextVar = data.data.pageItems.length === scope.itemPerPage;
+                });
+            };
+
+            if(routeParams.status1!=null){
+                scope.toDate = dateFilter( scope.restrictDate, 'yyyy-MM-dd');
+                scope.fromDate = '';
+                scope.searcText = '';
+                scope.p=3;
+                scope.text = routeParams.status1;
+                scope.completetransaction = paginatorService.paginate(scope.fetchFunction, scope.itemPerPage);
+
             }
             else {
-                $http.get("https://54.72.21.49:443/caritasmpesa/mpesa/getunmappedtransactions?officeId="+scope.officeId).success(function (data) {
-                    deferred.resolve(data);
-                    scope.completetransaction = data;
-                });
+                scope.completetransaction = paginatorService.paginate(scope.fetchUmappedTransactionFunction, scope.itemPerPage);
             }
             scope.searchStatus = [
                 {
@@ -122,16 +138,9 @@
                     }
                 }
 
-                http({
-                    method: 'GET',
-                    url: 'https://54.72.21.49:443/caritasmpesa/mpesa/Search?status='+ scope.text+'&FromDate='+ scope.fromDate+'&ToDate='+scope.toDate+'&mobileNo='+scope.searcText+'&officeId='+scope.officeId
-                }).success(function (data) {
-                    deferred.resolve(data);
-                    scope.completetransaction=data;
-                });
+               scope.completetransaction = paginatorService.paginate(scope.fetchFunction, scope.itemPerPage);
 
             };
-
 
             //scope.transactions={"id":5,"ipnId":2972,"origin":"MPESA","destination":"254700733153","timeStamp":null,"testMessage":"BM46ST941 Confirmed.on 6/7/11 at 10:49 PM Ksh8,723.00 received from RONALD NDALO 254722291067.Account Number 5FML59-01 New Utility balance is Ksh6,375,223.00","user":"123","password":"123","transactionCode":"BM46ST941","mobileNo":"9632587410","accountName":"5FML5901","transactionDate":"1307385000000","transactionTime":"10:49 PM","transactionAmount":"8723.000000","sender":"RONALD NDALO","status":"UT","clientId":13,"officeId":4};
             scope.showTransactionDetail1 = function (Id,Date,recNo) {
@@ -148,7 +157,7 @@
 
             var ClientDeleteCtrl = function ($scope, $modalInstance) {
 
-                $http.get("https://54.72.21.49:443/mifosng-provider/api/v1/clients/"+scope.clientId+"/Mpesa?TransactionDate="+scope.TransactionDate+"&ReceiptNo="+scope.ReceiptNo).success(function(data) {
+                $http.get("https://localhost:8443/mifosng-provider/api/v1/clients/"+scope.clientId+"/Mpesa?TransactionDate="+scope.TransactionDate+"&ReceiptNo="+scope.ReceiptNo).success(function(data) {
                     deferred.resolve(data);
                     $scope.transactionData = data;
 
@@ -161,7 +170,7 @@
         }
     });
 
-    mifosX.ng.application.controller('mpesareconciliationController', ['$q','$http','$scope', 'ResourceFactory', '$location','$http','dateFilter','$modal','SessionManager','$routeParams','$rootScope', mifosX.controllers.mpesareconciliationController]).run(function ($log) {
+    mifosX.ng.application.controller('mpesareconciliationController', ['$q','$http','$scope', 'ResourceFactory', '$location','$http','dateFilter','$modal','SessionManager','$routeParams','$rootScope', 'PaginatorService', mifosX.controllers.mpesareconciliationController]).run(function ($log) {
         $log.info("mpesareconciliationController initialized");
     });
 }(mifosX.controllers || {}));
