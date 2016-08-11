@@ -420,6 +420,16 @@
                     ]
                     };
                 }
+                if (data.status.value.includes("Closed")) {
+                    scope.buttons = { singlebuttons: [
+                        {
+                            name: "button.listguarantor",
+                            taskPermissionName: 'READ_GUARANTOR'
+                        }
+                    ]
+                    };
+                }
+
             });
 
             resourceFactory.loanResource.getAllNotes({loanId: routeParams.id,resourceType:'notes'}, function (data) {
