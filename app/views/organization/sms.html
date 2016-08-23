@@ -119,7 +119,7 @@
                 <div>
                 </div>
                 <div class="col-md-offset-9" >
-                    <button id="save" type="submit"  class="btn btn-primary" ng-click="sendMessage()">{{ 'label.button.send' | translate}}</button>
+                    <button id="save" type="submit"  class="btn btn-primary" ng-click="sendMessage()" ng-hide="blockUI">{{ 'label.button.send' | translate}}</button>
                     <button id="cancel" type="reset" class="btn btn-default" >{{ 'label.button.cancel' | translate}}</button>
                 </div>
 
