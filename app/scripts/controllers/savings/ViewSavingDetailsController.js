@@ -60,6 +60,7 @@
             scope.routeTo = function (savingsAccountId, transactionId, accountTransfer, transferId) {
                 if (accountTransfer) {
                     location.path('/viewaccounttransfers/' + transferId);
+                    $rootScope.savingsId = savingsAccountId;
                 } else {
                     location.path('/viewsavingtrxn/' + savingsAccountId + '/trxnId/' + transactionId);
                 }
